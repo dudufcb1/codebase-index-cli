@@ -1,0 +1,22 @@
+{
+	"name": "@roo-code/code-index-cli",
+	"private": true,
+	"type": "module",
+	"version": "0.0.1",
+	"description": "Headless code indexer for Roo Code workspaces",
+	"scripts": {
+		"start": "tsx src/index.ts",
+		"build": "tsc -p tsconfig.json"
+	},
+	"dependencies": {
+		"@qdrant/js-client-rest": "^1.12.0",
+		"@roo-code/types": "workspace:*",
+		"async-mutex": "^0.5.0",
+		"chokidar": "^3.6.0",
+		"ignore": "^5.3.2",
+		"openai": "^4.70.0",
+		"p-limit": "^4.0.0",
+		"uuid": "^9.0.1",
+		"zod": "^3.23.8"
+	}
+}

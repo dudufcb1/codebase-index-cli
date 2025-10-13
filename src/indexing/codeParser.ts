@@ -1,0 +1,108 @@
+import fs from "fs/promises"
+import path from "path"
+import { createHash } from "crypto"
+
+import { isSupportedExtension } from "./supportedExtensions.js"
+
+const MAX_BLOCK_CHARS = 1000
+const MIN_BLOCK_CHARS = 50
+const MIN_CHUNK_REMAINDER_CHARS = 200
+const MAX_CHARS_TOLERANCE_FACTOR = 1.15
+
+export interface CodeBlock {
+	filePath: string
+	startLine: number
+	endLine: number
+	content: string
+	segmentHash: string
+	fileHash: string
+}
+
+export class CodeParser {
+	async parseFile(filePath: string): Promise<CodeBlock[]> {
+		const ext = path.extname(filePath).toLowerCase()
+		if (!isSupportedExtension(ext)) {
+			return []
+		}
+
+		const content = await fs.readFile(filePath, "utf8")
+		const fileHash = this.hash(content)
+		return this.chunkSource(content, filePath, fileHash)
+	}
+
+	private chunkSource(source: string, filePath: string, fileHash: string): CodeBlock[] {
+		const lines = source.split(/\r?\n/)
+		const blocks: CodeBlock[] = []
+		let currentLines: string[] = []
+		let currentLength = 0
+		let chunkStartLine = 0
+		const effectiveMaxChars = MAX_BLOCK_CHARS * MAX_CHARS_TOLERANCE_FACTOR
+
+		const flush = (endLineIndex: number) => {
+			if (currentLength < MIN_BLOCK_CHARS || currentLines.length === 0) {
+				currentLines = []
+				currentLength = 0
+				chunkStartLine = endLineIndex + 1
+				return
+			}
+
+			const chunkContent = currentLines.join("\n")
+			const startLine = chunkStartLine + 1
+			const endLine = endLineIndex + 1
+			const hash = this.segmentHash(filePath, startLine, endLine, chunkContent)
+
+			blocks.push({
+				filePath,
+				startLine,
+				endLine,
+				content: chunkContent,
+				segmentHash: hash,
+				fileHash,
+			})
+
+			currentLines = []
+			currentLength = 0
+			chunkStartLine = endLineIndex + 1
+		}
+
+		const appendLine = (line: string, index: number) => {
+			const lineLength = line.length + 1
+
+			const remainingLines = lines.length - index - 1
+			const isLastLine = remainingLines === 0
+			const nextLine = lines[index + 1] ?? ""
+			const nextLineLength = !isLastLine ? nextLine.length : 0
+
+			if (
+				currentLength + lineLength > effectiveMaxChars &&
+				currentLines.length >= 1 &&
+				nextLineLength < MIN_CHUNK_REMAINDER_CHARS
+			) {
+				flush(index - 1)
+			}
+
+			currentLines.push(line)
+			currentLength += lineLength
+
+			if (currentLength >= effectiveMaxChars) {
+				flush(index)
+			}
+		}
+
+		lines.forEach((line, index) => appendLine(line, index))
+		flush(lines.length - 1)
+
+		return blocks
+	}
+
+	private hash(value: string): string {
+		return createHash("sha256").update(value).digest("hex")
+	}
+
+	private segmentHash(filePath: string, startLine: number, endLine: number, content: string): string {
+		const preview = content.slice(0, 100)
+		return createHash("sha256")
+			.update(`${filePath}-${startLine}-${endLine}-${content.length}-${preview}`)
+			.digest("hex")
+	}
+}
