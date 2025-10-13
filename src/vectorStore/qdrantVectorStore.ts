@@ -19,7 +19,7 @@ export interface VectorStoreSearchResult {
 }
 
 export class QdrantVectorStore {
-	private readonly vectorSize!: number
+	private vectorSize: number
 	private readonly DISTANCE_METRIC = "Cosine"
 
 	private client: QdrantClient
@@ -127,24 +127,28 @@ export class QdrantVectorStore {
 		}
 	}
 
+	private async createCollection(): Promise<void> {
+		await this.client.createCollection(this.collectionName, {
+			vectors: {
+				size: this.vectorSize,
+				distance: this.DISTANCE_METRIC,
+				on_disk: true,
+			},
+			hnsw_config: {
+				m: 64,
+				ef_construct: 512,
+				on_disk: true,
+			},
+		})
+	}
+
 	async initialize(): Promise<boolean> {
 		let created = false
 		try {
 			const collectionInfo = await this.getCollectionInfo()
 
 			if (collectionInfo === null) {
-				await this.client.createCollection(this.collectionName, {
-					vectors: {
-						size: this.vectorSize,
-						distance: this.DISTANCE_METRIC,
-						on_disk: true,
-					},
-					hnsw_config: {
-						m: 64,
-						ef_construct: 512,
-						on_disk: true,
-					},
-				})
+				await this.createCollection()
 				created = true
 			} else {
 				const vectorsConfig = collectionInfo.config?.params?.vectors
@@ -163,9 +167,9 @@ export class QdrantVectorStore {
 					existingVectorSize = 0
 				}
 
-				if (existingVectorSize !== this.vectorSize) {
-					created = await this.recreateCollectionWithNewDimension(existingVectorSize)
-				}
+			if (existingVectorSize !== this.vectorSize) {
+				created = await this.recreateCollectionWithNewDimension(existingVectorSize, this.vectorSize)
+			}
 			}
 
 			await this.createPayloadIndexes()
@@ -180,9 +184,9 @@ export class QdrantVectorStore {
 		}
 	}
 
-	private async recreateCollectionWithNewDimension(existingVectorSize: number): Promise<boolean> {
+	private async recreateCollectionWithNewDimension(existingVectorSize: number, desiredVectorSize: number): Promise<boolean> {
 		console.warn(
-			`[QdrantVectorStore] Collection ${this.collectionName} has dimension ${existingVectorSize}, expected ${this.vectorSize}. Recreating.`,
+			`[QdrantVectorStore] Collection ${this.collectionName} has dimension ${existingVectorSize}, expected ${desiredVectorSize}. Recreating.`,
 		)
 
 		let deletionSucceeded = false
@@ -200,18 +204,8 @@ export class QdrantVectorStore {
 			}
 
 			recreationAttempted = true
-			await this.client.createCollection(this.collectionName, {
-				vectors: {
-					size: this.vectorSize,
-					distance: this.DISTANCE_METRIC,
-					on_disk: true,
-				},
-				hnsw_config: {
-					m: 64,
-					ef_construct: 512,
-					on_disk: true,
-				},
-			})
+			this.vectorSize = desiredVectorSize
+			await this.createCollection()
 			return true
 		} catch (recreationError) {
 			const errorMessage = recreationError instanceof Error ? recreationError.message : String(recreationError)
@@ -222,7 +216,7 @@ export class QdrantVectorStore {
 			} else if (!recreationAttempted) {
 				contextualErrorMessage = `Deleted existing collection but verification failed. ${errorMessage}`
 			} else {
-				contextualErrorMessage = `Deleted collection but failed to create new collection with vector size ${this.vectorSize}. ${errorMessage}`
+				contextualErrorMessage = `Deleted collection but failed to create new collection with vector size ${desiredVectorSize}. ${errorMessage}`
 			}
 
 			console.error(
@@ -235,6 +229,23 @@ export class QdrantVectorStore {
 			dimensionMismatchError.cause = recreationError
 			throw dimensionMismatchError
 		}
+	}
+
+	async resetCollection(): Promise<void> {
+		try {
+			await this.client.deleteCollection(this.collectionName)
+		} catch (error: any) {
+			const message = (error?.message || "").toLowerCase()
+			if (!message.includes("not found") && !message.includes("does not exist")) {
+				console.warn(
+					`[QdrantVectorStore] Failed to delete collection ${this.collectionName} during reset:`,
+					error?.message ?? error,
+				)
+			}
+		}
+
+		await this.createCollection()
+		await this.createPayloadIndexes()
 	}
 
 	private async createPayloadIndexes(): Promise<void> {
@@ -457,4 +468,30 @@ export class QdrantVectorStore {
 		const collectionInfo = await this.getCollectionInfo()
 		return collectionInfo !== null
 	}
+
+	async ensureVectorDimension(actualDimension: number): Promise<void> {
+		if (actualDimension === this.vectorSize) {
+			return
+		}
+
+		console.warn(
+			`[QdrantVectorStore] Adjusting vector dimension from ${this.vectorSize} to ${actualDimension}.`,
+		)
+
+		await this.recreateCollectionWithNewDimension(this.vectorSize, actualDimension)
+		this.vectorSize = actualDimension
+	}
+}
+
+export function generatePointId(segmentHash: string): string {
+	const hex = segmentHash.replace(/-/g, "").toLowerCase()
+	const base = hex.slice(0, 32).padEnd(32, "0")
+	const sections = [
+		base.slice(0, 8),
+		base.slice(8, 12),
+		base.slice(12, 16),
+		base.slice(16, 20),
+		base.slice(20, 32),
+	]
+	return sections.join("-")
 }

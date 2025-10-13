@@ -1,40 +1,152 @@
 #!/usr/bin/env node
 
+import fs from "fs/promises"
+import path from "path"
 import process from "process"
 
-import { rootLogger } from "./logger.js"
-import { loadConfig, parseCliArgs, serializeConfig } from "./config.js"
+import { Logger, parseLogLevel, rootLogger, type LogLevel } from "./logger.js"
+import { parseCliArgs, resolveConfig } from "./config.js"
 import { WorkspaceIndexer } from "./indexer.js"
+import { getGlobalEnvDirectories, loadEnvFiles } from "./env.js"
+
+function determineLogLevel(explicit?: LogLevel): LogLevel | undefined {
+	if (explicit) {
+		return explicit
+	}
+
+	const value = process.env.ROO_LOG_LEVEL ?? process.env.LOG_LEVEL
+	if (!value) {
+		return undefined
+	}
+
+	try {
+		return parseLogLevel(value)
+	} catch {
+		rootLogger.warn(`Ignoring invalid log level "${value}" from environment`)
+		return undefined
+	}
+}
+
+async function readJsonFile<T>(filePath: string): Promise<T | null> {
+	try {
+		const raw = await fs.readFile(filePath, "utf8")
+		return JSON.parse(raw) as T
+	} catch (error: any) {
+		if (error?.code !== "ENOENT") {
+			rootLogger.warn(`Failed to read ${filePath}:`, error)
+		}
+		return null
+	}
+}
+
+async function printWorkspaceStats(workspacePath: string): Promise<void> {
+	const codebaseDir = path.join(workspacePath, ".codebase")
+	const legacyStatePath = path.join(workspacePath, ".roo-index-cli", "state.json")
+	const legacyCachePath = path.join(workspacePath, ".roo-code", "index-cache.json")
+	const statePath = path.join(codebaseDir, "state.json")
+	const cachePath = path.join(codebaseDir, "cache.json")
+
+	const state =
+		(await readJsonFile<{ qdrantCollection?: string; createdAt?: string; updatedAt?: string }>(statePath)) ??
+		(await readJsonFile<{ qdrantCollection?: string; createdAt?: string; updatedAt?: string }>(legacyStatePath))
+	const cache =
+		(await readJsonFile<Record<string, string>>(cachePath)) ??
+		(await readJsonFile<Record<string, string>>(legacyCachePath)) ??
+		{}
+
+	rootLogger.info(`Workspace: ${workspacePath}`)
+
+	if (!state) {
+		rootLogger.info("No local state file found.")
+	} else {
+		const collection = state.qdrantCollection ?? "unknown"
+		const createdAt = state.createdAt ?? "unknown"
+		const updatedAt = state.updatedAt ?? "unknown"
+		rootLogger.info(`Collection: ${collection}`)
+		rootLogger.info(`Created: ${createdAt}`)
+		rootLogger.info(`Last updated: ${updatedAt}`)
+	}
+
+	const trackedFiles = Object.keys(cache).length
+	rootLogger.info(`Tracked files: ${trackedFiles}`)
+	if (trackedFiles > 0) {
+		rootLogger.info(`Cache file: ${cachePath}`)
+	} else {
+		rootLogger.info("Cache file empty or missing; run -start to build index.")
+	}
+}
 
 async function main() {
 	try {
 		const options = parseCliArgs(process.argv)
-		const config = await loadConfig(options)
 
-		if (options.printConfig) {
-			console.log(serializeConfig(config))
+		const loadedEnvPaths = new Set<string>()
+		const globalEnvDirs = getGlobalEnvDirectories()
+		const workspacePath = path.resolve(process.cwd(), options.workspacePath)
+
+		const envLoads = await loadEnvFiles(globalEnvDirs, loadedEnvPaths)
+
+		const effectiveLogLevel = determineLogLevel(options.logLevel)
+		if (effectiveLogLevel) {
+			Logger.setGlobalLevel(effectiveLogLevel)
 		}
+
+		if (envLoads.length > 0) {
+			rootLogger.debug(`Environment files loaded: ${envLoads.join(", ")}`)
+		}
+
+		if (options.command === "stats") {
+			await printWorkspaceStats(workspacePath)
+			return
+		}
+
+		const resolved = await resolveConfig(options)
+		const config = resolved.config
+		const source = resolved.source
+		const configPath = resolved.path
+
+		if (source === "file") {
+			rootLogger.info(
+				`Loaded configuration from ${configPath ?? "unknown path"}; workspace: ${config.workspacePath}`,
+			)
+		} else {
+			rootLogger.info(`Auto-configured workspace at ${config.workspacePath}`)
+			rootLogger.info(
+				`Embedder ${config.embedder.provider} (${config.embedder.model}) | Qdrant collection ${config.qdrant.collectionName}`,
+			)
+		}
+
+		const debounce = config.watch?.debounceMs ?? 500
+		rootLogger.info(`Watching for changes (debounce ${debounce}ms)`)
 
 		const indexer = new WorkspaceIndexer(config)
 		await indexer.initialize()
-		await indexer.runInitialScan()
 
-		if (options.once) {
-			rootLogger.info("Completed initial scan in --once mode. Exiting.")
-			await indexer.shutdown()
-			process.exit(0)
+		if (options.command === "restart") {
+			rootLogger.info("Restart requested: rebuilding local cache and collection metadata before scanning.")
+			await indexer.forceRebuild()
 		}
 
+		await indexer.runInitialScan()
 		await indexer.startWatcher()
+
+		const keepAlive = setInterval(() => {}, 2 ** 31 - 1)
+
+		rootLogger.info("Watcher running. Press Ctrl+C to exit.")
 
 		const shutdown = async () => {
 			rootLogger.info("Received shutdown signal. Cleaning up...")
+			clearInterval(keepAlive)
 			await indexer.shutdown()
 			process.exit(0)
 		}
 
 		process.on("SIGINT", shutdown)
 		process.on("SIGTERM", shutdown)
+
+		await new Promise<void>(() => {
+			// Intentionally never resolve; shutdown() handles process exit.
+		})
 	} catch (error) {
 		rootLogger.error("Indexer failed", error)
 		process.exit(1)

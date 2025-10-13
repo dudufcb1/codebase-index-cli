@@ -58,6 +58,12 @@ export class WorkspaceIndexer {
 		await this.vectorStore.initialize()
 	}
 
+	async forceRebuild(): Promise<void> {
+		this.logger.info("Clearing cached hashes and resetting vector collection...")
+		await this.cacheManager.clear()
+		await this.vectorStore.resetCollection()
+	}
+
 	async runInitialScan(): Promise<void> {
 		this.logger.info("Starting full workspace scan...")
 		const stats = await this.directoryScanner.scan()

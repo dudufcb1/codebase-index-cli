@@ -5,12 +5,13 @@ import { createHash } from "crypto"
 import type { Embedder } from "../embedder/index.js"
 import { Logger } from "../logger.js"
 import type { IndexingConfig } from "../types.js"
-import type { QdrantVectorStore } from "../vectorStore/qdrantVectorStore.js"
+import { QdrantVectorStore, generatePointId } from "../vectorStore/qdrantVectorStore.js"
 
 import { CacheManager } from "./cacheManager.js"
 import { CodeParser } from "./codeParser.js"
 import type { CodeBlock } from "./codeParser.js"
 import { IgnoreManager } from "./ignoreManager.js"
+import { isSupportedExtension } from "./supportedExtensions.js"
 
 const MAX_FILE_SIZE_BYTES = 1 * 1024 * 1024
 
@@ -28,6 +29,20 @@ export interface ScanStats {
 	processedFiles: number
 	skippedFiles: number
 	totalBlocks: number
+}
+
+export type ProcessFileReason =
+	| "ignored"
+	| "unsupported-extension"
+	| "too-large"
+	| "unchanged"
+	| "no-blocks"
+	| "error"
+
+export interface ProcessFileResult {
+	processed: boolean
+	blockCount: number
+	reason?: ProcessFileReason
 }
 
 export class DirectoryScanner {
@@ -79,30 +94,45 @@ export class DirectoryScanner {
 		filePath: string,
 		existingHash?: string,
 		options?: { force?: boolean },
-	): Promise<{ processed: boolean; blockCount: number }> {
+	): Promise<ProcessFileResult> {
 		try {
 			if (this.ignoreManager.shouldIgnore(filePath)) {
-				return { processed: false, blockCount: 0 }
+				return { processed: false, blockCount: 0, reason: "ignored" }
 			}
 
 			const stats = await fs.stat(filePath)
 			if (!stats.isFile()) {
-				return { processed: false, blockCount: 0 }
+				return { processed: false, blockCount: 0, reason: "ignored" }
 			}
 
 			if (stats.size > (this.options.maxFileSizeBytes ?? MAX_FILE_SIZE_BYTES)) {
 				logger.debug(`Skipping ${filePath} (larger than limit)`)
-				return { processed: false, blockCount: 0 }
+				return { processed: false, blockCount: 0, reason: "too-large" }
 			}
 
-			const content = await fs.readFile(filePath, "utf8")
+			const ext = path.extname(filePath).toLowerCase()
+			if (!isSupportedExtension(ext)) {
+				return { processed: false, blockCount: 0, reason: "unsupported-extension" }
+			}
+
+			let content: string
+			try {
+				content = await fs.readFile(filePath, "utf8")
+			} catch (readError: any) {
+				logger.error(`Failed to read ${filePath}`, readError)
+				return { processed: false, blockCount: 0, reason: "error" }
+			}
+
 			const fileHash = this.hash(content)
 
 			if (!options?.force && existingHash && existingHash === fileHash) {
-				return { processed: false, blockCount: 0 }
+				return { processed: false, blockCount: 0, reason: "unchanged" }
 			}
 
 			const blocks = await this.parser.parseFile(filePath)
+			if (blocks.length === 0) {
+				return { processed: false, blockCount: 0, reason: "no-blocks" }
+			}
 
 			await this.vectorStore.deletePointsByFilePath(filePath)
 
@@ -114,7 +144,7 @@ export class DirectoryScanner {
 			return { processed: true, blockCount: blocks.length }
 		} catch (error) {
 			logger.error(`Failed to process ${filePath}`, error)
-			return { processed: false, blockCount: 0 }
+			return { processed: false, blockCount: 0, reason: "error" }
 		}
 	}
 
@@ -138,6 +168,14 @@ export class DirectoryScanner {
 			throw new Error(`Embedding response mismatch for ${filePath}`)
 		}
 
+		const vectorLength = embeddings[0]?.length ?? 0
+		if (vectorLength === 0) {
+			logger.warn(`Empty embedding vector for ${filePath}, skipping`)
+			return
+		}
+
+		await this.vectorStore.ensureVectorDimension(vectorLength)
+
 		const points = entries.map((entry, index) => {
 			const normalizedPath = generateNormalizedAbsolutePath(entry.block.filePath, this.workspacePath)
 			const relativePath = generateRelativeFilePath(normalizedPath, this.workspacePath)
@@ -146,17 +184,17 @@ export class DirectoryScanner {
 				throw new Error(`Missing embedding vector for block ${entry.block.segmentHash}`)
 			}
 			return {
-				id: entry.block.segmentHash,
+				id: generatePointId(entry.block.segmentHash),
 				vector,
 				payload: {
 					filePath: relativePath,
 					codeChunk: entry.block.content,
-						startLine: entry.block.startLine,
-						endLine: entry.block.endLine,
-						segmentHash: entry.block.segmentHash,
-					},
-				}
-			})
+					startLine: entry.block.startLine,
+					endLine: entry.block.endLine,
+					segmentHash: entry.block.segmentHash,
+				},
+			}
+		})
 
 		await this.vectorStore.upsertPoints(points)
 	}

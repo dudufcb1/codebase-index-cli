@@ -67,6 +67,26 @@ export class CodeParser {
 
 		const appendLine = (line: string, index: number) => {
 			const lineLength = line.length + 1
+			// Handle extremely long single-line files (e.g., minified assets)
+			if (lineLength > effectiveMaxChars) {
+				if (currentLines.length > 0) {
+					flush(index - 1)
+				}
+				let remaining = line
+				while (remaining.length > 0) {
+					const slice = remaining.slice(0, Math.floor(effectiveMaxChars))
+					currentLines = [slice]
+					currentLength = slice.length
+					chunkStartLine = index
+					flush(index)
+					chunkStartLine = index
+					remaining = remaining.slice(slice.length)
+				}
+				chunkStartLine = index + 1
+				currentLines = []
+				currentLength = 0
+				return
+			}
 
 			const remainingLines = lines.length - index - 1
 			const isLastLine = remainingLines === 0

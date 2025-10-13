@@ -1,7 +1,7 @@
 import fs from "fs/promises"
 import path from "path"
 import * as ignorePackage from "ignore"
-import type { Ignore } from "ignore"
+import type { Ignore, Options as IgnoreOptions } from "ignore"
 
 const DIRS_TO_IGNORE = [
 	"node_modules",
@@ -59,7 +59,11 @@ private rooIgnore: Ignore = createIgnoreInstance()
 
 	shouldIgnore(filePath: string): boolean {
 		const relative = path.relative(this.workspacePath, filePath)
-		if (!relative || relative.startsWith("..")) {
+		if (!relative || relative === "") {
+			// Workspace root should never be ignored
+			return false
+		}
+		if (relative.startsWith("..")) {
 			return true
 		}
 
@@ -110,6 +114,12 @@ private rooIgnore: Ignore = createIgnoreInstance()
 }
 
 function createIgnoreInstance(): Ignore {
-	const factory = ignorePackage as unknown as () => Ignore
-	return factory()
+	const possibleFactory =
+		(ignorePackage as unknown as { default?: (options?: IgnoreOptions) => Ignore }).default ??
+		(ignorePackage as unknown as (options?: IgnoreOptions) => Ignore)
+
+	if (typeof possibleFactory !== "function") {
+		throw new Error("Failed to create ignore instance. The ignore module did not export a factory function.")
+	}
+	return possibleFactory({ allowRelativePaths: true })
 }

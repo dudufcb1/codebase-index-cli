@@ -1,3 +1,5 @@
+import type { LogLevel } from "./logger.js"
+
 export type EmbedderProvider =
 	| "openai"
 	| "openai-compatible"
@@ -34,8 +36,10 @@ export interface IndexingConfig {
 	}
 }
 
+export type CliCommand = "start" | "restart" | "stats"
+
 export interface CliOptions {
-	configPath?: string
-	printConfig?: boolean
-	once?: boolean
+	command: CliCommand
+	workspacePath: string
+	logLevel?: LogLevel
 }

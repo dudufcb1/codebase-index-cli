@@ -3,7 +3,7 @@ import path from "path"
 
 import { Logger } from "../logger.js"
 
-import type { DirectoryScanner } from "./directoryScanner.js"
+import type { DirectoryScanner, ProcessFileReason } from "./directoryScanner.js"
 import { IgnoreManager } from "./ignoreManager.js"
 
 const logger = new Logger("workspace-watcher")
@@ -50,7 +50,7 @@ export class WorkspaceWatcher {
 			.on("unlink", (filePath) => this.enqueue("unlink", filePath))
 			.on("error", (error) => logger.error("Watcher error", error))
 
-		logger.info("File watcher initialized")
+		logger.info(`File watcher initialized at ${this.workspacePath}`)
 	}
 
 	async stop(): Promise<void> {
@@ -97,16 +97,45 @@ export class WorkspaceWatcher {
 		logger.info(`Processing ${events.length} file change(s)`)
 
 		for (const event of events) {
+			const relativePath = path.relative(this.workspacePath, event.path)
+			const displayPath =
+				!relativePath || relativePath.startsWith("..") ? event.path : relativePath
+
 			if (event.type === "unlink") {
 				await this.scanner.handleDeletion(event.path)
-				logger.debug(`Deleted index entries for ${event.path}`)
+				logger.info(`[delete] removed ${displayPath}`)
 				continue
 			}
 
 			const result = await this.scanner.processFile(event.path, undefined, { force: true })
 			if (result.processed) {
-				logger.debug(`Indexed ${event.path} (${result.blockCount} block(s))`)
+				logger.info(`[index] ${event.type} ${displayPath} (${result.blockCount} block(s))`)
+			} else {
+				if (result.reason && result.reason !== "unchanged") {
+					const reasonLabel = formatSkipReason(result.reason)
+					logger.info(`[skip] ${event.type} ${displayPath}${reasonLabel ? ` (${reasonLabel})` : ""}`)
+				} else {
+					logger.debug(`No changes detected for ${displayPath}`)
+				}
 			}
 		}
+	}
+}
+
+function formatSkipReason(reason: ProcessFileReason): string {
+	switch (reason) {
+		case "ignored":
+			return "ignored by patterns"
+		case "unsupported-extension":
+			return "unsupported file type"
+		case "too-large":
+			return "exceeds size limit"
+		case "no-blocks":
+			return "no indexable content"
+		case "error":
+			return "failed to process"
+		case "unchanged":
+		default:
+			return ""
 	}
 }
