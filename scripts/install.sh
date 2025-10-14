@@ -2,8 +2,8 @@
 set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-BIN_DIR="${ROO_INDEX_BIN_DIR:-$HOME/.local/bin}"
-CONFIG_DIR="${ROO_INDEX_CONFIG_DIR:-$HOME/.config/roo-index-cli}"
+BIN_DIR="${CODEBASE_INDEX_BIN_DIR:-$HOME/.local/bin}"
+CONFIG_DIR="${CODEBASE_INDEX_CONFIG_DIR:-$HOME/.config/codebase-index-cli}"
 
 if ! command -v pnpm >/dev/null 2>&1; then
 	echo "pnpm no está instalado. Instálalo (https://pnpm.io/installation) y vuelve a intentarlo." >&2
@@ -14,7 +14,7 @@ mkdir -p "$BIN_DIR"
 mkdir -p "$CONFIG_DIR"
 
 echo "Instalando dependencias de la CLI..."
-pnpm install --filter roo-index-cli... --prod
+pnpm install --filter codebase-index-cli... --prod
 
 echo "Compilando CLI..."
 pnpm run build
@@ -36,7 +36,7 @@ EOF
 
 create_wrapper "codebase"
 # Compatibilidad con instalaciones previas
-create_wrapper "roo-index"
+create_wrapper "codebase-index"
 
 if ! printf '%s' "$PATH" | tr ':' '\n' | grep -qx "$BIN_DIR"; then
 	echo
@@ -46,4 +46,4 @@ fi
 echo
 echo "Instalación completada. Ya puedes ejecutar:"
 echo "  codebase -start ."
-echo "(El binario 'roo-index' sigue disponible por compatibilidad)."
+echo "(El binario 'codebase-index' sigue disponible por compatibilidad)."

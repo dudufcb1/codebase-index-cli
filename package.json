@@ -1,17 +1,17 @@
 {
-	"name": "roo-index-cli",
+	"name": "codebase-index-cli",
 	"private": true,
 	"type": "module",
 	"version": "0.0.1",
-	"description": "Headless code indexer for Roo Code workspaces",
+	"description": "Headless code indexer for codebase workspaces",
 	"scripts": {
 		"start": "tsx src/index.ts",
 		"build": "tsc -p tsconfig.json",
 		"prepare": "pnpm run build"
 	},
 	"bin": {
-		"roo-index": "dist/index.js",
-		"roo-index-cli": "dist/index.js"
+		"codebase": "dist/index.js",
+		"codebase-index-cli": "dist/index.js"
 	},
 	"dependencies": {
 		"@qdrant/js-client-rest": "^1.12.0",

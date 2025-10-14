@@ -6,7 +6,7 @@ Herramienta en Node.js para reusar el índice semántico de Roo Code fuera de VS
 
 ```bash
 pnpm install
-pnpm --filter roo-index-cli build
+pnpm --filter codebase-index-cli build
 ```
 
 ## Uso rápido
@@ -17,7 +17,7 @@ pnpm --filter roo-index-cli build
    ./scripts/install.sh
    ```
 
-   Esto compila la CLI y crea un wrapper `codebase` en `~/.local/bin` (u otra ruta si defines `ROO_INDEX_BIN_DIR`). También deja `roo-index` por compatibilidad.
+   Esto compila la CLI y crea un wrapper `codebase` en `~/.local/bin` (u otra ruta si defines `CODEBASE_INDEX_BIN_DIR`). También deja `codebase-index` por compatibilidad.
 
 2. Copia `.env.example` a `.env` (en la raíz de este proyecto) y edítalo con tus credenciales. Ese archivo se usa como configuración global para todos los workspaces; no hace falta crear `.env` adicionales en cada repositorio.
 
@@ -27,7 +27,7 @@ pnpm --filter roo-index-cli build
    codebase -start .
    ```
 
-   (El comando `roo-index -start .` sigue funcionando para compatibilidad, pero el nombre recomendado es `codebase`).
+   (El comando `codebase-index -start .` sigue funcionando para compatibilidad, pero el nombre recomendado es `codebase`).
 
    El monitor hace un escaneo completo del directorio y queda observando cambios hasta que presiones `Ctrl+C`.
 
@@ -39,7 +39,7 @@ Comandos disponibles:
 
 ## Configuración manual (opcional)
 
-Puedes crear un archivo `roo-index.config.json` en el directorio del proyecto si prefieres definir todo de forma explícita:
+Puedes crear un archivo `codebase-index.config.json` en el directorio del proyecto si prefieres definir todo de forma explícita:
 
 ```json
 {
@@ -70,7 +70,7 @@ Variables importantes:
 Si no deseas instalar el wrapper, puedes ejecutar directamente:
 
 ```bash
-pnpm --filter roo-index-cli exec node dist/index.js -start /ruta/al/workspace
+pnpm --filter codebase-index-cli exec node dist/index.js -start /ruta/al/workspace
 ```
 
 ## ¿Qué guarda la CLI?

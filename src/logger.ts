@@ -75,4 +75,4 @@ export function parseLogLevel(value: string): LogLevel {
 	throw new Error(`Invalid log level "${value}". Expected one of: debug, info, warn, error`)
 }
 
-export const rootLogger = new Logger("roo-index-cli")
+export const rootLogger = new Logger("codebase-index-cli")

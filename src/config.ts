@@ -46,7 +46,7 @@ const configSchema = z.object({
 		.optional(),
 })
 
-export const DEFAULT_CONFIG_PATH = "roo-index.config.json"
+export const DEFAULT_CONFIG_PATH = "codebase-index.config.json"
 export type ConfigSource = "file" | "auto"
 
 export interface ResolvedConfig {
