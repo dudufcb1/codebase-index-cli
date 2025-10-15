@@ -1,30 +1,34 @@
-# Roo Code Index CLI
+# Codebase Index CLI
 
-Herramienta en Node.js para reusar el índice semántico de Roo Code fuera de VS Code.
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
+![TypeScript](https://img.shields.io/badge/typescript-5.x-blue.svg)
 
-## Instalación
+Node.js tool for semantic code indexing and search using vector embeddings.
+
+## Installation
 
 ```bash
 pnpm install
 pnpm --filter codebase-index-cli build
 ```
 
-## Uso rápido
+## Quick Start
 
-1. Corre el instalador una sola vez desde la raíz del repo:
+1. Run the installer once from the repository root:
 
    ```bash
    ./scripts/install.sh
    ```
 
-   Esto compila la CLI y crea wrappers en `~/.local/bin`:
+   This compiles the CLI and creates wrappers in `~/.local/bin`:
    - `codebase` - Uses Qdrant vector store (remote server)
    - `codesql` - Uses SQLite-vec (local database)
    - `codebase-index` - Legacy compatibility
 
-2. Copia `.env.example` a `.env` (en la raíz de este proyecto) y edítalo con tus credenciales. Ese archivo se usa como configuración global para todos los workspaces; no hace falta crear `.env` adicionales en cada repositorio.
+2. Copy `.env.example` to `.env` (in the project root) and edit it with your credentials. This file serves as global configuration for all workspaces; no need to create additional `.env` files in each repository.
 
-3. Desde cualquier proyecto:
+3. From any project directory:
 
    ```bash
    # Using SQLite-vec (local database)
@@ -34,7 +38,7 @@ pnpm --filter codebase-index-cli build
    codebase -start .
    ```
 
-   El monitor hace un escaneo completo del directorio y queda observando cambios hasta que presiones `Ctrl+C`.
+   The monitor performs a complete directory scan and watches for changes until you press `Ctrl+C`.
 
 ## Vector Store Options
 
@@ -54,20 +58,20 @@ The vector store is determined by which command you use:
 - **Requires**: Qdrant server running (e.g., `docker run -p 6333:6333 qdrant/qdrant`)
 - **Usage**: `codebase -start .`
 
-Comandos disponibles:
+## Available Commands
 
-- `-start <ruta>`: arranca el monitor (crea la colección si no existe, actualiza si ya estaba).
-- `-restart <ruta>`: limpia caché local y recrea la colección antes de volver a indexar.
-- `-stats <ruta>`: muestra la colección actual y el número de archivos rastreados sin modificar nada.
-- `-full-reset <ruta>`: **elimina completamente** todos los datos locales (`.codebase/`, `.roo-index-cli/`, `.roo-code/`). Útil cuando no sabes qué vector store estabas usando o quieres empezar desde cero.
+- `-start <path>`: Start the monitor (creates collection if it doesn't exist, updates if it does).
+- `-restart <path>`: Clear local cache and recreate collection before re-indexing.
+- `-stats <path>`: Show current collection and number of tracked files without modifying anything.
+- `-full-reset <path>`: **Completely removes** all local data (`.codebase/`, `.roo-index-cli/`, `.roo-code/`). Useful when you don't know which vector store you were using or want to start from scratch.
 
-## Configuración manual (opcional)
+## Manual Configuration (Optional)
 
-Puedes crear un archivo `codebase-index.config.json` en el directorio del proyecto si prefieres definir todo de forma explícita:
+You can create a `codebase-index.config.json` file in the project directory if you prefer to define everything explicitly:
 
 ```json
 {
-  "workspacePath": "/ruta/al/workspace",
+  "workspacePath": "/path/to/workspace",
   "embedder": {
     "provider": "openai",
     "model": "text-embedding-3-small",
@@ -83,25 +87,26 @@ Puedes crear un archivo `codebase-index.config.json` en el directorio del proyec
 }
 ```
 
-Variables importantes:
+Important variables:
 
-- `workspacePath`: ruta absoluta del repositorio a indexar.
-- `embedder`: proveedor soportado (`openai`, `openai-compatible`, `ollama`) y credenciales.
-- `qdrant`: instancia Qdrant donde se almacenarán los vectores.
+- `workspacePath`: Absolute path to the repository to index.
+- `embedder`: Supported provider (`openai`, `openai-compatible`, `ollama`) and credentials.
+- `qdrant`: Qdrant instance where vectors will be stored.
 
-## Uso directo sin wrapper
+## Direct Usage Without Wrapper
 
-Si no deseas instalar el wrapper, puedes ejecutar directamente:
+If you don't want to install the wrapper, you can run directly:
 
 ```bash
-pnpm --filter codebase-index-cli exec node dist/index.js -start /ruta/al/workspace
+pnpm --filter codebase-index-cli exec node dist/index.js -start /path/to/workspace
 ```
 
-## ¿Qué guarda la CLI?
+## What Does the CLI Store?
 
-Cada workspace mantiene su propio estado en `.codebase/`:
+Each workspace maintains its own state in `.codebase/`:
 
-- `.codebase/state.json`: colección Qdrant asignada, fechas de creación/actualización.
-- `.codebase/cache.json`: hashes de archivos para detectar cambios. Se regenera automáticamente tras `-restart`.
+- `.codebase/state.json`: Assigned Qdrant collection, creation/update dates.
+- `.codebase/cache.json`: File hashes to detect changes. Automatically regenerated after `-restart`.
 
-Los archivos legacy (`.roo-index-cli/state.json` y `.roo-code/index-cache.json`) se migran en la primera ejecución.
+Legacy files (`.roo-index-cli/state.json` and `.roo-code/index-cache.json`) are migrated on first run.
+
