@@ -447,6 +447,20 @@ export function parseCliArgs(argv: string[]): CliOptions {
 					}
 				}
 				break
+			case "-full-reset":
+			case "--full-reset":
+				if (command) {
+					throw new Error("Only one command can be provided at a time")
+				}
+				command = "full-reset"
+				{
+					const next = argv[i + 1]
+					if (next && !next.startsWith("-")) {
+						workspacePath = next
+						i++
+					}
+				}
+				break
 			case "--log-level":
 			case "--level": {
 				const next = argv[i + 1]
@@ -461,7 +475,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
 				if (!command && !arg.startsWith("-")) {
 					// allow shorthand: cli <command> <path>
 					const normalized = arg.toLowerCase()
-					if (normalized === "start" || normalized === "restart" || normalized === "stats") {
+					if (normalized === "start" || normalized === "restart" || normalized === "stats" || normalized === "full-reset") {
 						if (command) {
 							throw new Error("Only one command can be provided at a time")
 						}

@@ -76,6 +76,40 @@ async function printWorkspaceStats(workspacePath: string): Promise<void> {
 	}
 }
 
+async function fullReset(workspacePath: string): Promise<void> {
+	rootLogger.info(`🔥 Full reset for workspace: ${workspacePath}`)
+
+	const codebaseDir = path.join(workspacePath, ".codebase")
+	const legacyRooIndexDir = path.join(workspacePath, ".roo-index-cli")
+	const legacyRooCodeDir = path.join(workspacePath, ".roo-code")
+
+	// Remove .codebase directory (SQLite DB, cache, state)
+	try {
+		await fs.rm(codebaseDir, { recursive: true, force: true })
+		rootLogger.info(`✓ Removed ${codebaseDir}`)
+	} catch (error: any) {
+		if (error?.code !== "ENOENT") {
+			rootLogger.warn(`Failed to remove ${codebaseDir}:`, error)
+		}
+	}
+
+	// Remove legacy directories
+	for (const dir of [legacyRooIndexDir, legacyRooCodeDir]) {
+		try {
+			await fs.rm(dir, { recursive: true, force: true })
+			rootLogger.info(`✓ Removed ${dir}`)
+		} catch (error: any) {
+			if (error?.code !== "ENOENT") {
+				rootLogger.warn(`Failed to remove ${dir}:`, error)
+			}
+		}
+	}
+
+	rootLogger.info("✅ Full reset complete!")
+	rootLogger.info("Note: If using Qdrant, you may want to manually delete the collection.")
+	rootLogger.info("Run 'codebase -start .' to rebuild the index from scratch.")
+}
+
 async function main() {
 	try {
 		const options = parseCliArgs(process.argv)
@@ -97,6 +131,11 @@ async function main() {
 
 		if (options.command === "stats") {
 			await printWorkspaceStats(workspacePath)
+			return
+		}
+
+		if (options.command === "full-reset") {
+			await fullReset(workspacePath)
 			return
 		}
 

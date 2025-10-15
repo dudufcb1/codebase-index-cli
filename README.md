@@ -59,6 +59,7 @@ Comandos disponibles:
 - `-start <ruta>`: arranca el monitor (crea la colección si no existe, actualiza si ya estaba).
 - `-restart <ruta>`: limpia caché local y recrea la colección antes de volver a indexar.
 - `-stats <ruta>`: muestra la colección actual y el número de archivos rastreados sin modificar nada.
+- `-full-reset <ruta>`: **elimina completamente** todos los datos locales (`.codebase/`, `.roo-index-cli/`, `.roo-code/`). Útil cuando no sabes qué vector store estabas usando o quieres empezar desde cero.
 
 ## Configuración manual (opcional)
 

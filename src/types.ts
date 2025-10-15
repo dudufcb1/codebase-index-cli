@@ -47,7 +47,7 @@ export interface IndexingConfig {
 	}
 }
 
-export type CliCommand = "start" | "restart" | "stats"
+export type CliCommand = "start" | "restart" | "stats" | "full-reset"
 
 export interface CliOptions {
 	command: CliCommand
