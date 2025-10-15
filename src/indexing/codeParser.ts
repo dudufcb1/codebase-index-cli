@@ -4,9 +4,9 @@ import { createHash } from "crypto"
 
 import { isSupportedExtension } from "./supportedExtensions.js"
 
-const MAX_BLOCK_CHARS = 1000
+const MAX_BLOCK_CHARS = 5000
 const MIN_BLOCK_CHARS = 50
-const MIN_CHUNK_REMAINDER_CHARS = 200
+const MIN_CHUNK_REMAINDER_CHARS = 500
 const MAX_CHARS_TOLERANCE_FACTOR = 1.15
 
 export interface CodeBlock {
