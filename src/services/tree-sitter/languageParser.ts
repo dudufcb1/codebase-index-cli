@@ -1,5 +1,8 @@
 import * as path from "path"
-import { Parser as ParserT, Language as LanguageT, Query as QueryT } from "web-tree-sitter"
+import { Parser, Language, Query } from "web-tree-sitter"
+type ParserT = Parser
+type LanguageT = Language
+type QueryT = Query
 import {
 	javascriptQuery,
 	typescriptQuery,
@@ -42,7 +45,6 @@ async function loadLanguage(langName: string, sourceDirectory?: string) {
 	const wasmPath = path.join(baseDir, `tree-sitter-${langName}.wasm`)
 
 	try {
-		const { Language } = require("web-tree-sitter")
 		return await Language.load(wasmPath)
 	} catch (error) {
 		console.error(`Error loading language: ${wasmPath}: ${error instanceof Error ? error.message : error}`)
@@ -76,8 +78,6 @@ Sources:
 - https://github.com/tree-sitter/tree-sitter/blob/master/lib/binding_web/test/query-test.js
 */
 export async function loadRequiredLanguageParsers(filesToParse: string[], sourceDirectory?: string) {
-	const { Parser, Query } = require("web-tree-sitter")
-
 	if (!isParserInitialized) {
 		try {
 			await Parser.init()

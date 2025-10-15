@@ -157,14 +157,18 @@ export class SqliteVecClient implements VectorStore {
 				for (const point of points) {
 					// Convert vector to JSON string for storage
 					const vectorJson = JSON.stringify(point.vector)
-					
+
+					// Ensure line numbers are integers
+					const startLine = Math.floor(point.payload.startLine || 0)
+					const endLine = Math.floor(point.payload.endLine || 0)
+
 					stmt.run(
 						point.id,
 						vectorJson,
 						point.payload.filePath || "",
 						point.payload.codeChunk || "",
-						point.payload.startLine || 0,
-						point.payload.endLine || 0,
+						startLine,
+						endLine,
 						point.payload.segmentHash || null,
 					)
 				}
