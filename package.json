@@ -24,7 +24,9 @@
 		"openai": "^4.70.0",
 		"p-limit": "^4.0.0",
 		"sqlite-vec": "0.1.7-alpha.2",
+		"tree-sitter-wasms": "^0.1.13",
 		"uuid": "^9.0.1",
+		"web-tree-sitter": "^0.25.10",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {

@@ -28,7 +28,7 @@ import {
 	embeddedTemplateQuery,
 	elispQuery,
 	elixirQuery,
-} from "./queries"
+} from "./queries/index.js"
 
 export interface LanguageParser {
 	[key: string]: {
