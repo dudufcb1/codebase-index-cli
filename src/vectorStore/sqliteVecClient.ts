@@ -148,9 +148,9 @@ export class SqliteVecClient implements VectorStore {
 
 		try {
 			const stmt = this.db.prepare(`
-				INSERT OR REPLACE INTO ${this.tableName} 
+				INSERT OR REPLACE INTO ${this.tableName}
 				(id, embedding, file_path, code_chunk, start_line, end_line, segment_hash)
-				VALUES (?, ?, ?, ?, ?, ?, ?)
+				VALUES (?, ?, ?, ?, CAST(? AS INTEGER), CAST(? AS INTEGER), ?)
 			`)
 
 			const insertMany = this.db.transaction((points: any[]) => {
@@ -158,17 +158,13 @@ export class SqliteVecClient implements VectorStore {
 					// Convert vector to JSON string for storage
 					const vectorJson = JSON.stringify(point.vector)
 
-					// Ensure line numbers are integers
-					const startLine = Math.floor(point.payload.startLine || 0)
-					const endLine = Math.floor(point.payload.endLine || 0)
-
 					stmt.run(
 						point.id,
 						vectorJson,
 						point.payload.filePath || "",
 						point.payload.codeChunk || "",
-						startLine,
-						endLine,
+						point.payload.startLine || 0,
+						point.payload.endLine || 0,
 						point.payload.segmentHash || null,
 					)
 				}
