@@ -1,32 +1,14 @@
 #!/usr/bin/env node
 
 /**
- * Interactive SQLite-vec Search Demo (JavaScript/Node.js)
- * 
- * This script demonstrates how to search a codebase index stored in SQLite-vec.
- * It reads configuration from environment variables and provides an interactive
- * search interface.
- * 
- * Usage:
- *   node search-demo.js
- *   # or make it executable:
- *   chmod +x search-demo.js
- *   ./search-demo.js
- * 
- * Environment Variables (from .env):
- *   EMBED_PROVIDER - Embedding provider (openai, openai-compatible, ollama)
- *   EMBED_MODEL - Model name
- *   EMBED_API_KEY - API key for the embedding service
- *   EMBED_BASE_URL - Base URL for the embedding service
- *   EMBED_DIMENSION - Vector dimension (e.g., 1536, 4096)
+ * Non-interactive SQLite-vec Search Test
+ * For quick testing without interactive prompts
  */
 
 import Database from 'better-sqlite3';
 import * as sqlite_vec from 'sqlite-vec';
-import * as readline from 'readline';
-import * as path from 'path';
-import * as fs from 'fs';
 import dotenv from 'dotenv';
+import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -43,23 +25,6 @@ const CONFIG = {
   embedBaseUrl: process.env.EMBED_BASE_URL || 'https://api.studio.nebius.com/v1/',
   embedDimension: parseInt(process.env.EMBED_DIMENSION || '4096'),
 };
-
-// Create readline interface for user input
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
-/**
- * Prompt user for input
- */
-function prompt(question) {
-  return new Promise((resolve) => {
-    rl.question(question, (answer) => {
-      resolve(answer.trim());
-    });
-  });
-}
 
 /**
  * Generate embedding for a text query
@@ -152,11 +117,20 @@ function displayResults(results) {
 }
 
 /**
- * Main interactive loop
+ * Main function
  */
 async function main() {
+  const dbPath = process.argv[2];
+  const query = process.argv[3];
+
+  if (!dbPath || !query) {
+    console.error('Usage: node search-test.js <db-path> <query>');
+    console.error('Example: node search-test.js .codebase/vectors.db "authentication function"');
+    process.exit(1);
+  }
+
   console.log('╔════════════════════════════════════════════════════════════════════════════╗');
-  console.log('║         SQLite-vec Interactive Search Demo (JavaScript/Node.js)           ║');
+  console.log('║              SQLite-vec Search Test (Non-interactive)                     ║');
   console.log('╚════════════════════════════════════════════════════════════════════════════╝\n');
 
   console.log('Configuration:');
@@ -166,31 +140,25 @@ async function main() {
   console.log(`  Dimension: ${CONFIG.embedDimension}`);
   console.log('');
 
-  // Ask for database path
-  const dbPath = await prompt('Enter the path to the SQLite database (e.g., .codebase/vectors.db): ');
-  
-  if (!fs.existsSync(dbPath)) {
-    console.error(`\n❌ Error: Database file not found: ${dbPath}`);
-    rl.close();
-    return;
-  }
+  console.log(`Database: ${dbPath}`);
+  console.log(`Query: "${query}"`);
+  console.log('');
 
   // Open database
-  console.log(`\n✓ Opening database: ${dbPath}`);
+  console.log('⏳ Opening database...');
   const db = new Database(dbPath);
   
   // Load sqlite-vec extension
   sqlite_vec.load(db);
   console.log('✓ Loaded sqlite-vec extension');
 
-  // Get table name (assume 'code_vectors' or first vec0 table)
+  // Get table name
   const tables = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND sql LIKE '%vec0%'").all();
   
   if (tables.length === 0) {
-    console.error('\n❌ Error: No vec0 tables found in database');
+    console.error('❌ Error: No vec0 tables found in database');
     db.close();
-    rl.close();
-    return;
+    process.exit(1);
   }
 
   const tableName = tables[0].name;
@@ -200,44 +168,29 @@ async function main() {
   const count = db.prepare(`SELECT COUNT(*) as count FROM ${tableName}`).get();
   console.log(`✓ Database contains ${count.count} vectors\n`);
 
-  // Interactive search loop
-  while (true) {
-    const query = await prompt('\nEnter your search query (or "exit" to quit): ');
+  try {
+    console.log('⏳ Generating embedding...');
+    const queryVector = await generateEmbedding(query);
+    console.log(`✓ Generated ${queryVector.length}-dimensional embedding`);
+
+    console.log('⏳ Searching database...');
+    const results = searchDatabase(db, tableName, queryVector, 10);
     
-    if (query.toLowerCase() === 'exit' || query.toLowerCase() === 'quit') {
-      break;
-    }
+    displayResults(results);
 
-    if (!query) {
-      console.log('⚠️  Please enter a search query');
-      continue;
-    }
-
-    try {
-      console.log('\n⏳ Generating embedding...');
-      const queryVector = await generateEmbedding(query);
-      console.log(`✓ Generated ${queryVector.length}-dimensional embedding`);
-
-      console.log('⏳ Searching database...');
-      const results = searchDatabase(db, tableName, queryVector, 10);
-      
-      displayResults(results);
-
-    } catch (error) {
-      console.error(`\n❌ Error: ${error.message}`);
-    }
+  } catch (error) {
+    console.error(`\n❌ Error: ${error.message}`);
+    process.exit(1);
   }
 
   // Cleanup
   db.close();
-  rl.close();
-  console.log('\n👋 Goodbye!\n');
+  console.log('✓ Done!\n');
 }
 
 // Run main function
 main().catch(error => {
   console.error('Fatal error:', error);
-  rl.close();
   process.exit(1);
 });
 
