@@ -11,7 +11,8 @@
 	},
 	"bin": {
 		"codebase": "dist/index.js",
-		"codebase-index-cli": "dist/index.js"
+		"codebase-index-cli": "dist/index.js",
+		"codesql": "dist/index.js"
 	},
 	"dependencies": {
 		"@qdrant/js-client-rest": "^1.12.0",

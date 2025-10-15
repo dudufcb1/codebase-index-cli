@@ -86,11 +86,8 @@ export class SqliteVecClient implements VectorStore {
 					)
 				`)
 
-				// Create indexes for faster filtering
-				this.db.exec(`
-					CREATE INDEX IF NOT EXISTS idx_file_path ON ${this.tableName}(file_path);
-					CREATE INDEX IF NOT EXISTS idx_segment_hash ON ${this.tableName}(segment_hash);
-				`)
+				// Note: Cannot create indexes on virtual tables
+				// Filtering will be done in the WHERE clause
 
 				created = true
 			} else {

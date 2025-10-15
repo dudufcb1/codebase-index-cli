@@ -17,19 +17,42 @@ pnpm --filter codebase-index-cli build
    ./scripts/install.sh
    ```
 
-   Esto compila la CLI y crea un wrapper `codebase` en `~/.local/bin` (u otra ruta si defines `CODEBASE_INDEX_BIN_DIR`). También deja `codebase-index` por compatibilidad.
+   Esto compila la CLI y crea wrappers en `~/.local/bin`:
+   - `codebase` - Uses default vector store (SQLite-vec)
+   - `codesql` - Explicitly uses SQLite-vec (local database)
+   - `codebase-index` - Legacy compatibility
 
 2. Copia `.env.example` a `.env` (en la raíz de este proyecto) y edítalo con tus credenciales. Ese archivo se usa como configuración global para todos los workspaces; no hace falta crear `.env` adicionales en cada repositorio.
 
 3. Desde cualquier proyecto:
 
    ```bash
+   # Using SQLite-vec (default, local database)
    codebase -start .
+   # or explicitly
+   codesql -start .
+
+   # Using Qdrant (requires Qdrant server running)
+   VECTOR_STORE=qdrant codebase -start .
    ```
 
-   (El comando `codebase-index -start .` sigue funcionando para compatibilidad, pero el nombre recomendado es `codebase`).
-
    El monitor hace un escaneo completo del directorio y queda observando cambios hasta que presiones `Ctrl+C`.
+
+## Vector Store Options
+
+### SQLite-vec (Default)
+- **Local database** stored in `.codebase/vectors.db`
+- **No external services** required
+- **Portable** - can be committed with your project
+- **Best for**: Small/medium projects, local development, offline usage
+
+### Qdrant
+- **High performance** vector search
+- **Scalable** to millions of vectors
+- **Best for**: Large projects, production, multiple projects sharing an index
+- **Requires**: Qdrant server running (e.g., `docker run -p 6333:6333 qdrant/qdrant`)
+
+To use Qdrant, set `VECTOR_STORE=qdrant` in your `.env` or environment.
 
 Comandos disponibles:
 
