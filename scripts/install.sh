@@ -34,8 +34,7 @@ EOF
 	chmod +x "$target"
 }
 
-create_wrapper "codebase"
-# Compatibilidad con instalaciones previas
+# Compatibilidad con instalaciones previas (sin vector store específico)
 create_wrapper "codebase-index"
 
 # Create codesql wrapper (uses SQLite-vec by default)
@@ -57,6 +56,9 @@ EOF
 	chmod +x "$target"
 }
 
+# codebase always uses Qdrant
+create_wrapper_with_env "codebase" "VECTOR_STORE" "qdrant"
+
 # codesql always uses SQLite-vec
 create_wrapper_with_env "codesql" "VECTOR_STORE" "sqlite"
 
@@ -67,6 +69,6 @@ fi
 
 echo
 echo "Instalación completada. Ya puedes ejecutar:"
-echo "  codebase -start .    # Uses default vector store (SQLite-vec)"
-echo "  codesql -start .     # Explicitly uses SQLite-vec"
+echo "  codebase -start .    # Uses Qdrant vector store"
+echo "  codesql -start .     # Uses SQLite-vec (local database)"
 echo "(El binario 'codebase-index' sigue disponible por compatibilidad)."

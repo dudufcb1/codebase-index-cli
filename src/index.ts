@@ -8,6 +8,7 @@ import { Logger, parseLogLevel, rootLogger, type LogLevel } from "./logger.js"
 import { parseCliArgs, resolveConfig } from "./config.js"
 import { WorkspaceIndexer } from "./indexer.js"
 import { getGlobalEnvDirectories, loadEnvFiles } from "./env.js"
+import { QdrantClient } from "@qdrant/js-client-rest"
 
 function determineLogLevel(explicit?: LogLevel): LogLevel | undefined {
 	if (explicit) {
@@ -82,6 +83,38 @@ async function fullReset(workspacePath: string): Promise<void> {
 	const codebaseDir = path.join(workspacePath, ".codebase")
 	const legacyRooIndexDir = path.join(workspacePath, ".roo-index-cli")
 	const legacyRooCodeDir = path.join(workspacePath, ".roo-code")
+	const statePath = path.join(codebaseDir, "state.json")
+	const legacyStatePath = path.join(workspacePath, ".roo-index-cli", "state.json")
+
+	// Try to delete Qdrant collection if it exists
+	try {
+		const state =
+			(await readJsonFile<{ qdrantCollection?: string }>(statePath)) ??
+			(await readJsonFile<{ qdrantCollection?: string }>(legacyStatePath))
+
+		if (state?.qdrantCollection) {
+			const qdrantUrl = process.env.QDRANT_URL ?? "http://localhost:6333"
+			const qdrantApiKey = process.env.QDRANT_API_KEY
+
+			try {
+				const client = new QdrantClient({
+					url: qdrantUrl,
+					apiKey: qdrantApiKey,
+				})
+
+				await client.deleteCollection(state.qdrantCollection)
+				rootLogger.info(`✓ Deleted Qdrant collection: ${state.qdrantCollection}`)
+			} catch (error: any) {
+				if (error?.status === 404) {
+					rootLogger.info(`Collection ${state.qdrantCollection} not found in Qdrant (already deleted)`)
+				} else {
+					rootLogger.warn(`Failed to delete Qdrant collection ${state.qdrantCollection}:`, error.message)
+				}
+			}
+		}
+	} catch (error) {
+		// Ignore errors reading state file
+	}
 
 	// Remove .codebase directory (SQLite DB, cache, state)
 	try {
@@ -106,8 +139,7 @@ async function fullReset(workspacePath: string): Promise<void> {
 	}
 
 	rootLogger.info("✅ Full reset complete!")
-	rootLogger.info("Note: If using Qdrant, you may want to manually delete the collection.")
-	rootLogger.info("Run 'codebase -start .' to rebuild the index from scratch.")
+	rootLogger.info("Run 'codebase -start .' or 'codesql -start .' to rebuild the index from scratch.")
 }
 
 async function main() {
