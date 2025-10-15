@@ -136,16 +136,12 @@ function displayResults(results) {
     console.log(`\n${index + 1}. ${result.filePath} (lines ${result.startLine}-${result.endLine})`);
     console.log(`   Score: ${(result.score * 100).toFixed(2)}% | Distance: ${result.distance.toFixed(4)}`);
     console.log('   ' + '-'.repeat(76));
-    
-    // Show first 5 lines of code
-    const lines = result.codeChunk.split('\n').slice(0, 5);
+
+    // Show all code
+    const lines = result.codeChunk.split('\n');
     lines.forEach(line => {
       console.log(`   ${line}`);
     });
-    
-    if (result.codeChunk.split('\n').length > 5) {
-      console.log(`   ... (${result.codeChunk.split('\n').length - 5} more lines)`);
-    }
   });
 
   console.log('\n' + '='.repeat(80) + '\n');

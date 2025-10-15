@@ -113,21 +113,17 @@ def display_results(results: List[Dict[str, Any]]) -> None:
     print('\n' + '=' * 80)
     print(f'Found {len(results)} results:')
     print('=' * 80 + '\n')
-    
+
     for index, result in enumerate(results, 1):
         print(f"\n{index}. {result['file_path']} (lines {result['start_line']}-{result['end_line']})")
         print(f"   Score: {result['score'] * 100:.2f}% | Distance: {result['distance']:.4f}")
         print('   ' + '-' * 76)
-        
-        # Show first 5 lines of code
-        lines = result['code_chunk'].split('\n')[:5]
+
+        # Show all code
+        lines = result['code_chunk'].split('\n')
         for line in lines:
             print(f"   {line}")
-        
-        if len(result['code_chunk'].split('\n')) > 5:
-            remaining = len(result['code_chunk'].split('\n')) - 5
-            print(f"   ... ({remaining} more lines)")
-    
+
     print('\n' + '=' * 80 + '\n')
 
 
