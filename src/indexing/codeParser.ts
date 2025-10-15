@@ -3,6 +3,7 @@ import path from "path"
 import { createHash } from "crypto"
 
 import { isSupportedExtension } from "./supportedExtensions.js"
+import { parseSourceCodeDefinitionsForFile } from "../services/tree-sitter/index.js"
 
 const MAX_BLOCK_CHARS = 5000
 const MIN_BLOCK_CHARS = 50
@@ -16,9 +17,17 @@ export interface CodeBlock {
 	content: string
 	segmentHash: string
 	fileHash: string
+	identifier?: string // Function/class name from tree-sitter
+	nodeType?: string // AST node type from tree-sitter
 }
 
 export class CodeParser {
+	private useTreeSitter: boolean
+
+	constructor(useTreeSitter: boolean = false) {
+		this.useTreeSitter = useTreeSitter
+	}
+
 	async parseFile(filePath: string): Promise<CodeBlock[]> {
 		const ext = path.extname(filePath).toLowerCase()
 		if (!isSupportedExtension(ext)) {
@@ -27,7 +36,73 @@ export class CodeParser {
 
 		const content = await fs.readFile(filePath, "utf8")
 		const fileHash = this.hash(content)
+
+		// Use tree-sitter if enabled
+		if (this.useTreeSitter) {
+			try {
+				const blocks = await this.parseWithTreeSitter(filePath, content, fileHash)
+				if (blocks.length > 0) {
+					return blocks
+				}
+				// Fall back to regex chunking if tree-sitter fails
+			} catch (error) {
+				console.warn(`Tree-sitter parsing failed for ${filePath}, falling back to regex:`, error)
+			}
+		}
+
 		return this.chunkSource(content, filePath, fileHash)
+	}
+
+	private async parseWithTreeSitter(
+		filePath: string,
+		content: string,
+		fileHash: string,
+	): Promise<CodeBlock[]> {
+		// Parse file with tree-sitter
+		const definitions = await parseSourceCodeDefinitionsForFile(filePath)
+		if (!definitions) {
+			return []
+		}
+
+		const blocks: CodeBlock[] = []
+		const lines = content.split(/\r?\n/)
+
+		// Parse the definitions output
+		// Format: "startLine--endLine | code_snippet"
+		const defLines = definitions.split("\n").filter((line) => line.includes("--"))
+
+		for (const defLine of defLines) {
+			const match = defLine.match(/^(\d+)--(\d+)\s*\|\s*(.+)$/)
+			if (!match) continue
+
+			const startLine = parseInt(match[1], 10)
+			const endLine = parseInt(match[2], 10)
+			const identifier = match[3].trim()
+
+			// Extract content for this range
+			const blockLines = lines.slice(startLine - 1, endLine)
+			const blockContent = blockLines.join("\n")
+
+			// Skip if too small
+			if (blockContent.length < MIN_BLOCK_CHARS) {
+				continue
+			}
+
+			const hash = this.segmentHash(filePath, startLine, endLine, blockContent)
+
+			blocks.push({
+				filePath,
+				startLine,
+				endLine,
+				content: blockContent,
+				segmentHash: hash,
+				fileHash,
+				identifier,
+				nodeType: "definition", // Generic type for now
+			})
+		}
+
+		return blocks
 	}
 
 	private chunkSource(source: string, filePath: string, fileHash: string): CodeBlock[] {

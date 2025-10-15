@@ -48,6 +48,7 @@ const configSchema = z.object({
 	batchSize: z.number().int().positive().optional(),
 	fileGlobs: z.array(z.string()).optional(),
 	maxFileSizeBytes: z.number().int().positive().optional(),
+	useTreeSitter: z.boolean().optional(),
 	watch: z
 		.object({
 			debounceMs: z.number().int().positive().optional(),
@@ -370,6 +371,9 @@ async function loadAutoConfig(options: CliOptions): Promise<IndexingConfig> {
 		"INDEXER_WATCH_DEBOUNCE_MS",
 	)
 
+	const useTreeSitterValue = pickEnv("USE_TREE_SITTER", "INDEXER_USE_TREE_SITTER")
+	const useTreeSitter = parseBoolean(useTreeSitterValue, "USE_TREE_SITTER") ?? false
+
 	const config: IndexingConfig = {
 		workspacePath,
 		embedder,
@@ -380,6 +384,7 @@ async function loadAutoConfig(options: CliOptions): Promise<IndexingConfig> {
 		batchSize,
 		fileGlobs,
 		maxFileSizeBytes,
+		useTreeSitter,
 	}
 
 	const watchEnabled = watchEnabledEnv ?? true

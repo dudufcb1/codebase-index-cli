@@ -40,6 +40,7 @@ export interface IndexingConfig {
 	batchSize?: number
 	fileGlobs?: string[]
 	maxFileSizeBytes?: number
+	useTreeSitter?: boolean
 	watch?: {
 		debounceMs?: number
 		enabled?: boolean

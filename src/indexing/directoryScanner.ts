@@ -57,7 +57,7 @@ export class DirectoryScanner {
 		private readonly ignoreManager: IgnoreManager,
 		private readonly options: IndexingConfig,
 	) {
-		this.parser = new CodeParser()
+		this.parser = new CodeParser(options.useTreeSitter ?? false)
 	}
 
 	async scan(): Promise<ScanStats> {
