@@ -46,7 +46,9 @@ export interface LanguageParser {
 }
 
 async function loadLanguage(langName: string, sourceDirectory?: string) {
-	const baseDir = sourceDirectory || __dirname
+	// WASM files are in dist/ root, not in dist/services/tree-sitter/
+	// So we need to go up two levels from __dirname (which is dist/services/tree-sitter/)
+	const baseDir = sourceDirectory || path.join(__dirname, "..", "..")
 	const wasmPath = path.join(baseDir, `tree-sitter-${langName}.wasm`)
 
 	try {
