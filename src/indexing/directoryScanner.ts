@@ -190,8 +190,8 @@ export class DirectoryScanner {
 				payload: {
 					filePath: relativePath,
 					codeChunk: entry.block.content,
-					startLine: entry.block.startLine,
-					endLine: entry.block.endLine,
+					startLine: Math.floor(entry.block.startLine),
+					endLine: Math.floor(entry.block.endLine),
 					segmentHash: entry.block.segmentHash,
 				},
 			}
