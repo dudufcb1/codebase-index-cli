@@ -9,6 +9,8 @@ import type {
 	CliCommand,
 	IndexingConfig,
 	QdrantConfig,
+	SqliteConfig,
+	VectorStoreType,
 } from "./types.js"
 import { parseLogLevel } from "./logger.js"
 import { ensureWorkspaceState, saveWorkspaceState } from "./workspaceState.js"
@@ -30,10 +32,18 @@ const qdrantSchema = z.object({
 	searchMaxResults: z.number().int().positive().optional(),
 })
 
+const sqliteSchema = z.object({
+	dbPath: z.string().optional(),
+	searchMinScore: z.number().min(0).max(1).optional(),
+	searchMaxResults: z.number().int().positive().optional(),
+})
+
 const configSchema = z.object({
 	workspacePath: z.string().min(1, "workspacePath is required"),
 	embedder: embedderSchema,
-	qdrant: qdrantSchema,
+	vectorStore: z.enum(["qdrant", "sqlite"]).optional(),
+	qdrant: qdrantSchema.optional(),
+	sqlite: sqliteSchema.optional(),
 	cachePath: z.string().optional(),
 	batchSize: z.number().int().positive().optional(),
 	fileGlobs: z.array(z.string()).optional(),
@@ -171,6 +181,22 @@ function buildEmbedderConfig(): EmbedderConfig {
 	}
 }
 
+function resolveVectorStoreType(): VectorStoreType {
+	const explicit = pickEnv("VECTOR_STORE", "VECTOR_STORE_TYPE")
+	if (explicit) {
+		const normalized = explicit.toLowerCase()
+		if (normalized === "qdrant" || normalized === "sqlite") {
+			return normalized
+		}
+		throw new Error(
+			`Unsupported vector store type "${explicit}". Expected one of: qdrant, sqlite`,
+		)
+	}
+
+	// Default to sqlite for local development
+	return "sqlite"
+}
+
 function buildQdrantConfig(defaultCollectionName: string): QdrantConfig {
 	const url = pickEnv("QDRANT_URL", "ROO_QDRANT_URL", "IDX_QDRANT_URL") ?? "http://localhost:6333"
 	const apiKey = pickEnv("QDRANT_API_KEY", "ROO_QDRANT_API_KEY", "IDX_QDRANT_API_KEY")
@@ -192,6 +218,26 @@ function buildQdrantConfig(defaultCollectionName: string): QdrantConfig {
 		url,
 		apiKey,
 		collectionName: collection,
+		searchMinScore,
+		searchMaxResults,
+	}
+}
+
+function buildSqliteConfig(workspacePath: string): SqliteConfig {
+	const dbPath = pickEnv("SQLITE_DB_PATH")
+	const searchMinScore = parseFloatInRange(
+		pickEnv("SQLITE_SEARCH_MIN_SCORE"),
+		"SQLITE_SEARCH_MIN_SCORE",
+		0,
+		1,
+	)
+	const searchMaxResults = parsePositiveInteger(
+		pickEnv("SQLITE_SEARCH_MAX_RESULTS"),
+		"SQLITE_SEARCH_MAX_RESULTS",
+	)
+
+	return {
+		dbPath: dbPath ? path.resolve(workspacePath, dbPath) : undefined,
 		searchMinScore,
 		searchMaxResults,
 	}
@@ -290,6 +336,8 @@ async function loadAutoConfig(options: CliOptions): Promise<IndexingConfig> {
 	const workspaceState = await ensureWorkspaceState(workspacePath)
 
 	const embedder = buildEmbedderConfig()
+	const vectorStoreType = resolveVectorStoreType()
+
 	const qdrant = buildQdrantConfig(workspaceState.qdrantCollection)
 	if (qdrant.collectionName && qdrant.collectionName !== workspaceState.qdrantCollection) {
 		await saveWorkspaceState(workspacePath, {
@@ -297,6 +345,8 @@ async function loadAutoConfig(options: CliOptions): Promise<IndexingConfig> {
 			qdrantCollection: qdrant.collectionName,
 		})
 	}
+
+	const sqlite = buildSqliteConfig(workspacePath)
 
 	const cachePath = resolveOptionalPath(
 		pickEnv("INDEXER_CACHE_PATH", "ROO_CACHE_PATH"),
@@ -323,7 +373,9 @@ async function loadAutoConfig(options: CliOptions): Promise<IndexingConfig> {
 	const config: IndexingConfig = {
 		workspacePath,
 		embedder,
+		vectorStore: vectorStoreType,
 		qdrant,
+		sqlite,
 		cachePath,
 		batchSize,
 		fileGlobs,

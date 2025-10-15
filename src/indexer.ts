@@ -5,6 +5,8 @@ import type { Embedder } from "./embedder/index.js"
 import { Logger, rootLogger } from "./logger.js"
 import type { IndexingConfig } from "./types.js"
 import { QdrantVectorStore } from "./vectorStore/qdrantVectorStore.js"
+import { SqliteVecClient } from "./vectorStore/sqliteVecClient.js"
+import type { VectorStore } from "./vectorStore/interface.js"
 
 import { CacheManager } from "./indexing/cacheManager.js"
 import { DirectoryScanner } from "./indexing/directoryScanner.js"
@@ -15,7 +17,7 @@ export class WorkspaceIndexer {
 	private readonly logger = new Logger("indexer")
 	private workspacePath!: string
 	private embedder!: Embedder
-	private vectorStore!: QdrantVectorStore
+	private vectorStore!: VectorStore
 	private cacheManager!: CacheManager
 	private ignoreManager!: IgnoreManager
 	private directoryScanner!: DirectoryScanner
@@ -32,13 +34,29 @@ export class WorkspaceIndexer {
 
 		const dimension = this.embedder.dimension()
 
-		this.vectorStore = new QdrantVectorStore(
-			this.workspacePath,
-			this.config.qdrant.url,
-			dimension,
-			this.config.qdrant.apiKey,
-			this.config.qdrant.collectionName,
-		)
+		// Create vector store based on configuration
+		const vectorStoreType = this.config.vectorStore ?? "sqlite"
+
+		if (vectorStoreType === "sqlite") {
+			this.logger.info("Using SQLite-vec for vector storage")
+			this.vectorStore = new SqliteVecClient(
+				this.workspacePath,
+				dimension,
+				this.config.sqlite?.dbPath,
+			)
+		} else {
+			this.logger.info("Using Qdrant for vector storage")
+			if (!this.config.qdrant) {
+				throw new Error("Qdrant configuration is required when vectorStore is 'qdrant'")
+			}
+			this.vectorStore = new QdrantVectorStore(
+				this.workspacePath,
+				this.config.qdrant.url,
+				dimension,
+				this.config.qdrant.apiKey,
+				this.config.qdrant.collectionName,
+			)
+		}
 
 		this.ignoreManager = new IgnoreManager(this.workspacePath)
 		await this.ignoreManager.initialize()

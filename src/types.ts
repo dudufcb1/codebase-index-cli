@@ -14,6 +14,8 @@ export interface EmbedderConfig {
 	maxBatchSize?: number
 }
 
+export type VectorStoreType = "qdrant" | "sqlite"
+
 export interface QdrantConfig {
 	url: string
 	apiKey?: string
@@ -22,10 +24,18 @@ export interface QdrantConfig {
 	searchMaxResults?: number
 }
 
+export interface SqliteConfig {
+	dbPath?: string
+	searchMinScore?: number
+	searchMaxResults?: number
+}
+
 export interface IndexingConfig {
 	workspacePath: string
 	embedder: EmbedderConfig
-	qdrant: QdrantConfig
+	vectorStore?: VectorStoreType
+	qdrant?: QdrantConfig
+	sqlite?: SqliteConfig
 	cachePath?: string
 	batchSize?: number
 	fileGlobs?: string[]

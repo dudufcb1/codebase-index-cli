@@ -5,7 +5,8 @@ import { createHash } from "crypto"
 import type { Embedder } from "../embedder/index.js"
 import { Logger } from "../logger.js"
 import type { IndexingConfig } from "../types.js"
-import { QdrantVectorStore, generatePointId } from "../vectorStore/qdrantVectorStore.js"
+import type { VectorStore } from "../vectorStore/interface.js"
+import { generatePointId } from "../vectorStore/interface.js"
 
 import { CacheManager } from "./cacheManager.js"
 import { CodeParser } from "./codeParser.js"
@@ -51,7 +52,7 @@ export class DirectoryScanner {
 	constructor(
 		private readonly workspacePath: string,
 		private readonly embedder: Embedder,
-		private readonly vectorStore: QdrantVectorStore,
+		private readonly vectorStore: VectorStore,
 		private readonly cacheManager: CacheManager,
 		private readonly ignoreManager: IgnoreManager,
 		private readonly options: IndexingConfig,

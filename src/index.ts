@@ -111,8 +111,11 @@ async function main() {
 			)
 		} else {
 			rootLogger.info(`Auto-configured workspace at ${config.workspacePath}`)
+			const vectorStoreInfo = config.vectorStore === "sqlite"
+				? "SQLite-vec (local)"
+				: `Qdrant collection ${config.qdrant?.collectionName ?? "default"}`
 			rootLogger.info(
-				`Embedder ${config.embedder.provider} (${config.embedder.model}) | Qdrant collection ${config.qdrant.collectionName}`,
+				`Embedder ${config.embedder.provider} (${config.embedder.model}) | Vector store: ${vectorStoreInfo}`,
 			)
 		}
 

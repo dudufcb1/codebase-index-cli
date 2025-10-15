@@ -1,24 +1,12 @@
 import { QdrantClient, type Schemas } from "@qdrant/js-client-rest"
 import { createHash } from "crypto"
 import path from "path"
+import type { VectorStore, VectorStoreSearchResult } from "./interface.js"
 
 const DEFAULT_MAX_SEARCH_RESULTS = 50
 const DEFAULT_SEARCH_MIN_SCORE = 0.4
 
-export interface VectorStoreSearchResult {
-	id: string
-	score: number
-	vector?: number[]
-	payload: {
-		filePath: string
-		codeChunk: string
-		startLine: number
-		endLine: number
-		segmentHash?: string
-	}
-}
-
-export class QdrantVectorStore {
+export class QdrantVectorStore implements VectorStore {
 	private vectorSize: number
 	private readonly DISTANCE_METRIC = "Cosine"
 
