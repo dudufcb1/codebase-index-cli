@@ -6,7 +6,7 @@
 	"description": "Headless code indexer for codebase workspaces",
 	"scripts": {
 		"start": "tsx src/index.ts",
-		"build": "tsc -p tsconfig.json",
+		"build": "tsc -p tsconfig.json && node scripts/copy-wasms.js",
 		"prepare": "pnpm run build"
 	},
 	"bin": {
