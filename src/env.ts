@@ -35,7 +35,7 @@ function uniquePaths(paths: Array<string | undefined | null>): string[] {
 
 const DEFAULT_GLOBAL_ENV_DIRS = uniquePaths([
 	CLI_ROOT_DIR,
-	process.env.ROO_GLOBAL_ENV_DIR,
+	process.env.CODEBASE_GLOBAL_ENV_DIR,
 ])
 
 async function fileExists(filePath: string): Promise<boolean> {

@@ -70,13 +70,13 @@ const DEFAULT_WATCH_DEBOUNCE_MS = 500
 function resolveWorkspacePath(options: CliOptions): string {
 	const candidate =
 		options.workspacePath ??
-		pickEnv("ROO_WORKSPACE_PATH", "WORKSPACE_PATH", "INDEXER_WORKSPACE_PATH") ??
+		pickEnv("CODEBASE_WORKSPACE_PATH", "WORKSPACE_PATH", "INDEXER_WORKSPACE_PATH") ??
 		process.cwd()
 	return path.resolve(candidate)
 }
 
 function resolveEmbedderProvider(): EmbedderProvider {
-	const explicit = pickEnv("ROO_EMBED_PROVIDER", "EMBED_PROVIDER", "IDX_EMBED_PROVIDER")
+	const explicit = pickEnv("EMBED_PROVIDER", "EMBED_PROVIDER", "IDX_EMBED_PROVIDER")
 	if (explicit) {
 		const normalized = explicit.toLowerCase()
 		if (normalized === "openai" || normalized === "openai-compatible" || normalized === "ollama") {
@@ -87,10 +87,10 @@ function resolveEmbedderProvider(): EmbedderProvider {
 		)
 	}
 
-	if (pickEnv("OPENAI_API_KEY", "ROO_OPENAI_API_KEY")) {
+	if (pickEnv("OPENAI_API_KEY", "OPENAI_API_KEY")) {
 		return "openai"
 	}
-	if (pickEnv("EMBED_BASE_URL", "OPENAI_BASE_URL") && pickEnv("EMBED_API_KEY", "ROO_EMBED_API_KEY")) {
+	if (pickEnv("EMBED_BASE_URL", "OPENAI_BASE_URL") && pickEnv("EMBED_API_KEY", "EMBED_API_KEY")) {
 		return "openai-compatible"
 	}
 	if (pickEnv("OLLAMA_MODEL")) {
@@ -107,7 +107,7 @@ function buildEmbedderConfig(): EmbedderConfig {
 
 	if (provider === "openai") {
 		const apiKey =
-			pickEnv("OPENAI_API_KEY", "ROO_OPENAI_API_KEY") ??
+			pickEnv("OPENAI_API_KEY", "OPENAI_API_KEY") ??
 			pickEnv("EMBED_API_KEY", "IDX_EMBED_API_KEY")
 		if (!apiKey) {
 			throw new Error("OPENAI_API_KEY is required for OpenAI provider")
@@ -133,8 +133,8 @@ function buildEmbedderConfig(): EmbedderConfig {
 			throw new Error("EMBED_BASE_URL is required for openai-compatible provider")
 		}
 		const apiKey =
-			pickEnv("EMBED_API_KEY", "ROO_EMBED_API_KEY") ??
-			pickEnv("OPENAI_API_KEY", "ROO_OPENAI_API_KEY")
+			pickEnv("EMBED_API_KEY", "EMBED_API_KEY") ??
+			pickEnv("OPENAI_API_KEY", "OPENAI_API_KEY")
 		if (!apiKey) {
 			throw new Error("EMBED_API_KEY is required for openai-compatible provider")
 		}
@@ -199,10 +199,10 @@ function resolveVectorStoreType(): VectorStoreType {
 }
 
 function buildQdrantConfig(defaultCollectionName: string): QdrantConfig {
-	const url = pickEnv("QDRANT_URL", "ROO_QDRANT_URL", "IDX_QDRANT_URL") ?? "http://localhost:6333"
-	const apiKey = pickEnv("QDRANT_API_KEY", "ROO_QDRANT_API_KEY", "IDX_QDRANT_API_KEY")
+	const url = pickEnv("QDRANT_URL", "QDRANT_URL", "IDX_QDRANT_URL") ?? "http://localhost:6333"
+	const apiKey = pickEnv("QDRANT_API_KEY", "QDRANT_API_KEY", "IDX_QDRANT_API_KEY")
 	const collection =
-		pickEnv("QDRANT_COLLECTION", "QDRANT_COLLECTION_NAME", "ROO_QDRANT_COLLECTION") ??
+		pickEnv("QDRANT_COLLECTION", "QDRANT_COLLECTION_NAME", "QDRANT_COLLECTION") ??
 		defaultCollectionName
 	const searchMinScore = parseFloatInRange(
 		pickEnv("QDRANT_SEARCH_MIN_SCORE"),
@@ -350,24 +350,24 @@ async function loadAutoConfig(options: CliOptions): Promise<IndexingConfig> {
 	const sqlite = buildSqliteConfig(workspacePath)
 
 	const cachePath = resolveOptionalPath(
-		pickEnv("INDEXER_CACHE_PATH", "ROO_CACHE_PATH"),
+		pickEnv("INDEXER_CACHE_PATH", "INDEXER_CACHE_PATH"),
 		workspacePath,
 	) ?? path.join(workspacePath, ".codebase", "cache.json")
 	const batchSize = parsePositiveInteger(
-		pickEnv("INDEXER_BATCH_SIZE", "ROO_INDEX_BATCH_SIZE"),
+		pickEnv("INDEXER_BATCH_SIZE", "INDEXER_BATCH_SIZE"),
 		"INDEXER_BATCH_SIZE",
 	)
 	const fileGlobs = parseStringList(
-		pickEnv("INDEXER_FILE_GLOBS", "ROO_INDEX_FILE_GLOBS"),
+		pickEnv("INDEXER_FILE_GLOBS", "INDEXER_FILE_GLOBS"),
 	)
 	const maxFileSizeBytes = parsePositiveInteger(
-		pickEnv("INDEXER_MAX_FILE_SIZE_BYTES", "ROO_INDEX_MAX_FILE_SIZE"),
+		pickEnv("INDEXER_MAX_FILE_SIZE_BYTES", "INDEXER_MAX_FILE_SIZE_BYTES"),
 		"INDEXER_MAX_FILE_SIZE_BYTES",
 	)
-	const watchEnabledValue = pickEnv("INDEXER_WATCH_ENABLED", "ROO_WATCH_ENABLED", "WATCH_ENABLED")
+	const watchEnabledValue = pickEnv("INDEXER_WATCH_ENABLED", "INDEXER_WATCH_ENABLED", "WATCH_ENABLED")
 	const watchEnabledEnv = parseBoolean(watchEnabledValue, "INDEXER_WATCH_ENABLED")
 	const watchDebounce = parsePositiveInteger(
-		pickEnv("INDEXER_WATCH_DEBOUNCE_MS", "ROO_WATCH_DEBOUNCE_MS"),
+		pickEnv("INDEXER_WATCH_DEBOUNCE_MS", "INDEXER_WATCH_DEBOUNCE_MS"),
 		"INDEXER_WATCH_DEBOUNCE_MS",
 	)
 
@@ -516,7 +516,7 @@ export async function resolveConfig(options: CliOptions): Promise<ResolvedConfig
 		throw new Error("Stats command does not require configuration resolution")
 	}
 
-	const explicitInput = process.env.ROO_INDEX_CONFIG
+	const explicitInput = process.env.CODEBASE_INDEX_CONFIG
 	if (explicitInput) {
 		const configPath = resolveConfigPath(explicitInput)
 		if (!(await fileExists(configPath))) {
@@ -548,7 +548,7 @@ export async function loadConfig(options: CliOptions): Promise<IndexingConfig> {
 }
 
 export function resolveConfigPath(inputPath?: string): string {
-	const candidate = inputPath ?? process.env.ROO_INDEX_CONFIG ?? DEFAULT_CONFIG_PATH
+	const candidate = inputPath ?? process.env.CODEBASE_INDEX_CONFIG ?? DEFAULT_CONFIG_PATH
 	if (!path.isAbsolute(candidate)) {
 		return path.resolve(process.cwd(), candidate)
 	}

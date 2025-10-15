@@ -15,7 +15,7 @@ function determineLogLevel(explicit?: LogLevel): LogLevel | undefined {
 		return explicit
 	}
 
-	const value = process.env.ROO_LOG_LEVEL ?? process.env.LOG_LEVEL
+	const value = process.env.LOG_LEVEL ?? process.env.LOG_LEVEL
 	if (!value) {
 		return undefined
 	}
