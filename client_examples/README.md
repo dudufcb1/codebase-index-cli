@@ -1,8 +1,12 @@
 # SQLite-vec Search Demo Examples
 
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
+![Python](https://img.shields.io/badge/python-%3E%3D3.8-blue.svg)
+
 Interactive search demos for querying codebase indexes stored in SQLite-vec.
 
-## 📋 Overview
+## Overview
 
 These scripts demonstrate how to:
 - Connect to a SQLite-vec database
@@ -14,7 +18,7 @@ Both scripts provide **identical functionality** in different languages:
 - `search-demo.js` - JavaScript/Node.js version
 - `search-demo.py` - Python version
 
-## 🚀 Quick Start
+## Quick Start
 
 ### JavaScript/Node.js
 
@@ -44,7 +48,7 @@ chmod +x search-demo.py
 ./search-demo.py
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 Both scripts read configuration from environment variables (`.env` file):
 
@@ -67,7 +71,7 @@ EMBED_DIMENSION=4096
 - **openai-compatible** - OpenAI-compatible APIs (Nebius, Together, etc.)
 - **ollama** - Local Ollama instance
 
-## 📖 Usage
+## Usage
 
 1. **Start the script**:
    ```bash
@@ -99,7 +103,6 @@ EMBED_DIMENSION=4096
         if (!user) {
           throw new Error('User not found');
         }
-        ... (15 more lines)
    ```
 
 5. **Exit**:
@@ -107,7 +110,7 @@ EMBED_DIMENSION=4096
    Enter your search query: exit
    ```
 
-## 🔍 How It Works
+## How It Works
 
 ### 1. Load Configuration
 Both scripts read embedding configuration from environment variables.
@@ -156,7 +159,7 @@ Results are sorted by similarity score (1 - distance) and displayed with:
 - Similarity score (0-100%)
 - Code preview (first 5 lines)
 
-## 📊 Understanding Results
+## Understanding Results
 
 ### Similarity Score
 - **90-100%** - Excellent match (almost identical)
@@ -169,7 +172,7 @@ Results are sorted by similarity score (1 - distance) and displayed with:
 - Distance is converted to score: `score = 1 - distance`
 - For cosine distance: 0 = identical, 2 = opposite
 
-## 🛠️ Customization
+## Customization
 
 ### Change Number of Results
 
@@ -219,7 +222,7 @@ const results = searchResults.filter(r => r.score >= 0.7); // 70% minimum
 results = [r for r in results if r['score'] >= 0.7]  # 70% minimum
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### "Database file not found"
 - Check the path you entered
@@ -242,7 +245,7 @@ results = [r for r in results if r['score'] >= 0.7]  # 70% minimum
 - Check your `.env` file
 - Common dimensions: 1536 (OpenAI small), 4096 (Qwen)
 
-## 📚 Examples
+## Examples
 
 ### Search for Authentication Code
 ```
@@ -264,13 +267,13 @@ Query: try catch error handling
 Query: REST API endpoint route handler
 ```
 
-## 🔗 Related
+## Related
 
 - [SQLite-vec Documentation](https://github.com/asg017/sqlite-vec)
 - [Main Project README](../README.md)
 - [Installation Guide](../INSTALL.md)
 
-## 📝 License
+## License
 
 Same as the main project.
 
