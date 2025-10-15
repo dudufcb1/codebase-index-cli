@@ -1,8 +1,13 @@
 import * as path from "path"
+import { fileURLToPath } from "url"
 import { Parser, Language, Query } from "web-tree-sitter"
 type ParserT = Parser
 type LanguageT = Language
 type QueryT = Query
+
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 import {
 	javascriptQuery,
 	typescriptQuery,
