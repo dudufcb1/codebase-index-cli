@@ -107,6 +107,8 @@ QDRANT_EMBED_DIMENSION=4096
 
 Enable automatic git commit monitoring and LLM-powered analysis to make your commit history semantically searchable.
 
+> **⚠️ Important:** Git commit tracking is **only supported with Qdrant**. It will not work with SQLite-vec due to schema limitations. Use the `codebase` command (not `codesql`) to enable this feature.
+
 ### How It Works
 
 When enabled, the CLI watches the `.git` directory and:
