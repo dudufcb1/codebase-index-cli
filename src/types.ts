@@ -45,6 +45,9 @@ export interface IndexingConfig {
 		debounceMs?: number
 		enabled?: boolean
 	}
+	git?: {
+		trackCommits?: boolean
+	}
 }
 
 export type CliCommand = "start" | "restart" | "stats" | "full-reset"

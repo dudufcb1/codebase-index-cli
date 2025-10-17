@@ -13,6 +13,7 @@ import { CacheManager } from "./indexing/cacheManager.js"
 import { DirectoryScanner } from "./indexing/directoryScanner.js"
 import { IgnoreManager } from "./indexing/ignoreManager.js"
 import { WorkspaceWatcher } from "./indexing/workspaceWatcher.js"
+import { GitCommitWatcher, type GitCommitInfo } from "./indexing/gitCommitWatcher.js"
 
 export class WorkspaceIndexer {
 	private readonly logger = new Logger("indexer")
@@ -23,6 +24,7 @@ export class WorkspaceIndexer {
 	private ignoreManager!: IgnoreManager
 	private directoryScanner!: DirectoryScanner
 	private watcher: WorkspaceWatcher | null = null
+	private gitWatcher: GitCommitWatcher | null = null
 
 	constructor(private readonly config: IndexingConfig) {
 }
@@ -141,9 +143,46 @@ export class WorkspaceIndexer {
 		)
 		await this.watcher.start()
 
+		// Start git commit watcher if enabled
+		if (this.config.git?.trackCommits) {
+			this.gitWatcher = new GitCommitWatcher(
+				this.workspacePath,
+				(commit) => this.handleGitCommit(commit),
+			)
+			await this.gitWatcher.start()
+		}
+
 		await updateIndexingStatus(this.workspacePath, {
 			state: 'watching',
 		})
+	}
+
+	private async handleGitCommit(commit: GitCommitInfo): Promise<void> {
+		this.logger.info(`Git commit detected: ${commit.hash.slice(0, 7)} on ${commit.branch}`)
+
+		if (commit.data) {
+			const { metadata, stats, changedFiles } = commit.data
+
+			this.logger.info(`  Author: ${metadata.author} <${metadata.authorEmail}>`)
+			this.logger.info(`  Date: ${metadata.date.toISOString()}`)
+			this.logger.info(`  Message: ${metadata.message.split('\n')[0]}`) // First line only
+			this.logger.info(`  Stats: ${stats.filesChanged} files, +${stats.insertions}/-${stats.deletions}`)
+			this.logger.info(`  Changed files:`)
+
+			for (const file of changedFiles.slice(0, 5)) { // Show first 5 files
+				const statusIcon = file.status === 'added' ? '+' : file.status === 'modified' ? 'M' : file.status === 'deleted' ? '-' : 'R'
+				this.logger.info(`    ${statusIcon} ${file.filePath}`)
+			}
+
+			if (changedFiles.length > 5) {
+				this.logger.info(`    ... and ${changedFiles.length - 5} more files`)
+			}
+		}
+
+		// Future phases will:
+		// - Send diff + message to LLM for interpretation
+		// - Index in separate Qdrant collection
+		// - Enable semantic search of commit history
 	}
 
 	async shutdown(): Promise<void> {
@@ -155,6 +194,12 @@ export class WorkspaceIndexer {
 			await this.watcher.stop()
 			this.watcher = null
 		}
+
+		if (this.gitWatcher) {
+			await this.gitWatcher.stop()
+			this.gitWatcher = null
+		}
+
 		rootLogger.info("Indexer stopped")
 	}
 }

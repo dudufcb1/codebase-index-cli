@@ -54,6 +54,11 @@ const configSchema = z.object({
 			enabled: z.boolean().optional(),
 		})
 		.optional(),
+	git: z
+		.object({
+			trackCommits: z.boolean().optional(),
+		})
+		.optional(),
 })
 
 export const DEFAULT_CONFIG_PATH = "codebase-index.config.json"
@@ -413,6 +418,9 @@ async function loadAutoConfig(options: CliOptions): Promise<IndexingConfig> {
 	const useTreeSitterValue = pickEnv("USE_TREE_SITTER", "INDEXER_USE_TREE_SITTER")
 	const useTreeSitter = parseBoolean(useTreeSitterValue, "USE_TREE_SITTER") ?? false
 
+	const trackGitValue = pickEnv("TRACK_GIT", "GIT_TRACK_COMMITS")
+	const trackGitCommits = parseBoolean(trackGitValue, "TRACK_GIT") ?? false
+
 	const config: IndexingConfig = {
 		workspacePath,
 		embedder,
@@ -430,6 +438,10 @@ async function loadAutoConfig(options: CliOptions): Promise<IndexingConfig> {
 	config.watch = {
 		enabled: watchEnabled,
 		debounceMs: watchDebounce ?? DEFAULT_WATCH_DEBOUNCE_MS,
+	}
+
+	config.git = {
+		trackCommits: trackGitCommits,
 	}
 
 	return config

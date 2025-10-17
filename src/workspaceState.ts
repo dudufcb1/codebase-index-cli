@@ -25,6 +25,8 @@ export interface LastActivity {
 		reason?: string
 		filesProcessed?: number
 		totalBlocks?: number
+		gitCommit?: string
+		gitBranch?: string
 	}
 	vectorStore?: 'sqlite' | 'qdrant'
 }

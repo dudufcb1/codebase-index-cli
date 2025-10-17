@@ -38,7 +38,29 @@ export class WorkspaceWatcher {
 
 		this.watcher = chokidar.watch(this.workspacePath, {
 			ignoreInitial: true,
-			ignored: (watchedPath) => this.shouldIgnore(watchedPath),
+			ignored: [
+				// Patrones regex para evitar que chokidar intente abrir estos directorios
+				/(^|[\/\\])\../,           // Archivos/directorios que empiezan con punto
+				/node_modules/,
+				/__pycache__/,
+				/\.git/,
+				/\.vscode/,
+				/\.idea/,
+				/env[\/\\]/,
+				/venv[\/\\]/,
+				/dist[\/\\]/,
+				/out[\/\\]/,
+				/build[\/\\]/,
+				/target[\/\\]/,
+				/vendor[\/\\]/,
+				/tmp[\/\\]/,
+				/temp[\/\\]/,
+				/\.next/,
+				/\.nuxt/,
+				/\.cache/,
+				// Función adicional para verificaciones más complejas
+				(watchedPath) => this.shouldIgnore(watchedPath),
+			],
 			awaitWriteFinish: {
 				stabilityThreshold: 200,
 				pollInterval: 100,
