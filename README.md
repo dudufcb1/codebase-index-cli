@@ -727,6 +727,23 @@ If you encounter issues not covered here:
 
 ---
 
+## Related Projects
+
+### [Semantic Search MCP](https://github.com/dudufcb1/semantic-search)
+
+MCP server that enables **semantic search across multiple IDEs** (Claude Code, Cline, Cursor, etc.) by connecting to the indexes created by this CLI tool.
+
+While this CLI handles the indexing, the MCP server provides:
+- **Universal search interface** - Works with any MCP-compatible IDE
+- **Code search** - Query indexed codebases using natural language
+- **Commit history search** - Semantic search across git commits
+- **Multi-project support** - Search across different workspaces
+- **SQLite and Qdrant support** - Compatible with both storage backends
+
+**Perfect companion:** Index your codebase with this CLI, search it from your favorite IDE using the MCP server.
+
+---
+
 ## Acknowledgments
 
 This project is based on [Roo Code](https://github.com/RooCodeInc/Roo-Code), whose indexer implementation inspired this CLI tool.
