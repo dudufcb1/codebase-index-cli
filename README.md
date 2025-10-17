@@ -6,6 +6,31 @@
 
 Node.js tool for semantic code indexing and search using vector embeddings. Includes automatic git commit tracking with LLM analysis for semantic commit history search.
 
+---
+
+## Motivation
+
+This is an **experimental project** born from a simple need: giving semantic search capabilities to AI coding assistants that don't have it built-in.
+
+While working with tools like **Claude Code**, **Cline**, and **Codex**, I noticed they often struggle with large codebases because they lack native semantic search. They might miss relevant code scattered across multiple files, or fail to understand the broader context of a project.
+
+This CLI aims to be a **lightweight semantic context engine** that any AI assistant can use. It runs in the background, indexes your codebase in real-time, and makes it searchable through natural language queries.
+
+### Integration with Claude Code
+
+The CLI is designed to hook into Claude Code seamlessly:
+
+- **Auto-start on session**: Automatically begins indexing when you start Claude Code
+- **Real-time sync**: Watches for file changes and keeps the index up-to-date
+- **Status line integration**: Shows indexing status directly in Claude's status line
+- **Zero configuration**: Works out of the box with Claude Code's hooks system
+
+See the [Claude Code Integration](#claude-code-integration) section below for setup instructions.
+
+This project is humble in its goals: it's not trying to replace specialized tools, but rather to fill a gap for developers who want semantic code understanding in environments that don't natively support it.
+
+---
+
 ## Features
 
 - **Semantic Code Search** - Vector-based search across your entire codebase
@@ -276,6 +301,163 @@ The CLI is built with a modular architecture:
 When `USE_TREE_SITTER=true`, the CLI parses code semantically for these languages:
 
 C, C++, C#, CSS, Elisp, Elixir, Go, HTML, Java, JavaScript, Kotlin, Lua, OCaml, PHP, Python, Ruby, Rust, Scala, Solidity, Swift, SystemRDL, TLA+, TOML, TypeScript, TSX, Vue, Zig, and more.
+
+## Claude Code Integration
+
+This CLI integrates seamlessly with Claude Code through hooks and status line customization.
+
+### Auto-Start on Session
+
+Configure Claude Code to automatically start the indexer when you begin a session.
+
+**Edit `~/.claude/settings.json` and add:**
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "nohup ~/.local/bin/codebase -start \"$CLAUDE_PROJECT_DIR\" > /dev/null 2>&1 &",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**What this does:**
+- Automatically starts `codebase -start` when Claude Code opens a project
+- Runs in background (`nohup ... &`) so it doesn't block Claude
+- Uses `$CLAUDE_PROJECT_DIR` to index the current project directory
+- Times out after 10 seconds if something goes wrong
+
+**Note:** Adjust the path (`~/.local/bin/codebase`) if you installed the CLI in a different location.
+
+### Status Line Integration
+
+Show real-time indexing status in Claude's status line.
+
+**1. Create the status line script `~/.claude/statusline.sh`:**
+
+```bash
+#!/usr/bin/env bash
+
+# Line 1: Original context usage from ccstatusline
+bunx -y ccstatusline@latest
+
+# Line 2: Codebase indexing status with detailed stats
+if [ -n "$CLAUDE_PROJECT_DIR" ] && [ -f "$CLAUDE_PROJECT_DIR/.codebase/state.json" ]; then
+    STATE_FILE="$CLAUDE_PROJECT_DIR/.codebase/state.json"
+
+    # Extract indexing stats
+    INDEXING_STATE=$(jq -r '.indexingStatus.state // ""' "$STATE_FILE" 2>/dev/null)
+    LAST_ACTION=$(jq -r '.lastActivity.action // ""' "$STATE_FILE" 2>/dev/null)
+    TOTAL_VECTORS=$(jq -r '.qdrantStats.totalVectors // 0' "$STATE_FILE" 2>/dev/null)
+    UNIQUE_FILES=$(jq -r '.qdrantStats.uniqueFiles // 0' "$STATE_FILE" 2>/dev/null)
+    UPDATED_AT=$(jq -r '.updatedAt // ""' "$STATE_FILE" 2>/dev/null)
+
+    # Calculate time since last update
+    if [ -n "$UPDATED_AT" ]; then
+        LAST_UPDATE=$(date -d "$UPDATED_AT" +%s 2>/dev/null)
+        NOW=$(date +%s)
+        SECONDS_AGO=$((NOW - LAST_UPDATE))
+
+        if [ $SECONDS_AGO -lt 60 ]; then
+            TIME_AGO="${SECONDS_AGO}s"
+        elif [ $SECONDS_AGO -lt 3600 ]; then
+            TIME_AGO="$((SECONDS_AGO / 60))m"
+        else
+            TIME_AGO="$((SECONDS_AGO / 3600))h"
+        fi
+    else
+        TIME_AGO="unknown"
+    fi
+
+    # Set color based on state
+    if [ "$INDEXING_STATE" = "watching" ]; then
+        STATE_COLOR="\x1b[32m"  # green
+    elif [ "$INDEXING_STATE" = "indexing" ]; then
+        STATE_COLOR="\x1b[33m"  # yellow
+    elif [ "$INDEXING_STATE" = "error" ]; then
+        STATE_COLOR="\x1b[31m"  # red
+    else
+        STATE_COLOR="\x1b[90m"  # gray
+    fi
+
+    # Display status
+    echo -e "${STATE_COLOR}${INDEXING_STATE}\x1b[0m | \x1b[36m${LAST_ACTION}\x1b[0m | \x1b[35m${UNIQUE_FILES} files\x1b[0m | \x1b[34m${TOTAL_VECTORS} blocks\x1b[0m | \x1b[90m${TIME_AGO} ago\x1b[0m"
+else
+    echo -e "\x1b[90mcodebase: not initialized\x1b[0m"
+fi
+```
+
+**2. Make it executable:**
+```bash
+chmod +x ~/.claude/statusline.sh
+```
+
+**3. Configure Claude Code in `~/.claude/settings.json`:**
+
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 0
+  }
+}
+```
+
+**What you'll see:**
+
+Line 1: Claude's normal context usage (tokens, cost, etc.)
+Line 2: Indexing status with color coding:
+- 🟢 **watching** - Index up-to-date, monitoring for changes
+- 🟡 **indexing** - Currently processing files
+- 🔴 **error** - Something went wrong
+- ⚪ **not initialized** - No index for this project yet
+
+**Example output:**
+```
+watching | indexed | 170 files | 1000 blocks | 5m ago
+```
+
+### Complete Configuration Example
+
+Here's a complete `~/.claude/settings.json` with both hooks and status line:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "nohup ~/.local/bin/codebase -start \"$CLAUDE_PROJECT_DIR\" > /dev/null 2>&1 &",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline.sh",
+    "padding": 0
+  }
+}
+```
+
+**Requirements:**
+- `jq` must be installed: `sudo apt install jq` (Linux) or `brew install jq` (macOS)
+- Adjust paths if you installed the CLI in a different location
+- The status line updates automatically (Claude polls it periodically)
 
 ## License
 
