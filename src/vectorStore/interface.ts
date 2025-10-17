@@ -16,13 +16,18 @@ export interface VectorStoreSearchResult {
 	}
 }
 
+export interface VectorStoreInitResult {
+	created: boolean
+	didCleanup: boolean
+}
+
 export interface VectorStore {
 	/**
 	 * Initialize the vector store.
 	 * Creates collection/table if it doesn't exist.
-	 * Returns true if created, false if already existed.
+	 * Returns initialization result with created and cleanup flags.
 	 */
-	initialize(): Promise<boolean>
+	initialize(): Promise<VectorStoreInitResult>
 
 	/**
 	 * Reset the collection by dropping and recreating it.
@@ -85,6 +90,16 @@ export interface VectorStore {
 	 * If not, recreate the collection.
 	 */
 	ensureVectorDimension(actualDimension: number): Promise<void>
+
+	/**
+	 * Get collection statistics.
+	 * Returns total vectors, unique files, and vector dimension.
+	 */
+	getCollectionStats?(): Promise<{
+		totalVectors: number
+		uniqueFiles: number
+		vectorDimension: number
+	} | null>
 }
 
 /**

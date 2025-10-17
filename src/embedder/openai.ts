@@ -6,7 +6,7 @@ import { Logger } from "../logger.js"
 
 const logger = new Logger("embedder:openai")
 
-const MAX_BATCH_TOKENS = 100_000
+const DEFAULT_MAX_BATCH_TOKENS = 8192 // Safe default for most OpenAI models
 const MAX_ITEM_TOKENS = 8_191
 
 const OPENAI_MODEL_DIMENSIONS: Record<string, number> = {
@@ -20,6 +20,7 @@ export class OpenAIEmbedder implements Embedder {
 	private readonly model: string
 	private readonly dimensionOverride?: number
 	private readonly maxBatchSize: number
+	private readonly maxBatchTokens: number
 
 	constructor(config: EmbedderConfig) {
 		if (!config.apiKey) {
@@ -38,6 +39,7 @@ export class OpenAIEmbedder implements Embedder {
 		this.model = config.model
 		this.dimensionOverride = config.dimension
 		this.maxBatchSize = config.maxBatchSize ?? 60
+		this.maxBatchTokens = config.maxBatchTokens ?? DEFAULT_MAX_BATCH_TOKENS
 	}
 
 	async validateConfiguration(): Promise<void> {
@@ -73,7 +75,7 @@ export class OpenAIEmbedder implements Embedder {
 				)
 			}
 
-			const wouldOverflowTokens = currentTokens + itemTokens > MAX_BATCH_TOKENS
+			const wouldOverflowTokens = currentTokens + itemTokens > this.maxBatchTokens
 			const wouldOverflowBatch = currentBatch.length >= this.maxBatchSize
 
 			if (currentBatch.length > 0 && (wouldOverflowTokens || wouldOverflowBatch)) {
@@ -89,6 +91,8 @@ export class OpenAIEmbedder implements Embedder {
 		if (currentBatch.length > 0) {
 			batches.push(currentBatch)
 		}
+
+		logger.debug(`Split ${texts.length} texts into ${batches.length} batches (maxBatchSize: ${this.maxBatchSize}, maxBatchTokens: ${this.maxBatchTokens})`)
 
 		const results: number[][] = []
 

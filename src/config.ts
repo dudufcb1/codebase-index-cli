@@ -27,7 +27,6 @@ const embedderSchema = z.object({
 const qdrantSchema = z.object({
 	url: z.string().min(1, "Qdrant URL is required"),
 	apiKey: z.string().optional(),
-	collectionName: z.string().optional(),
 	searchMinScore: z.number().min(0).max(1).optional(),
 	searchMaxResults: z.number().int().positive().optional(),
 })
@@ -75,8 +74,13 @@ function resolveWorkspacePath(options: CliOptions): string {
 	return path.resolve(candidate)
 }
 
-function resolveEmbedderProvider(): EmbedderProvider {
-	const explicit = pickEnv("EMBED_PROVIDER", "EMBED_PROVIDER", "IDX_EMBED_PROVIDER")
+function resolveEmbedderProvider(vectorStoreType?: VectorStoreType): EmbedderProvider {
+	const prefix = vectorStoreType === "sqlite" ? "SQLITE_" : vectorStoreType === "qdrant" ? "QDRANT_" : ""
+
+	// Try vector-store-specific provider first, then fall back to global
+	const explicit =
+		pickEnv(`${prefix}EMBED_PROVIDER`) ??
+		pickEnv("EMBED_PROVIDER", "IDX_EMBED_PROVIDER")
 	if (explicit) {
 		const normalized = explicit.toLowerCase()
 		if (normalized === "openai" || normalized === "openai-compatible" || normalized === "ollama") {
@@ -87,13 +91,17 @@ function resolveEmbedderProvider(): EmbedderProvider {
 		)
 	}
 
-	if (pickEnv("OPENAI_API_KEY", "OPENAI_API_KEY")) {
+	// Try to infer from vector-store-specific variables first
+	if (pickEnv(`${prefix}OPENAI_API_KEY`) || pickEnv("OPENAI_API_KEY")) {
 		return "openai"
 	}
-	if (pickEnv("EMBED_BASE_URL", "OPENAI_BASE_URL") && pickEnv("EMBED_API_KEY", "EMBED_API_KEY")) {
+	if (
+		(pickEnv(`${prefix}EMBED_BASE_URL`) || pickEnv("EMBED_BASE_URL", "OPENAI_BASE_URL")) &&
+		(pickEnv(`${prefix}EMBED_API_KEY`) || pickEnv("EMBED_API_KEY"))
+	) {
 		return "openai-compatible"
 	}
-	if (pickEnv("OLLAMA_MODEL")) {
+	if (pickEnv(`${prefix}OLLAMA_MODEL`) || pickEnv("OLLAMA_MODEL")) {
 		return "ollama"
 	}
 
@@ -102,20 +110,34 @@ function resolveEmbedderProvider(): EmbedderProvider {
 	)
 }
 
-function buildEmbedderConfig(): EmbedderConfig {
-	const provider = resolveEmbedderProvider()
+function buildEmbedderConfig(vectorStoreType?: VectorStoreType): EmbedderConfig {
+	const provider = resolveEmbedderProvider(vectorStoreType)
 
 	if (provider === "openai") {
+		const prefix = vectorStoreType === "sqlite" ? "SQLITE_" : vectorStoreType === "qdrant" ? "QDRANT_" : ""
+
 		const apiKey =
-			pickEnv("OPENAI_API_KEY", "OPENAI_API_KEY") ??
-			pickEnv("EMBED_API_KEY", "IDX_EMBED_API_KEY")
+			pickEnv(`${prefix}OPENAI_API_KEY`, `${prefix}EMBED_API_KEY`) ??
+			pickEnv("OPENAI_API_KEY", "EMBED_API_KEY", "IDX_EMBED_API_KEY")
 		if (!apiKey) {
-			throw new Error("OPENAI_API_KEY is required for OpenAI provider")
+			throw new Error(`${prefix}OPENAI_API_KEY (or OPENAI_API_KEY) is required for OpenAI provider`)
 		}
-		const model = pickEnv("OPENAI_EMBED_MODEL", "EMBED_MODEL") ?? "text-embedding-3-small"
-		const baseUrl = pickEnv("OPENAI_BASE_URL", "EMBED_BASE_URL")
-		const dimension = parsePositiveInteger(pickEnv("OPENAI_EMBED_DIMENSION", "EMBED_DIMENSION"), "OPENAI_EMBED_DIMENSION")
-		const maxBatch = parsePositiveInteger(pickEnv("OPENAI_MAX_BATCH", "EMBED_MAX_BATCH"), "OPENAI_MAX_BATCH")
+		const model =
+			pickEnv(`${prefix}OPENAI_EMBED_MODEL`, `${prefix}EMBED_MODEL`) ??
+			pickEnv("OPENAI_EMBED_MODEL", "EMBED_MODEL") ??
+			"text-embedding-3-small"
+		const baseUrl =
+			pickEnv(`${prefix}OPENAI_BASE_URL`, `${prefix}EMBED_BASE_URL`) ??
+			pickEnv("OPENAI_BASE_URL", "EMBED_BASE_URL")
+		const dimension =
+			parsePositiveInteger(pickEnv(`${prefix}OPENAI_EMBED_DIMENSION`, `${prefix}EMBED_DIMENSION`), `${prefix}OPENAI_EMBED_DIMENSION`) ??
+			parsePositiveInteger(pickEnv("OPENAI_EMBED_DIMENSION", "EMBED_DIMENSION"), "OPENAI_EMBED_DIMENSION")
+		const maxBatch =
+			parsePositiveInteger(pickEnv(`${prefix}OPENAI_MAX_BATCH`, `${prefix}EMBED_MAX_BATCH`), `${prefix}OPENAI_MAX_BATCH`) ??
+			parsePositiveInteger(pickEnv("OPENAI_MAX_BATCH", "EMBED_MAX_BATCH"), "OPENAI_MAX_BATCH")
+		const maxBatchTokens =
+			parsePositiveInteger(pickEnv(`${prefix}OPENAI_MAX_TOKENS`, `${prefix}EMBED_MAX_TOKENS`), `${prefix}OPENAI_MAX_TOKENS`) ??
+			parsePositiveInteger(pickEnv("OPENAI_MAX_TOKENS", "EMBED_MAX_TOKENS"), "OPENAI_MAX_TOKENS")
 
 		return {
 			provider,
@@ -124,28 +146,41 @@ function buildEmbedderConfig(): EmbedderConfig {
 			baseUrl,
 			dimension,
 			maxBatchSize: maxBatch,
+			maxBatchTokens,
 		}
 	}
 
 	if (provider === "openai-compatible") {
-		const baseUrl = pickEnv("EMBED_BASE_URL", "OPENAI_BASE_URL")
+		const prefix = vectorStoreType === "sqlite" ? "SQLITE_" : vectorStoreType === "qdrant" ? "QDRANT_" : ""
+
+		const baseUrl =
+			pickEnv(`${prefix}EMBED_BASE_URL`, `${prefix}OPENAI_BASE_URL`) ??
+			pickEnv("EMBED_BASE_URL", "OPENAI_BASE_URL")
 		if (!baseUrl) {
-			throw new Error("EMBED_BASE_URL is required for openai-compatible provider")
+			throw new Error(`${prefix}EMBED_BASE_URL (or EMBED_BASE_URL) is required for openai-compatible provider`)
 		}
 		const apiKey =
-			pickEnv("EMBED_API_KEY", "EMBED_API_KEY") ??
-			pickEnv("OPENAI_API_KEY", "OPENAI_API_KEY")
+			pickEnv(`${prefix}EMBED_API_KEY`) ??
+			pickEnv(`${prefix}OPENAI_API_KEY`) ??
+			pickEnv("EMBED_API_KEY", "OPENAI_API_KEY")
 		if (!apiKey) {
-			throw new Error("EMBED_API_KEY is required for openai-compatible provider")
+			throw new Error(`${prefix}EMBED_API_KEY (or EMBED_API_KEY) is required for openai-compatible provider`)
 		}
 		const model =
-			pickEnv("EMBED_MODEL", "OPENAI_EMBED_MODEL") ??
-			pickEnv("OPENAI_MODEL")
+			pickEnv(`${prefix}EMBED_MODEL`, `${prefix}OPENAI_EMBED_MODEL`) ??
+			pickEnv("EMBED_MODEL", "OPENAI_EMBED_MODEL", "OPENAI_MODEL")
 		if (!model) {
-			throw new Error("EMBED_MODEL (or OPENAI_EMBED_MODEL) is required for openai-compatible provider")
+			throw new Error(`${prefix}EMBED_MODEL (or EMBED_MODEL) is required for openai-compatible provider`)
 		}
-		const dimension = parsePositiveInteger(pickEnv("EMBED_DIMENSION", "OPENAI_EMBED_DIMENSION"), "EMBED_DIMENSION")
-		const maxBatch = parsePositiveInteger(pickEnv("EMBED_MAX_BATCH", "OPENAI_MAX_BATCH"), "EMBED_MAX_BATCH")
+		const dimension =
+			parsePositiveInteger(pickEnv(`${prefix}EMBED_DIMENSION`, `${prefix}OPENAI_EMBED_DIMENSION`), `${prefix}EMBED_DIMENSION`) ??
+			parsePositiveInteger(pickEnv("EMBED_DIMENSION", "OPENAI_EMBED_DIMENSION"), "EMBED_DIMENSION")
+		const maxBatch =
+			parsePositiveInteger(pickEnv(`${prefix}EMBED_MAX_BATCH`, `${prefix}OPENAI_MAX_BATCH`), `${prefix}EMBED_MAX_BATCH`) ??
+			parsePositiveInteger(pickEnv("EMBED_MAX_BATCH", "OPENAI_MAX_BATCH"), "EMBED_MAX_BATCH")
+		const maxBatchTokens =
+			parsePositiveInteger(pickEnv(`${prefix}EMBED_MAX_TOKENS`, `${prefix}OPENAI_MAX_TOKENS`), `${prefix}EMBED_MAX_TOKENS`) ??
+			parsePositiveInteger(pickEnv("EMBED_MAX_TOKENS", "OPENAI_MAX_TOKENS"), "EMBED_MAX_TOKENS")
 
 		return {
 			provider,
@@ -154,24 +189,37 @@ function buildEmbedderConfig(): EmbedderConfig {
 			baseUrl,
 			dimension,
 			maxBatchSize: maxBatch,
+			maxBatchTokens,
 		}
 	}
 
 	// ollama
-	const model = pickEnv("OLLAMA_MODEL")
+	const prefix = vectorStoreType === "sqlite" ? "SQLITE_" : vectorStoreType === "qdrant" ? "QDRANT_" : ""
+
+	const model =
+		pickEnv(`${prefix}OLLAMA_MODEL`) ??
+		pickEnv("OLLAMA_MODEL")
 	if (!model) {
-		throw new Error("OLLAMA_MODEL is required for ollama provider")
+		throw new Error(`${prefix}OLLAMA_MODEL (or OLLAMA_MODEL) is required for ollama provider`)
 	}
-	const baseUrl = pickEnv("OLLAMA_BASE_URL", "EMBED_BASE_URL")
+	const baseUrl =
+		pickEnv(`${prefix}OLLAMA_BASE_URL`, `${prefix}EMBED_BASE_URL`) ??
+		pickEnv("OLLAMA_BASE_URL", "EMBED_BASE_URL")
 	const dimension =
+		parsePositiveInteger(pickEnv(`${prefix}OLLAMA_EMBED_DIMENSION`, `${prefix}EMBED_DIMENSION`), `${prefix}OLLAMA_EMBED_DIMENSION`) ??
 		parsePositiveInteger(pickEnv("OLLAMA_EMBED_DIMENSION", "EMBED_DIMENSION"), "OLLAMA_EMBED_DIMENSION") ??
 		parsePositiveInteger(pickEnv("EMBED_DIMENSION"), "EMBED_DIMENSION")
 
 	if (!dimension) {
-		throw new Error("OLLAMA_EMBED_DIMENSION (or EMBED_DIMENSION) is required for ollama provider")
+		throw new Error(`${prefix}OLLAMA_EMBED_DIMENSION (or OLLAMA_EMBED_DIMENSION) is required for ollama provider`)
 	}
 
-	const maxBatch = parsePositiveInteger(pickEnv("EMBED_MAX_BATCH"), "EMBED_MAX_BATCH")
+	const maxBatch =
+		parsePositiveInteger(pickEnv(`${prefix}EMBED_MAX_BATCH`), `${prefix}EMBED_MAX_BATCH`) ??
+		parsePositiveInteger(pickEnv("EMBED_MAX_BATCH"), "EMBED_MAX_BATCH")
+	const maxBatchTokens =
+		parsePositiveInteger(pickEnv(`${prefix}EMBED_MAX_TOKENS`, `${prefix}OLLAMA_MAX_TOKENS`), `${prefix}EMBED_MAX_TOKENS`) ??
+		parsePositiveInteger(pickEnv("EMBED_MAX_TOKENS", "OLLAMA_MAX_TOKENS"), "EMBED_MAX_TOKENS")
 
 	return {
 		provider,
@@ -179,6 +227,7 @@ function buildEmbedderConfig(): EmbedderConfig {
 		baseUrl,
 		dimension,
 		maxBatchSize: maxBatch,
+		maxBatchTokens,
 	}
 }
 
@@ -198,12 +247,9 @@ function resolveVectorStoreType(): VectorStoreType {
 	return "sqlite"
 }
 
-function buildQdrantConfig(defaultCollectionName: string): QdrantConfig {
+function buildQdrantConfig(): QdrantConfig {
 	const url = pickEnv("QDRANT_URL", "QDRANT_URL", "IDX_QDRANT_URL") ?? "http://localhost:6333"
 	const apiKey = pickEnv("QDRANT_API_KEY", "QDRANT_API_KEY", "IDX_QDRANT_API_KEY")
-	const collection =
-		pickEnv("QDRANT_COLLECTION", "QDRANT_COLLECTION_NAME", "QDRANT_COLLECTION") ??
-		defaultCollectionName
 	const searchMinScore = parseFloatInRange(
 		pickEnv("QDRANT_SEARCH_MIN_SCORE"),
 		"QDRANT_SEARCH_MIN_SCORE",
@@ -218,7 +264,6 @@ function buildQdrantConfig(defaultCollectionName: string): QdrantConfig {
 	return {
 		url,
 		apiKey,
-		collectionName: collection,
 		searchMinScore,
 		searchMaxResults,
 	}
@@ -336,16 +381,10 @@ async function loadAutoConfig(options: CliOptions): Promise<IndexingConfig> {
 	const workspacePath = resolveWorkspacePath(options)
 	const workspaceState = await ensureWorkspaceState(workspacePath)
 
-	const embedder = buildEmbedderConfig()
 	const vectorStoreType = resolveVectorStoreType()
+	const embedder = buildEmbedderConfig(vectorStoreType)
 
-	const qdrant = buildQdrantConfig(workspaceState.qdrantCollection)
-	if (qdrant.collectionName && qdrant.collectionName !== workspaceState.qdrantCollection) {
-		await saveWorkspaceState(workspacePath, {
-			...workspaceState,
-			qdrantCollection: qdrant.collectionName,
-		})
-	}
+	const qdrant = buildQdrantConfig()
 
 	const sqlite = buildSqliteConfig(workspacePath)
 

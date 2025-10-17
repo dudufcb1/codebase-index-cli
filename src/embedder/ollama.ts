@@ -7,11 +7,14 @@ export class OllamaEmbedder implements Embedder {
 	private readonly baseUrl: string
 	private readonly model: string
 	private readonly dimensionOverride?: number
+	private readonly maxBatchTokens: number
 
 	constructor(config: EmbedderConfig) {
 		this.baseUrl = (config.baseUrl ?? DEFAULT_OLLAMA_URL).replace(/\/$/, "")
 		this.model = config.model
 		this.dimensionOverride = config.dimension
+		// Ollama processes one text at a time, but we store this for consistency
+		this.maxBatchTokens = config.maxBatchTokens ?? 8192
 	}
 
 	async validateConfiguration(): Promise<void> {

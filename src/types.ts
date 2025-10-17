@@ -12,6 +12,7 @@ export interface EmbedderConfig {
 	baseUrl?: string
 	dimension?: number
 	maxBatchSize?: number
+	maxBatchTokens?: number
 }
 
 export type VectorStoreType = "qdrant" | "sqlite"
@@ -19,7 +20,6 @@ export type VectorStoreType = "qdrant" | "sqlite"
 export interface QdrantConfig {
 	url: string
 	apiKey?: string
-	collectionName?: string
 	searchMinScore?: number
 	searchMaxResults?: number
 }

@@ -2,6 +2,7 @@ import chokidar, { type FSWatcher } from "chokidar"
 import path from "path"
 
 import { Logger } from "../logger.js"
+import { updateIndexingStatus, updateLastActivity } from "../workspaceState.js"
 
 import type { DirectoryScanner, ProcessFileReason } from "./directoryScanner.js"
 import { IgnoreManager } from "./ignoreManager.js"
@@ -94,7 +95,18 @@ export class WorkspaceWatcher {
 			return
 		}
 
+		await updateIndexingStatus(this.workspacePath, {
+			state: 'indexing',
+			startedAt: new Date().toISOString(),
+			progress: {
+				filesProcessed: 0,
+				totalFiles: events.length,
+			},
+		})
+
 		logger.info(`Processing ${events.length} file change(s)`)
+
+		let filesProcessed = 0
 
 		for (const event of events) {
 			const relativePath = path.relative(this.workspacePath, event.path)
@@ -104,21 +116,69 @@ export class WorkspaceWatcher {
 			if (event.type === "unlink") {
 				await this.scanner.handleDeletion(event.path)
 				logger.info(`[delete] removed ${displayPath}`)
+
+				await updateLastActivity(this.workspacePath, {
+					timestamp: new Date().toISOString(),
+					action: 'deleted',
+					filePath: displayPath,
+				})
+
+				filesProcessed++
+				await updateIndexingStatus(this.workspacePath, {
+					state: 'indexing',
+					progress: {
+						filesProcessed,
+						totalFiles: events.length,
+						currentFile: displayPath,
+					},
+				})
 				continue
 			}
 
 			const result = await this.scanner.processFile(event.path, undefined, { force: true })
 			if (result.processed) {
 				logger.info(`[index] ${event.type} ${displayPath} (${result.blockCount} block(s))`)
+
+				await updateLastActivity(this.workspacePath, {
+					timestamp: new Date().toISOString(),
+					action: 'indexed',
+					filePath: displayPath,
+					details: {
+						blockCount: result.blockCount,
+					},
+				})
 			} else {
 				if (result.reason && result.reason !== "unchanged") {
 					const reasonLabel = formatSkipReason(result.reason)
 					logger.info(`[skip] ${event.type} ${displayPath}${reasonLabel ? ` (${reasonLabel})` : ""}`)
+
+					await updateLastActivity(this.workspacePath, {
+						timestamp: new Date().toISOString(),
+						action: 'skipped',
+						filePath: displayPath,
+						details: {
+							reason: result.reason,
+						},
+					})
 				} else {
 					logger.debug(`No changes detected for ${displayPath}`)
 				}
 			}
+
+			filesProcessed++
+			await updateIndexingStatus(this.workspacePath, {
+				state: 'indexing',
+				progress: {
+					filesProcessed,
+					totalFiles: events.length,
+					currentFile: displayPath,
+				},
+			})
 		}
+
+		await updateIndexingStatus(this.workspacePath, {
+			state: 'watching',
+		})
 	}
 }
 

@@ -1,6 +1,8 @@
 import { QdrantClient, type Schemas } from "@qdrant/js-client-rest"
 import { createHash } from "crypto"
 import path from "path"
+import fs from "fs/promises"
+import { randomUUID } from "crypto"
 import type { VectorStore, VectorStoreSearchResult } from "./interface.js"
 
 const DEFAULT_MAX_SEARCH_RESULTS = 50
@@ -11,7 +13,7 @@ export class QdrantVectorStore implements VectorStore {
 	private readonly DISTANCE_METRIC = "Cosine"
 
 	private client: QdrantClient
-	private readonly collectionName: string
+	private collectionName: string
 	private readonly qdrantUrl: string = "http://localhost:6333"
 	private readonly workspacePath: string
 
@@ -20,11 +22,15 @@ export class QdrantVectorStore implements VectorStore {
 		url: string,
 		vectorSize: number,
 		apiKey?: string,
-		collectionOverride?: string,
+		collectionName?: string,
 	) {
 		const parsedUrl = this.parseQdrantUrl(url)
 		this.qdrantUrl = parsedUrl
 		this.workspacePath = workspacePath
+
+		if (!collectionName) {
+			throw new Error("Collection name is required for QdrantVectorStore. This should come from the workspace state.json file.")
+		}
 
 		try {
 			const urlObj = new URL(parsedUrl)
@@ -65,12 +71,7 @@ export class QdrantVectorStore implements VectorStore {
 		}
 
 		this.vectorSize = vectorSize
-		if (collectionOverride) {
-			this.collectionName = collectionOverride
-		} else {
-			const hash = createHash("sha256").update(workspacePath).digest("hex")
-			this.collectionName = `ws-${hash.substring(0, 16)}`
-		}
+		this.collectionName = collectionName
 	}
 
 	private parseQdrantUrl(url: string | undefined): string {
@@ -130,12 +131,70 @@ export class QdrantVectorStore implements VectorStore {
 		})
 	}
 
-	async initialize(): Promise<boolean> {
+	private async cleanStateAndCache(): Promise<string> {
+		const codebaseDir = path.join(this.workspacePath, ".codebase")
+		const statePath = path.join(codebaseDir, "state.json")
+		const cachePath = path.join(codebaseDir, "cache.json")
+
+		// Delete old state.json
+		try {
+			await fs.unlink(statePath)
+			console.warn(`[QdrantVectorStore] Deleted corrupted ${statePath}`)
+		} catch (error: any) {
+			if (error?.code !== "ENOENT") {
+				console.warn(`[QdrantVectorStore] Failed to delete ${statePath}:`, error)
+			}
+		}
+
+		// Delete cache.json
+		try {
+			await fs.unlink(cachePath)
+			console.warn(`[QdrantVectorStore] Deleted ${cachePath}`)
+		} catch (error: any) {
+			if (error?.code !== "ENOENT") {
+				console.warn(`[QdrantVectorStore] Failed to delete ${cachePath}:`, error)
+			}
+		}
+
+		// Generate new collection name
+		const collectionId = randomUUID().replace(/-/g, "").slice(0, 18)
+		const newCollectionName = `codebase-${collectionId}`
+
+		// Immediately regenerate state.json with new collection
+		const newState = {
+			workspacePath: this.workspacePath,
+			qdrantCollection: newCollectionName,
+			createdAt: new Date().toISOString(),
+			updatedAt: new Date().toISOString(),
+		}
+
+		await fs.mkdir(codebaseDir, { recursive: true })
+		await fs.writeFile(statePath, JSON.stringify(newState, null, 2), "utf8")
+		console.warn(`[QdrantVectorStore] Regenerated ${statePath} with new collection: ${newCollectionName}`)
+
+		return newCollectionName
+	}
+
+	async initialize(): Promise<{ created: boolean; didCleanup: boolean }> {
 		let created = false
+		let didCleanup = false
 		try {
 			const collectionInfo = await this.getCollectionInfo()
 
 			if (collectionInfo === null) {
+				console.warn(
+					`[QdrantVectorStore] Collection "${this.collectionName}" does not exist. This could be from a bug where multiple workspaces share the same collection name.`,
+				)
+
+				// Clean and regenerate state.json with NEW collection name
+				const newCollectionName = await this.cleanStateAndCache()
+
+				// Update this instance's collection name
+				this.collectionName = newCollectionName
+
+				didCleanup = true
+
+				// Create the new collection
 				await this.createCollection()
 				created = true
 			} else {
@@ -161,7 +220,7 @@ export class QdrantVectorStore implements VectorStore {
 			}
 
 			await this.createPayloadIndexes()
-			return created
+			return { created, didCleanup }
 		} catch (error: any) {
 			const errorMessage = error?.message || String(error)
 			console.error(`[QdrantVectorStore] Failed to initialize collection "${this.collectionName}":`, errorMessage)
@@ -468,6 +527,63 @@ export class QdrantVectorStore implements VectorStore {
 
 		await this.recreateCollectionWithNewDimension(this.vectorSize, actualDimension)
 		this.vectorSize = actualDimension
+	}
+
+	async getCollectionStats(): Promise<{
+		totalVectors: number
+		uniqueFiles: number
+		vectorDimension: number
+	} | null> {
+		try {
+			const collectionInfo = await this.getCollectionInfo()
+			if (!collectionInfo) {
+				return null
+			}
+
+			const totalVectors = collectionInfo.points_count ?? 0
+
+			const scrollResponse = await this.client.scroll(this.collectionName, {
+				limit: 10000,
+				with_payload: {
+					include: ["filePath"]
+				},
+				with_vector: false,
+			})
+
+			const uniqueFilesSet = new Set<string>()
+			for (const point of scrollResponse.points) {
+				if (point.payload && typeof point.payload === "object" && "filePath" in point.payload) {
+					const filePath = point.payload.filePath
+					if (typeof filePath === "string") {
+						uniqueFilesSet.add(filePath)
+					}
+				}
+			}
+
+			const vectorsConfig = collectionInfo.config?.params?.vectors
+			let vectorDimension: number
+			if (typeof vectorsConfig === "number") {
+				vectorDimension = vectorsConfig
+			} else if (
+				vectorsConfig &&
+				typeof vectorsConfig === "object" &&
+				"size" in vectorsConfig &&
+				typeof vectorsConfig.size === "number"
+			) {
+				vectorDimension = vectorsConfig.size
+			} else {
+				vectorDimension = this.vectorSize
+			}
+
+			return {
+				totalVectors,
+				uniqueFiles: uniqueFilesSet.size,
+				vectorDimension,
+			}
+		} catch (error) {
+			console.error("[QdrantVectorStore] Failed to get collection stats:", error)
+			return null
+		}
 	}
 }
 

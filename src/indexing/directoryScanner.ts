@@ -7,6 +7,7 @@ import { Logger } from "../logger.js"
 import type { IndexingConfig } from "../types.js"
 import type { VectorStore } from "../vectorStore/interface.js"
 import { generatePointId } from "../vectorStore/interface.js"
+import { updateIndexingStatus, updateLastActivity, updateQdrantStats } from "../workspaceState.js"
 
 import { CacheManager } from "./cacheManager.js"
 import { CodeParser } from "./codeParser.js"
@@ -65,6 +66,15 @@ export class DirectoryScanner {
 		const cacheHashes = this.cacheManager.getAllHashes()
 		const seenFiles = new Set<string>()
 
+		await updateIndexingStatus(this.workspacePath, {
+			state: 'scanning',
+			startedAt: new Date().toISOString(),
+			progress: {
+				filesProcessed: 0,
+				totalFiles: files.length,
+			},
+		})
+
 		let processedFiles = 0
 		let skippedFiles = 0
 		let totalBlocks = 0
@@ -78,13 +88,41 @@ export class DirectoryScanner {
 			} else {
 				skippedFiles++
 			}
+
+			await updateIndexingStatus(this.workspacePath, {
+				state: 'scanning',
+				progress: {
+					filesProcessed: processedFiles + skippedFiles,
+					totalFiles: files.length,
+					currentFile: path.relative(this.workspacePath, filePath),
+				},
+			})
 		}
 
-		// Handle deleted files
 		for (const cachedPath of Object.keys(cacheHashes)) {
 			if (!seenFiles.has(cachedPath)) {
 				await this.vectorStore.deletePointsByFilePath(cachedPath)
 				await this.cacheManager.deleteHash(cachedPath)
+			}
+		}
+
+		await updateLastActivity(this.workspacePath, {
+			timestamp: new Date().toISOString(),
+			action: 'scan-completed',
+			details: {
+				filesProcessed: processedFiles,
+				totalBlocks: totalBlocks,
+			},
+		})
+
+		if (this.vectorStore.getCollectionStats) {
+			try {
+				const qdrantStats = await this.vectorStore.getCollectionStats()
+				if (qdrantStats) {
+					await updateQdrantStats(this.workspacePath, qdrantStats)
+				}
+			} catch (error) {
+				logger.warn("Failed to update Qdrant stats after scan:", error)
 			}
 		}
 

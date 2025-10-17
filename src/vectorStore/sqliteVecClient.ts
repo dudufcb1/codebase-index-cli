@@ -59,9 +59,10 @@ export class SqliteVecClient implements VectorStore {
 	/**
 	 * Initialize the vector store.
 	 * Creates the virtual table if it doesn't exist.
-	 * Returns true if the table was created, false if it already existed.
+	 * Returns initialization result with created and cleanup flags.
+	 * SQLite never does cleanup (no remote state to validate).
 	 */
-	async initialize(): Promise<boolean> {
+	async initialize(): Promise<{ created: boolean; didCleanup: boolean }> {
 		let created = false
 
 		try {
@@ -94,7 +95,7 @@ export class SqliteVecClient implements VectorStore {
 				// Verify vector dimension matches
 				const tableInfo = this.db.prepare(`PRAGMA table_info(${this.tableName})`).all() as any[]
 				const embeddingColumn = tableInfo.find((col: any) => col.name === "embedding")
-				
+
 				if (embeddingColumn) {
 					// Extract dimension from type like "float[4096]"
 					const match = embeddingColumn.type.match(/float\[(\d+)\]/)
@@ -111,7 +112,7 @@ export class SqliteVecClient implements VectorStore {
 				}
 			}
 
-			return created
+			return { created, didCleanup: false }
 		} catch (error: any) {
 			console.error(`[SqliteVecClient] Failed to initialize database:`, error.message)
 			throw new Error(`Failed to initialize SQLite vector store: ${error.message}`)

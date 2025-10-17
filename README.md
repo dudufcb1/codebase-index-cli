@@ -58,6 +58,35 @@ The vector store is determined by which command you use:
 - **Requires**: Qdrant server running (e.g., `docker run -p 6333:6333 qdrant/qdrant`)
 - **Usage**: `codebase -start .`
 
+## 🆕 Vector-Store-Specific Embedders
+
+**NEW**: You can now use **different embedders for SQLite vs Qdrant**!
+
+This allows you to optimize your embedding strategy:
+- Use a **smaller/cheaper model** for local SQLite development
+- Use a **larger/more accurate model** for production Qdrant
+- Use **local Ollama** for SQLite (offline) and **cloud API** for Qdrant (online)
+
+### Quick Example
+
+```bash
+# Global fallback (used by both if no specific config)
+EMBED_PROVIDER=openai-compatible
+EMBED_BASE_URL=https://api.studio.nebius.com/v1/
+EMBED_API_KEY=your-key
+EMBED_MODEL=Qwen/Qwen3-Embedding-8B
+
+# SQLite-specific (overrides global for SQLite)
+SQLITE_EMBED_MODEL=text-embedding-3-small
+SQLITE_EMBED_DIMENSION=1536
+
+# Qdrant-specific (overrides global for Qdrant)
+QDRANT_EMBED_MODEL=Qwen/Qwen3-Embedding-8B
+QDRANT_EMBED_DIMENSION=4096
+```
+
+📖 **See [EMBEDDER_CONFIG.md](./EMBEDDER_CONFIG.md) for detailed examples and use cases.**
+
 ## Available Commands
 
 - `-start <path>`: Start the monitor (creates collection if it doesn't exist, updates if it does).

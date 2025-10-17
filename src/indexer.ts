@@ -7,6 +7,7 @@ import type { IndexingConfig } from "./types.js"
 import { QdrantVectorStore } from "./vectorStore/qdrantVectorStore.js"
 import { SqliteVecClient } from "./vectorStore/sqliteVecClient.js"
 import type { VectorStore } from "./vectorStore/interface.js"
+import { updateIndexingStatus, updateLastActivity, ensureWorkspaceState } from "./workspaceState.js"
 
 import { CacheManager } from "./indexing/cacheManager.js"
 import { DirectoryScanner } from "./indexing/directoryScanner.js"
@@ -29,12 +30,16 @@ export class WorkspaceIndexer {
 	async initialize(): Promise<void> {
 		this.workspacePath = path.resolve(this.config.workspacePath)
 
+		await updateIndexingStatus(this.workspacePath, {
+			state: 'initializing',
+			startedAt: new Date().toISOString(),
+		})
+
 		this.embedder = createEmbedder(this.config.embedder)
 		await this.embedder.validateConfiguration()
 
 		const dimension = this.embedder.dimension()
 
-		// Create vector store based on configuration
 		const vectorStoreType = this.config.vectorStore ?? "sqlite"
 
 		if (vectorStoreType === "sqlite") {
@@ -49,12 +54,13 @@ export class WorkspaceIndexer {
 			if (!this.config.qdrant) {
 				throw new Error("Qdrant configuration is required when vectorStore is 'qdrant'")
 			}
+			const workspaceState = await ensureWorkspaceState(this.workspacePath)
 			this.vectorStore = new QdrantVectorStore(
 				this.workspacePath,
 				this.config.qdrant.url,
 				dimension,
 				this.config.qdrant.apiKey,
-				this.config.qdrant.collectionName,
+				workspaceState.qdrantCollection,
 			)
 		}
 
@@ -73,7 +79,35 @@ export class WorkspaceIndexer {
 			this.config,
 		)
 
-		await this.vectorStore.initialize()
+		const initResult = await this.vectorStore.initialize()
+
+		// If cleanup happened (cache.json was deleted because collection didn't exist),
+		// we need to reinitialize the cache manager to ensure it starts empty
+		if (initResult.didCleanup) {
+			this.logger.info("Vector store performed cleanup. Reinitializing cache manager...")
+
+			// Reinitialize cache manager to start with empty cache
+			this.cacheManager = new CacheManager(this.workspacePath, this.config.cachePath)
+			await this.cacheManager.initialize()
+
+			// Recreate directory scanner with fresh cache
+			this.directoryScanner = new DirectoryScanner(
+				this.workspacePath,
+				this.embedder,
+				this.vectorStore,
+				this.cacheManager,
+				this.ignoreManager,
+				this.config,
+			)
+
+			this.logger.info("Cache manager reinitialized successfully")
+		}
+
+		await updateLastActivity(this.workspacePath, {
+			timestamp: new Date().toISOString(),
+			action: 'initialized',
+			vectorStore: vectorStoreType,
+		})
 	}
 
 	async forceRebuild(): Promise<void> {
@@ -93,6 +127,9 @@ export class WorkspaceIndexer {
 	async startWatcher(): Promise<void> {
 		if (this.config.watch?.enabled === false) {
 			rootLogger.info("File watcher disabled in configuration")
+			await updateIndexingStatus(this.workspacePath, {
+				state: 'idle',
+			})
 			return
 		}
 
@@ -103,9 +140,17 @@ export class WorkspaceIndexer {
 			this.config.watch?.debounceMs,
 		)
 		await this.watcher.start()
+
+		await updateIndexingStatus(this.workspacePath, {
+			state: 'watching',
+		})
 	}
 
 	async shutdown(): Promise<void> {
+		await updateIndexingStatus(this.workspacePath, {
+			state: 'idle',
+		})
+
 		if (this.watcher) {
 			await this.watcher.stop()
 			this.watcher = null

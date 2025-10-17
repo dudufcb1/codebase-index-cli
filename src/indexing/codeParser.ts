@@ -88,6 +88,22 @@ export class CodeParser {
 				continue
 			}
 
+			// If block is too large, split it into smaller chunks
+			if (blockContent.length > MAX_BLOCK_CHARS) {
+				// Use the existing chunking logic to split large blocks
+				const subBlocks = this.chunkSource(blockContent, filePath, fileHash)
+
+				// Add identifier and nodeType to each sub-block
+				for (const subBlock of subBlocks) {
+					blocks.push({
+						...subBlock,
+						identifier: `${identifier} (chunk)`,
+						nodeType: "definition-chunk",
+					})
+				}
+				continue
+			}
+
 			const hash = this.segmentHash(filePath, startLine, endLine, blockContent)
 
 			blocks.push({
