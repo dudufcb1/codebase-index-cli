@@ -142,6 +142,147 @@ async function fullReset(workspacePath: string): Promise<void> {
 	rootLogger.info("Run 'codebase -start .' or 'codesql -start .' to rebuild the index from scratch.")
 }
 
+async function indexHistoricalCommits(workspacePath: string, count: number): Promise<void> {
+	rootLogger.info(`📚 Indexing last ${count} commits (excluding the most recent one)...`)
+	rootLogger.info(`Workspace: ${workspacePath}`)
+
+	// Import necessary modules
+	const { GitCommitExtractor } = await import("./indexing/gitCommitExtractor.js")
+	const { CommitLlmService } = await import("./indexing/commitLlmService.js")
+	const { CommitPromptFormatter } = await import("./indexing/commitPromptFormatter.js")
+	const { createEmbedder } = await import("./embedder/index.js")
+	const { QdrantVectorStore } = await import("./vectorStore/qdrantVectorStore.js")
+	const { loadConfig } = await import("./config.js")
+	const { ensureWorkspaceState } = await import("./workspaceState.js")
+
+	// Load config to get embedder and vector store settings
+	const config = await loadConfig({ command: "start", workspacePath, logLevel: undefined })
+
+	// Check if using Qdrant (required for git tracking)
+	if (config.vectorStore !== "qdrant") {
+		rootLogger.error("❌ Historical commit indexing only works with Qdrant vector store.")
+		rootLogger.error("   Set VECTOR_STORE=qdrant or use the 'codebase' command.")
+		process.exit(1)
+	}
+
+	// Check if LLM is configured
+	const hasLlmConfig =
+		process.env.TRACK_GIT_LLM_PROVIDER &&
+		process.env.TRACK_GIT_LLM_ENDPOINT &&
+		process.env.TRACK_GIT_LLM_MODEL &&
+		process.env.TRACK_GIT_LLM_API_KEY
+
+	if (!hasLlmConfig) {
+		rootLogger.error("❌ LLM configuration is required for commit indexing.")
+		rootLogger.error("   Required env vars: TRACK_GIT_LLM_PROVIDER, TRACK_GIT_LLM_ENDPOINT, TRACK_GIT_LLM_MODEL, TRACK_GIT_LLM_API_KEY")
+		process.exit(1)
+	}
+
+	// Initialize components
+	const embedder = createEmbedder(config.embedder)
+	const dimension = embedder.dimension()
+
+	// Create Qdrant vector store
+	if (!config.qdrant) {
+		rootLogger.error("❌ Qdrant configuration is required.")
+		process.exit(1)
+	}
+	const workspaceState = await ensureWorkspaceState(workspacePath)
+	const vectorStore = new QdrantVectorStore(
+		workspacePath,
+		config.qdrant.url,
+		dimension,
+		config.qdrant.apiKey,
+		workspaceState.qdrantCollection,
+	)
+
+	const extractor = new GitCommitExtractor(workspacePath)
+	const commitLlmService = new CommitLlmService(workspacePath, embedder, vectorStore)
+	const formatter = new CommitPromptFormatter(workspacePath)
+	await formatter.initialize()
+
+	// Get current branch
+	const currentBranch = await extractor.getCurrentBranch()
+	rootLogger.info(`Branch: ${currentBranch}`)
+
+	// Get historical commits (excluding most recent)
+	rootLogger.info("🔍 Fetching commit history...")
+	const commitHashes = await extractor.getHistoricalCommits(count, currentBranch)
+
+	if (commitHashes.length === 0) {
+		rootLogger.warn("⚠️  No historical commits found (besides the most recent one).")
+		rootLogger.info("   This might mean your repository has only 1 commit.")
+		return
+	}
+
+	rootLogger.info(`📋 Found ${commitHashes.length} commits to process`)
+	rootLogger.info("")
+
+	// Process each commit
+	let indexed = 0
+	let errors = 0
+
+	for (let i = 0; i < commitHashes.length; i++) {
+		const hash = commitHashes[i]
+		const shortHash = hash.slice(0, 7)
+
+		rootLogger.info(`[${i + 1}/${commitHashes.length}] Processing commit ${shortHash}...`)
+
+		try {
+			// Extract commit data
+			const commitData = await extractor.extractCommitData(hash, currentBranch)
+
+			if (!commitData) {
+				rootLogger.warn(`  ⚠️  Failed to extract data for ${shortHash}`)
+				errors++
+				continue
+			}
+
+			// Format prompt
+			const promptText = await formatter.formatPrompt(commitData)
+
+			// Index commit (upsert will handle duplicates automatically)
+			const result = await commitLlmService.indexSingleCommit(
+				commitData,
+				promptText,
+			)
+
+			if (result.indexed) {
+				rootLogger.info(`  ✅ Indexed ${shortHash}`)
+				indexed++
+			} else {
+				rootLogger.warn(`  ❌ Failed to index ${shortHash}`)
+				errors++
+			}
+
+		} catch (error) {
+			rootLogger.error(`  ❌ Error processing ${shortHash}`, error)
+			errors++
+		}
+
+		// Small delay to avoid overwhelming the LLM
+		if (i < commitHashes.length - 1) {
+			await new Promise(resolve => setTimeout(resolve, 500))
+		}
+	}
+
+	rootLogger.info("")
+	rootLogger.info("=" .repeat(60))
+	rootLogger.info("📊 Summary:")
+	rootLogger.info(`   Total commits processed: ${commitHashes.length}`)
+	rootLogger.info(`   ✅ Successfully indexed: ${indexed}`)
+	rootLogger.info(`   ❌ Errors: ${errors}`)
+	rootLogger.info("=" .repeat(60))
+	rootLogger.info("")
+	rootLogger.info("Note: If some commits were already indexed, they were updated (upsert).")
+
+	if (indexed > 0) {
+		rootLogger.info("")
+		rootLogger.info("🎉 Historical commits indexed successfully!")
+		rootLogger.info(`   You can now search them using the semantic search client.`)
+	}
+}
+
 async function main() {
 	try {
 		const options = parseCliArgs(process.argv)
@@ -168,6 +309,11 @@ async function main() {
 
 		if (options.command === "full-reset") {
 			await fullReset(workspacePath)
+			return
+		}
+
+		if (options.command === "index-history") {
+			await indexHistoricalCommits(workspacePath, options.historyCount!)
 			return
 		}
 

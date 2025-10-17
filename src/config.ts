@@ -451,6 +451,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
 	let command: CliCommand | undefined
 	let workspacePath: string | undefined
 	let logLevel: ReturnType<typeof parseLogLevel> | undefined
+	let historyCount: number | undefined
 
 	for (let i = 2; i < argv.length; i++) {
 		const arg = argv[i] ?? ""
@@ -512,6 +513,34 @@ export function parseCliArgs(argv: string[]): CliOptions {
 					}
 				}
 				break
+			case "-index-history":
+			case "--index-history":
+				if (command) {
+					throw new Error("Only one command can be provided at a time")
+				}
+				command = "index-history"
+				{
+					// Next argument should be the count
+					const countArg = argv[i + 1]
+					if (!countArg || countArg.startsWith("-")) {
+						throw new Error("-index-history requires a number argument (e.g., -index-history 50)")
+					}
+					const count = parseInt(countArg, 10)
+					if (!Number.isFinite(count) || count <= 0) {
+						throw new Error(`Invalid count for -index-history: ${countArg}. Must be a positive integer.`)
+					}
+					// Store the count
+					historyCount = count
+					i++
+
+					// Check if next is workspace path
+					const next = argv[i + 1]
+					if (next && !next.startsWith("-")) {
+						workspacePath = next
+						i++
+					}
+				}
+				break
 			case "--log-level":
 			case "--level": {
 				const next = argv[i + 1]
@@ -526,15 +555,37 @@ export function parseCliArgs(argv: string[]): CliOptions {
 				if (!command && !arg.startsWith("-")) {
 					// allow shorthand: cli <command> <path>
 					const normalized = arg.toLowerCase()
-					if (normalized === "start" || normalized === "restart" || normalized === "stats" || normalized === "full-reset") {
+					if (normalized === "start" || normalized === "restart" || normalized === "stats" || normalized === "full-reset" || normalized === "index-history") {
 						if (command) {
 							throw new Error("Only one command can be provided at a time")
 						}
 						command = normalized as CliCommand
-						const next = argv[i + 1]
-						if (next && !next.startsWith("-")) {
-							workspacePath = next
+
+						// Special handling for index-history
+						if (normalized === "index-history") {
+							const countArg = argv[i + 1]
+							if (!countArg || countArg.startsWith("-")) {
+								throw new Error("index-history requires a number argument (e.g., index-history 50)")
+							}
+							const count = parseInt(countArg, 10)
+							if (!Number.isFinite(count) || count <= 0) {
+								throw new Error(`Invalid count for index-history: ${countArg}. Must be a positive integer.`)
+							}
+							historyCount = count
 							i++
+
+							// Check if next is workspace path
+							const next2 = argv[i + 1]
+							if (next2 && !next2.startsWith("-")) {
+								workspacePath = next2
+								i++
+							}
+						} else {
+							const next = argv[i + 1]
+							if (next && !next.startsWith("-")) {
+								workspacePath = next
+								i++
+							}
 						}
 						break
 					}
@@ -550,7 +601,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
 	}
 
 	if (!command) {
-		throw new Error("Please provide a command: -start, -restart, or -stats")
+		throw new Error("Please provide a command: -start, -restart, -stats, -full-reset, or -index-history <count>")
 	}
 
 	const resolvedWorkspace = workspacePath ?? "."
@@ -559,6 +610,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
 		command,
 		workspacePath: resolvedWorkspace,
 		logLevel,
+		historyCount,
 	}
 }
 

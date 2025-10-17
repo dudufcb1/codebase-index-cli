@@ -136,6 +136,26 @@ QDRANT_EMBED_DIMENSION=4096
 - `-restart <path>`: Clear local cache and recreate collection before re-indexing.
 - `-stats <path>`: Show current collection and number of tracked files without modifying anything.
 - `-full-reset <path>`: **Completely removes** all local data (`.codebase/`, `.roo-index-cli/`, `.roo-code/`). Useful when you don't know which vector store you were using or want to start from scratch.
+- `-index-history <count> [path]`: **Retroactively index historical commits.** Processes the last N commits (excluding the most recent one, which is already indexed by real-time tracking) and indexes them with LLM analysis. **Requires Qdrant and LLM configuration.**
+
+### Examples
+
+```bash
+# Start real-time indexing
+codebase -start .
+
+# Index the last 50 commits (excluding the most recent)
+codebase -index-history 50 .
+
+# Index 100 commits from a specific directory
+codebase -index-history 100 /path/to/project
+
+# Show stats
+codebase -stats .
+
+# Full reset
+codebase -full-reset .
+```
 
 ## Git Commit Tracking (Experimental)
 
@@ -203,6 +223,45 @@ Each commit includes:
 - "Commits that fixed database issues"
 - "Changes affecting the user service"
 - "Security-related updates"
+
+### Retroactive Indexing
+
+**NEW**: You can now index historical commits retroactively!
+
+The `-index-history` command allows you to process commits that happened **before** you started using this tool:
+
+```bash
+# Index the last 50 commits (excluding the most recent)
+codebase -index-history 50 .
+
+# Index 200 commits for comprehensive history
+codebase -index-history 200 /path/to/project
+```
+
+**How it works:**
+1. Fetches the last N commits from your git history (excluding the most recent one)
+2. Extracts metadata, diffs, and statistics for each commit
+3. Sends each commit to your configured LLM for semantic analysis
+4. Indexes the analysis in Qdrant alongside your code
+
+**Important notes:**
+- **Excludes the most recent commit** - The real-time tracking already indexed it
+- **Requires LLM configuration** - Same LLM env vars as real-time tracking
+- **Only works with Qdrant** - SQLite-vec doesn't support the necessary metadata
+- **Upsert handles duplicates** - Re-running with overlapping commits is safe; Qdrant will update existing entries
+- **Processing time** - Expect ~2-3 seconds per commit (LLM analysis time)
+
+**Example workflow:**
+```bash
+# 1. Start real-time tracking (indexes new commits going forward)
+codebase -start .
+
+# 2. In another terminal, index 100 historical commits
+codebase -index-history 100 .
+
+# 3. Search across all indexed commits (past and future)
+node client_examples/search-commits.js codebase-xxx "authentication changes"
+```
 
 ## Manual Configuration (Optional)
 

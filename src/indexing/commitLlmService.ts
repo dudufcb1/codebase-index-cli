@@ -222,4 +222,26 @@ export class CommitLlmService {
 
 		logger.debug(`Indexed commit ${metadata.hash.slice(0, 7)} in vector store`)
 	}
+
+	/**
+	 * Index a single commit data
+	 * Note: Qdrant's upsert will automatically handle duplicates using the point ID
+	 * (which is generated deterministically from the commit hash)
+	 * @param commitData Commit data to index
+	 * @param promptText Formatted prompt for LLM analysis
+	 */
+	async indexSingleCommit(
+		commitData: GitCommitData,
+		promptText: string,
+	): Promise<{ indexed: boolean; reason?: string }> {
+		try {
+			// Analyze and index (upsert will handle duplicates)
+			await this.analyzeAndIndexCommit(commitData, promptText)
+
+			return { indexed: true }
+		} catch (error) {
+			logger.error(`Failed to index commit ${commitData.metadata.hash.slice(0, 7)}`, error)
+			return { indexed: false, reason: "error" }
+		}
+	}
 }

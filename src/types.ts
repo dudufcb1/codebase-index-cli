@@ -50,10 +50,11 @@ export interface IndexingConfig {
 	}
 }
 
-export type CliCommand = "start" | "restart" | "stats" | "full-reset"
+export type CliCommand = "start" | "restart" | "stats" | "full-reset" | "index-history"
 
 export interface CliOptions {
 	command: CliCommand
 	workspacePath: string
 	logLevel?: LogLevel
+	historyCount?: number  // Number of commits to index for "index-history" command
 }
