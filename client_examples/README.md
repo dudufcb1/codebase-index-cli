@@ -1,24 +1,42 @@
-# SQLite-vec Search Demo Examples
+# Client Examples
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
 ![Python](https://img.shields.io/badge/python-%3E%3D3.8-blue.svg)
 
-Interactive search demos for querying codebase indexes stored in SQLite-vec.
+Client examples for querying codebase indexes stored in SQLite-vec and Qdrant.
 
 ## Overview
 
 These scripts demonstrate how to:
-- Connect to a SQLite-vec database
+- Connect to SQLite-vec or Qdrant databases
 - Generate embeddings for search queries
-- Search for similar code chunks
+- Search for code chunks or git commits
 - Display results with similarity scores
 
-Both scripts provide **identical functionality** in different languages:
-- `search-demo.js` - JavaScript/Node.js version
-- `search-demo.py` - Python version
+## Available Scripts
+
+### 1. SQLite-vec Search (Code)
+- `search-demo.js` - JavaScript/Node.js interactive search
+- `search-demo.py` - Python interactive search
+- `search-test.js` - Non-interactive quick test
+
+### 2. Qdrant Commit Search (Git Commits)
+- `search-commits.js` - Search git commits analyzed by LLM
 
 ## Quick Start
+
+### Search Git Commits (Qdrant)
+
+```bash
+# No dependencies needed - uses native fetch!
+
+# Get all commits (max 5)
+node search-commits.js codebase-908e5cbf73d44edcbc
+
+# Search commits semantically
+node search-commits.js codebase-908e5cbf73d44edcbc "cleanup and refactoring"
+```
 
 ### JavaScript/Node.js
 

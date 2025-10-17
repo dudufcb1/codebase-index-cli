@@ -14,6 +14,8 @@ import { DirectoryScanner } from "./indexing/directoryScanner.js"
 import { IgnoreManager } from "./indexing/ignoreManager.js"
 import { WorkspaceWatcher } from "./indexing/workspaceWatcher.js"
 import { GitCommitWatcher, type GitCommitInfo } from "./indexing/gitCommitWatcher.js"
+import { CommitPromptFormatter } from "./indexing/commitPromptFormatter.js"
+import { CommitLlmService } from "./indexing/commitLlmService.js"
 
 export class WorkspaceIndexer {
 	private readonly logger = new Logger("indexer")
@@ -25,6 +27,7 @@ export class WorkspaceIndexer {
 	private directoryScanner!: DirectoryScanner
 	private watcher: WorkspaceWatcher | null = null
 	private gitWatcher: GitCommitWatcher | null = null
+	private commitLlmService: CommitLlmService | null = null
 
 	constructor(private readonly config: IndexingConfig) {
 }
@@ -145,11 +148,24 @@ export class WorkspaceIndexer {
 
 		// Start git commit watcher if enabled
 		if (this.config.git?.trackCommits) {
+			// Initialize LLM service for commit analysis
+			this.commitLlmService = new CommitLlmService(
+				this.workspacePath,
+				this.embedder,
+				this.vectorStore,
+			)
+
 			this.gitWatcher = new GitCommitWatcher(
 				this.workspacePath,
 				(commit) => this.handleGitCommit(commit),
 			)
 			await this.gitWatcher.start()
+
+			if (this.commitLlmService.isConfigured()) {
+				this.logger.info("Git commit watcher started with LLM analysis enabled")
+			} else {
+				this.logger.info("Git commit watcher started (LLM analysis disabled)")
+			}
 		}
 
 		await updateIndexingStatus(this.workspacePath, {
@@ -177,12 +193,22 @@ export class WorkspaceIndexer {
 			if (changedFiles.length > 5) {
 				this.logger.info(`    ... and ${changedFiles.length - 5} more files`)
 			}
-		}
 
-		// Future phases will:
-		// - Send diff + message to LLM for interpretation
-		// - Index in separate Qdrant collection
-		// - Enable semantic search of commit history
+			// Send to LLM for analysis and index the result
+			if (this.commitLlmService?.isConfigured()) {
+				try {
+					const formatter = new CommitPromptFormatter(this.workspacePath)
+					await formatter.initialize()
+					const prompt = await formatter.formatPrompt(commit.data)
+
+					await this.commitLlmService.analyzeAndIndexCommit(commit.data, prompt)
+				} catch (error) {
+					this.logger.error("Failed to analyze and index commit", error)
+				}
+			} else {
+				this.logger.debug("LLM service not configured, skipping commit analysis")
+			}
+		}
 	}
 
 	async shutdown(): Promise<void> {
