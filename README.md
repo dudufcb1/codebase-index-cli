@@ -161,7 +161,9 @@ codebase -full-reset .
 
 Enable automatic git commit monitoring and LLM-powered analysis to make your commit history semantically searchable.
 
-> **⚠️ Important:** Git commit tracking is **only supported with Qdrant**. It will not work with SQLite-vec due to schema limitations. Use the `codebase` command (not `codesql`) to enable this feature.
+> **⚠️ Important:** Git commit tracking is **only supported with Qdrant**. SQLite-vec currently has a hardcoded schema for code chunks only and does not support the additional metadata fields required for git commits (author, branch, commit hash, etc.). While SQLite-vec is technically capable of storing this data (via additional columns or tables), it has not been implemented yet. Use the `codebase` command (not `codesql`) to enable this feature.
+>
+> **Note for contributors:** Git tracking support for SQLite-vec could be added by extending the schema or creating a separate table. See `src/vectorStore/sqliteVecClient.ts` for the current implementation.
 
 ### How It Works
 
@@ -247,7 +249,7 @@ codebase -index-history 200 /path/to/project
 **Important notes:**
 - **Excludes the most recent commit** - The real-time tracking already indexed it
 - **Requires LLM configuration** - Same LLM env vars as real-time tracking
-- **Only works with Qdrant** - SQLite-vec doesn't support the necessary metadata
+- **Only works with Qdrant** - SQLite-vec implementation doesn't currently support git metadata (could be added in the future)
 - **Upsert handles duplicates** - Re-running with overlapping commits is safe; Qdrant will update existing entries
 - **Processing time** - Expect ~2-3 seconds per commit (LLM analysis time)
 
@@ -597,7 +599,14 @@ codebase -start .
 VECTOR_STORE=qdrant ./dist/index.js -start .
 ```
 
-**Why:** SQLite-vec has a fixed schema that only supports code chunks. Git commits need additional fields (author, branch, commit hash, etc.) that only Qdrant supports.
+**Why:** The current SQLite-vec implementation uses a hardcoded schema designed for code chunks only (see `src/vectorStore/sqliteVecClient.ts:79-87`). Git commits require additional metadata fields that haven't been implemented yet. While technically feasible to add, it would require schema modifications or a separate table.
+
+**For contributors:** If you'd like to add git tracking support to SQLite-vec, you would need to:
+1. Extend the schema with additional columns (author, branch, commit_hash, etc.), OR
+2. Create a separate `git_commits` virtual table, OR
+3. Use a JSON payload column for flexible metadata storage
+
+See the Qdrant implementation in `src/vectorStore/qdrantVectorStore.ts` for reference.
 
 #### 4. **LLM Configuration for Git Tracking**
 
