@@ -196,6 +196,11 @@ async function indexHistoricalCommits(workspacePath: string, count: number): Pro
 		workspaceState.qdrantCollection,
 	)
 
+	// Initialize the vector store (creates collection if needed)
+	rootLogger.info("Initializing Qdrant collection...")
+	await vectorStore.initialize()
+	rootLogger.info(`Using Qdrant collection: ${workspaceState.qdrantCollection}`)
+
 	const extractor = new GitCommitExtractor(workspacePath)
 	const commitLlmService = new CommitLlmService(workspacePath, embedder, vectorStore)
 	const formatter = new CommitPromptFormatter(workspacePath)
