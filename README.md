@@ -452,8 +452,9 @@ Here's a complete `~/.claude/settings.json` with both hooks and status line:
     "padding": 0
   }
 }
-<img width="579" height="87" alt="image" src="https://github.com/user-attachments/assets/b35490f9-eeac-4eeb-b921-4ce79257ec0d" />
 ```
+
+<img width="579" height="87" alt="image" src="https://github.com/user-attachments/assets/b35490f9-eeac-4eeb-b921-4ce79257ec0d" />
 
 **Requirements:**
 - `jq` must be installed: `sudo apt install jq` (Linux) or `brew install jq` (macOS)
