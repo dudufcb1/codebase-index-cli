@@ -53,7 +53,21 @@ const NEW_STATE_DIRNAME = ".codebase"
 const STATE_FILENAME = "state.json"
 
 async function writeStateFile(statePath: string, state: WorkspaceState): Promise<void> {
-	await fs.writeFile(statePath, JSON.stringify(state, null, 2), "utf8")
+	// Atomic write: write to temp file first, then rename
+	// This prevents corruption if another process reads while writing
+	const tmpPath = `${statePath}.tmp.${randomUUID()}`
+	try {
+		await fs.writeFile(tmpPath, JSON.stringify(state, null, 2), "utf8")
+		await fs.rename(tmpPath, statePath)
+	} catch (error) {
+		// Clean up temp file if something went wrong
+		try {
+			await fs.unlink(tmpPath)
+		} catch {
+			// Ignore cleanup errors
+		}
+		throw error
+	}
 }
 
 export async function ensureWorkspaceState(workspacePath: string): Promise<WorkspaceState> {
