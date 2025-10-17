@@ -520,6 +520,213 @@ Here's a complete `~/.claude/settings.json` with both hooks and status line:
 - Adjust paths if you installed the CLI in a different location
 - The status line updates automatically (Claude polls it periodically)
 
+---
+
+## Troubleshooting
+
+### Common Issues and Solutions
+
+#### 1. **Embedding Dimension Mismatch**
+
+**Problem:** Errors like "dimension mismatch" or "vector size incompatible"
+
+**Cause:** Your embedder configuration changed, but the collection was created with a different dimension.
+
+**Solutions:**
+```bash
+# Option 1: Full reset (deletes all indexed data)
+codebase -full-reset .
+
+# Option 2: Restart with fresh collection (recommended)
+codebase -restart .
+```
+
+**Important:** When searching, **always use the same embedder configuration** (model and dimension) that you used for indexing. For example:
+
+```bash
+# Indexing with text-embedding-3-small (1536 dimensions)
+EMBED_MODEL=text-embedding-3-small
+EMBED_DIMENSION=1536
+
+# Searching MUST use the same model and dimension
+# ❌ WRONG: Using a different model will fail
+# ✅ CORRECT: Use the exact same configuration
+```
+
+#### 2. **Embedder Requirements**
+
+**Problem:** "Unsupported embedder provider" or connection errors
+
+**Required:** This project **requires an OpenAI-compatible API**. It supports:
+
+- ✅ **OpenAI official API** (`provider: openai`)
+- ✅ **OpenAI-compatible APIs** (`provider: openai-compatible`)
+  - LM Studio
+  - Nebius AI Studio
+  - Together AI
+  - Any API following OpenAI's format
+- ✅ **Ollama** (`provider: ollama`) - requires explicit dimension configuration
+
+**Not supported:**
+- ❌ Google Gemini API (different format)
+- ❌ Anthropic Claude API (different format)
+- ❌ Custom embedding APIs (unless OpenAI-compatible)
+
+**Configuration example:**
+```bash
+# OpenAI-compatible provider (recommended)
+EMBED_PROVIDER=openai-compatible
+EMBED_BASE_URL=http://localhost:4141/v1  # Your API endpoint
+EMBED_API_KEY=sk-your-key-here
+EMBED_MODEL=text-embedding-3-small
+EMBED_DIMENSION=1536  # Must match your model's output
+```
+
+#### 3. **Git Commit Tracking Issues**
+
+**Problem:** "Git commit tracking only works with Qdrant" error
+
+**Cause:** You're using `codesql` (SQLite-vec) but git tracking requires Qdrant.
+
+**Solution:**
+```bash
+# Use the codebase command instead
+codebase -start .
+
+# Or set the environment variable
+VECTOR_STORE=qdrant ./dist/index.js -start .
+```
+
+**Why:** SQLite-vec has a fixed schema that only supports code chunks. Git commits need additional fields (author, branch, commit hash, etc.) that only Qdrant supports.
+
+#### 4. **LLM Configuration for Git Tracking**
+
+**Problem:** Git tracking enabled but commits aren't being analyzed
+
+**Cause:** Missing LLM configuration variables.
+
+**Required environment variables:**
+```bash
+TRACK_GIT=true
+TRACK_GIT_LLM_PROVIDER=openai-compatible
+TRACK_GIT_LLM_ENDPOINT=http://localhost:4141/v1
+TRACK_GIT_LLM_MODEL=gpt-4.1
+TRACK_GIT_LLM_API_KEY=sk-your-key-here
+```
+
+**Note:** The LLM for git tracking is **separate** from the embedder. You can use:
+- Different providers (e.g., Ollama for embeddings, OpenAI for LLM analysis)
+- Different models (e.g., small embedding model, large LLM for analysis)
+
+#### 5. **Collection Not Found (Qdrant)**
+
+**Problem:** "Collection doesn't exist" when using `-index-history` or search
+
+**Cause:** Collection hasn't been created yet.
+
+**Solution:**
+```bash
+# Create the collection by starting the indexer first
+codebase -start .
+
+# Then in another terminal, index historical commits
+codebase -index-history 50 .
+```
+
+**Or:** The `-index-history` command now auto-creates the collection if needed (version >= 0.0.2).
+
+#### 6. **Qdrant Server Not Running**
+
+**Problem:** "Connection refused" or "ECONNREFUSED" errors
+
+**Cause:** Qdrant server is not running or wrong URL.
+
+**Solution:**
+```bash
+# Start Qdrant with Docker (recommended)
+docker run -p 6333:6333 qdrant/qdrant
+
+# Or specify custom Qdrant URL
+QDRANT_URL=http://your-qdrant-server:6333
+```
+
+#### 7. **Search Returns No Results**
+
+**Possible causes:**
+
+1. **Dimension mismatch** - See issue #1 above
+2. **Different embedder** - Search must use the same model as indexing
+3. **Empty index** - Run `codebase -stats .` to check if files are indexed
+4. **Wrong collection** - Verify collection name in `.codebase/state.json`
+
+**Debug steps:**
+```bash
+# 1. Check stats
+codebase -stats .
+
+# 2. Verify embedder configuration
+cat .env | grep EMBED
+
+# 3. Check collection state
+cat .codebase/state.json
+
+# 4. If all else fails, restart
+codebase -restart .
+```
+
+#### 8. **Performance Issues**
+
+**Problem:** Indexing is very slow
+
+**Solutions:**
+
+1. **Increase batch size:**
+   ```bash
+   INDEXER_BATCH_SIZE=100  # Default: 50
+   ```
+
+2. **Use smaller embedding model:**
+   ```bash
+   # Instead of large models, use smaller ones
+   EMBED_MODEL=text-embedding-3-small  # Faster than text-embedding-3-large
+   ```
+
+3. **Adjust file globs to exclude large directories:**
+   ```bash
+   INDEXER_FILE_GLOBS="src/**/*.ts,src/**/*.js"  # Only index specific patterns
+   ```
+
+4. **Disable tree-sitter parsing:**
+   ```bash
+   USE_TREE_SITTER=false  # Faster, but less semantic
+   ```
+
+---
+
+### Configuration Best Practices
+
+1. **Always use the same embedder** for indexing and searching
+2. **Specify dimension explicitly** to avoid mismatches
+3. **Keep `.env` file in project root** for consistent configuration across workspaces
+4. **Use Qdrant for production** and large projects
+5. **Use SQLite-vec for small projects** and offline development
+6. **Test with `-stats` command** before heavy indexing
+
+---
+
+### Getting Help
+
+If you encounter issues not covered here:
+
+1. Check the logs for detailed error messages
+2. Run with `--log-level debug` for verbose output
+3. Verify your `.env` configuration
+4. Check `.codebase/state.json` for collection info
+5. Try `-full-reset` as a last resort (deletes all indexed data)
+6. Open an issue on GitHub with logs and configuration
+
+---
+
 ## License
 
 MIT
