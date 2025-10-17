@@ -727,6 +727,12 @@ If you encounter issues not covered here:
 
 ---
 
+## Acknowledgments
+
+This project is based on [Roo Code](https://github.com/RooCodeInc/Roo-Code), whose indexer implementation inspired this CLI tool.
+
+---
+
 ## License
 
 MIT
