@@ -1,210 +1,311 @@
-# Installation Guide - Roo Code Index CLI
+# Installation Guide
 
-## 📋 Prerequisites
+Platform-specific installation instructions for the Codebase Index CLI.
 
-### Required Software
+## Table of Contents
 
-- **Node.js** >= 18.0.0
-- **pnpm** (package manager)
-  ```bash
-  npm install -g pnpm
-  ```
+- [Linux](#linux)
+- [macOS](#macos)
+- [Windows](#windows)
+- [Manual Installation (All Platforms)](#manual-installation-all-platforms)
 
-### Vector Store Options
+---
 
-You can choose between two options for storing vectors:
+## Prerequisites (All Platforms)
 
-#### Option 1: SQLite-vec (Recommended for local development)
-✅ **Advantages:**
-- No external services required
-- Local database in `.codebase/vectors.db`
-- Portable (you can commit the index with your project)
-- Automatic installation with `pnpm install`
+Before installing, make sure you have:
 
-❌ **Limitations:**
-- Best for small/medium projects (<100k chunks)
-- Moderate performance compared to Qdrant
+1. **Node.js** (>= 18.x)
+   - Download from: https://nodejs.org/
+   - Verify: `node --version`
 
-#### Option 2: Qdrant (Recommended for production)
-✅ **Advantages:**
-- High performance
-- Scalable to millions of vectors
-- Ideal for multiple projects sharing an index
+2. **pnpm** (package manager)
+   - Install: `npm install -g pnpm`
+   - Or visit: https://pnpm.io/installation
+   - Verify: `pnpm --version`
 
-❌ **Limitations:**
-- Requires Qdrant server running
-- Additional configuration
+---
 
-**Qdrant Installation:**
-```bash
-# With Docker (recommended)
-docker run -p 6333:6333 -p 6334:6334 \
-  -v $(pwd)/qdrant_storage:/qdrant/storage:z \
-  qdrant/qdrant
+## Linux
 
-# Or with Docker Compose
-docker-compose up -d qdrant
-```
-
-## 🚀 Installation
-
-### 1. Clone and Install Dependencies
+### Automatic Installation
 
 ```bash
 # Clone the repository
-git clone <repo-url>
-cd code-index-cli
+git clone https://github.com/dudufcb1/codebase-index-cli.git
+cd codebase-index-cli
 
-# Install dependencies
-pnpm install
-
-# Build the project
-pnpm build
-```
-
-### 2. Install Global Wrapper (Optional but Recommended)
-
-```bash
 # Run the installer
 ./scripts/install.sh
 ```
 
-This will:
-- Compile the CLI
-- Create `codebase` and `codesql` wrappers in `~/.local/bin`
-- Add `~/.local/bin` to your PATH if not already there
+The script will:
+- Install dependencies
+- Build the CLI
+- Create command wrappers in `~/.local/bin/`:
+  - `codebase` - Uses Qdrant
+  - `codesql` - Uses SQLite-vec
+  - `codebase-index` - Legacy compatibility
 
-**Optional environment variables:**
+### Add to PATH
+
+If `~/.local/bin` is not in your PATH, add this to your `~/.bashrc` or `~/.zshrc`:
+
 ```bash
-# Change installation directory
-export CODEBASE_INDEX_BIN_DIR="$HOME/bin"
-./scripts/install.sh
+export PATH="$HOME/.local/bin:$PATH"
 ```
 
-### 3. Configure Credentials
-
-Copy the example file and edit it:
-
+Then reload your shell:
 ```bash
-cp .env.example .env
+source ~/.bashrc  # or source ~/.zshrc
 ```
 
-Edit `.env` with your credentials:
+---
+
+## macOS
+
+> **⚠️ Note:** This installation script has not been tested on macOS. If you test it and it works (or needs modifications), please submit a PR with your tested configuration!
+
+### Automatic Installation
 
 ```bash
-# Embedding provider (openai, openai-compatible, ollama)
-EMBED_PROVIDER=openai-compatible
+# Clone the repository
+git clone https://github.com/dudufcb1/codebase-index-cli.git
+cd codebase-index-cli
 
-# For OpenAI
-EMBED_API_KEY=sk-...
-EMBED_MODEL=text-embedding-3-small
-
-# For compatible APIs (e.g., Nebius)
-EMBED_BASE_URL=https://api.studio.nebius.com/v1/
-EMBED_API_KEY=your-api-key
-EMBED_MODEL=Qwen/Qwen3-Embedding-8B
-
-# For Ollama (local)
-EMBED_BASE_URL=http://localhost:11434
-EMBED_MODEL=nomic-embed-text
-
-# Qdrant (only if using Qdrant)
-QDRANT_URL=http://localhost:6333
-QDRANT_API_KEY=  # Optional
+# Run the macOS installer
+./scripts/install-macos.sh
 ```
 
-## 📦 Installed Dependencies
+The script will:
+- Install dependencies
+- Build the CLI
+- Create command wrappers in `~/.local/bin/`:
+  - `codebase` - Uses Qdrant
+  - `codesql` - Uses SQLite-vec
+  - `codebase-index` - Legacy compatibility
 
-When running `pnpm install`, the following are installed:
+### Add to PATH
 
-### Production Dependencies
-- `@qdrant/js-client-rest` (^1.12.0) - Qdrant client
-- `sqlite-vec` (0.1.7-alpha.2) - SQLite extension for vectors
-- `openai` (^4.70.0) - Embeddings client
-- `chokidar` (^3.6.0) - File watcher
-- `dotenv` (^16.6.1) - Environment variables
-- `ignore` (^5.3.2) - .gitignore parser
-- `p-limit` (^4.0.0) - Concurrency control
-- `uuid` (^9.0.1) - UUID generator
-- `zod` (^3.23.8) - Schema validation
-- `async-mutex` (^0.5.0) - Async synchronization
-
-### Development Dependencies
-- `typescript` (^5.4.5)
-- `tsx` (^4.19.3)
-- `@types/node` (^20.16.11)
-
-## ✅ Verify Installation
+macOS uses `zsh` by default (since Catalina). Add to your `~/.zshrc`:
 
 ```bash
-# Check that commands are available
-which codebase
-which codesql
-
-# Check version
-codebase --version
-
-# Test with a project
-codebase -start .
-```
-
-## 🔧 Troubleshooting
-
-### Error: "Cannot find module 'sqlite-vec'"
-
-```bash
-# Clean and reinstall
-rm -rf node_modules pnpm-lock.yaml
-pnpm install
-pnpm build
-```
-
-### Error: "Qdrant connection refused"
-
-If using `codebase` (Qdrant):
-```bash
-# Check that Qdrant is running
-curl http://localhost:6333/health
-
-# If not running, start it
-docker run -p 6333:6333 qdrant/qdrant
-```
-
-If using `codesql` (SQLite-vec):
-- You don't need Qdrant, ignore this error
-
-### Error: "Permission denied" when running install.sh
-
-```bash
-chmod +x scripts/install.sh
-./scripts/install.sh
-```
-
-### Commands not found after installation
-
-Add `~/.local/bin` to your PATH:
-
-```bash
-# Bash
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-source ~/.bashrc
-
-# Zsh
 echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-## 🎯 Next Steps
+For older macOS versions using bash:
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bash_profile
+source ~/.bash_profile
+```
 
-Once installed, check the [README.md](./README.md) for:
-- Basic usage of `codebase` and `codesql`
-- Advanced configuration
-- Available commands
-- Usage examples
+---
 
-## 📚 Additional Resources
+## Windows
 
-- [Qdrant Documentation](https://qdrant.tech/documentation/)
-- [sqlite-vec on GitHub](https://github.com/asg017/sqlite-vec)
-- [OpenAI Embeddings API](https://platform.openai.com/docs/guides/embeddings)
+> **⚠️ Note:** This installation script has not been tested on Windows. If you test it and it works (or needs modifications), please submit a PR with your tested configuration!
 
+### Automatic Installation (PowerShell)
+
+```powershell
+# Clone the repository
+git clone https://github.com/dudufcb1/codebase-index-cli.git
+cd codebase-index-cli
+
+# Run the PowerShell installer
+powershell -ExecutionPolicy Bypass -File scripts\install.ps1
+```
+
+The script will:
+- Install dependencies
+- Build the CLI
+- Create batch files in `%USERPROFILE%\.local\bin\`:
+  - `codebase.bat` - Uses Qdrant
+  - `codesql.bat` - Uses SQLite-vec
+  - `codebase-index.bat` - Legacy compatibility
+
+### Add to PATH (Windows)
+
+**Option 1: GUI Method**
+1. Press `Win + R`, type `sysdm.cpl`, press Enter
+2. Go to "Advanced" tab → "Environment Variables"
+3. Under "User variables", select "Path" → "Edit"
+4. Click "New" and add: `%USERPROFILE%\.local\bin`
+5. Click "OK" on all dialogs
+6. **Restart your terminal**
+
+**Option 2: PowerShell (Admin required)**
+```powershell
+[Environment]::SetEnvironmentVariable('Path', $env:Path + ";$env:USERPROFILE\.local\bin", 'User')
+```
+Then **restart your terminal**.
+
+### Creating Aliases (Optional - Windows)
+
+Since Windows doesn't support aliases in the same way as Unix, you can use PowerShell profiles:
+
+1. Open PowerShell profile for editing:
+   ```powershell
+   notepad $PROFILE
+   ```
+   (If file doesn't exist, create it first: `New-Item -Path $PROFILE -Type File -Force`)
+
+2. Add these functions (optional shortcuts):
+   ```powershell
+   function cb { codebase $args }
+   function cbsql { codesql $args }
+   ```
+
+3. Save and reload:
+   ```powershell
+   . $PROFILE
+   ```
+
+---
+
+## Manual Installation (All Platforms)
+
+If the automatic scripts don't work, you can install manually:
+
+### 1. Clone and Build
+
+```bash
+git clone https://github.com/dudufcb1/codebase-index-cli.git
+cd codebase-index-cli
+pnpm install
+pnpm run build
+```
+
+### 2. Create Aliases/Commands
+
+#### Linux/macOS - Add to `~/.bashrc` or `~/.zshrc`:
+
+```bash
+# Get the repository path
+CODEBASE_CLI_PATH="/path/to/codebase-index-cli"
+
+# Create aliases
+alias codebase="VECTOR_STORE=qdrant node $CODEBASE_CLI_PATH/dist/index.js"
+alias codesql="VECTOR_STORE=sqlite node $CODEBASE_CLI_PATH/dist/index.js"
+alias codebase-index="node $CODEBASE_CLI_PATH/dist/index.js"
+```
+
+Replace `/path/to/codebase-index-cli` with the actual absolute path.
+
+Then reload:
+```bash
+source ~/.bashrc  # or source ~/.zshrc
+```
+
+#### Windows - PowerShell Profile Method:
+
+1. Open PowerShell profile:
+   ```powershell
+   notepad $PROFILE
+   ```
+
+2. Add these functions:
+   ```powershell
+   $CODEBASE_CLI_PATH = "C:\path\to\codebase-index-cli"
+
+   function codebase {
+       $env:VECTOR_STORE = "qdrant"
+       node "$CODEBASE_CLI_PATH\dist\index.js" $args
+   }
+
+   function codesql {
+       $env:VECTOR_STORE = "sqlite"
+       node "$CODEBASE_CLI_PATH\dist\index.js" $args
+   }
+
+   function codebase-index {
+       node "$CODEBASE_CLI_PATH\dist\index.js" $args
+   }
+   ```
+
+3. Save and reload:
+   ```powershell
+   . $PROFILE
+   ```
+
+---
+
+## Verification
+
+Test that the installation worked:
+
+```bash
+# Check if commands are available
+codebase --help      # Should show help
+codesql --help       # Should show help
+
+# Or on Windows:
+codebase.bat --help
+codesql.bat --help
+```
+
+---
+
+## Troubleshooting
+
+### "Command not found" / "Not recognized as a command"
+
+- **Linux/macOS**: Make sure `~/.local/bin` is in your PATH
+- **Windows**: Make sure `%USERPROFILE%\.local\bin` is in your PATH and you've restarted your terminal
+
+### "pnpm not found"
+
+Install pnpm globally:
+```bash
+npm install -g pnpm
+```
+
+### Permission denied (Linux/macOS)
+
+Make sure the scripts are executable:
+```bash
+chmod +x scripts/install.sh
+chmod +x scripts/install-macos.sh
+```
+
+### PowerShell script won't run (Windows)
+
+Run with execution policy bypass:
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\install.ps1
+```
+
+---
+
+## Contributing Installation Scripts
+
+**If you test the macOS or Windows installation scripts and they work (or you fix them), please contribute back!**
+
+1. Fork the repository
+2. Test the script on your platform
+3. Make any necessary fixes
+4. Update this README with your findings
+5. Submit a Pull Request
+
+Your contribution will help other users on your platform!
+
+---
+
+## Next Steps
+
+After installation, configure your environment:
+
+1. Copy `.env.example` to `.env` in the repository root
+2. Edit `.env` with your API keys and configuration
+3. Start using the CLI:
+
+```bash
+# Using SQLite-vec (local)
+codesql -start .
+
+# Using Qdrant (requires Qdrant server)
+codebase -start .
+```
+
+See the main [README.md](./README.md) for usage instructions.

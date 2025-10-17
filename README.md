@@ -17,25 +17,34 @@ Node.js tool for semantic code indexing and search using vector embeddings. Incl
 
 ## Installation
 
+### Linux (Tested)
+
 ```bash
-pnpm install
-pnpm --filter codebase-index-cli build
+git clone https://github.com/dudufcb1/codebase-index-cli.git
+cd codebase-index-cli
+./scripts/install.sh
 ```
+
+### macOS / Windows (Untested)
+
+Installation scripts are provided but **have not been tested**:
+- **macOS**: `./scripts/install-macos.sh`
+- **Windows**: `powershell -ExecutionPolicy Bypass -File scripts\install.ps1`
+
+**If you test these scripts and they work (or you fix them), please submit a PR!** See [INSTALL.md](./INSTALL.md) for detailed platform-specific instructions and manual installation alternatives.
+
+---
 
 ## Quick Start
 
-1. Run the installer once from the repository root:
+1. **Run the installer** (see Installation above)
 
-   ```bash
-   ./scripts/install.sh
-   ```
-
-   This compiles the CLI and creates wrappers in `~/.local/bin`:
+   The installer compiles the CLI and creates wrappers:
    - `codebase` - Uses Qdrant vector store (remote server)
    - `codesql` - Uses SQLite-vec (local database)
    - `codebase-index` - Legacy compatibility
 
-2. Copy `.env.example` to `.env` (in the project root) and edit it with your credentials. This file serves as global configuration for all workspaces; no need to create additional `.env` files in each repository.
+2. **Configure environment**: Copy `.env.example` to `.env` (in the project root) and edit it with your credentials. This file serves as global configuration for all workspaces; no need to create additional `.env` files in each repository.
 
 3. From any project directory:
 
