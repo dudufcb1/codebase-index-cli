@@ -155,6 +155,9 @@ async function indexHistoricalCommits(workspacePath: string, count: number): Pro
 	const { loadConfig } = await import("./config.js")
 	const { ensureWorkspaceState } = await import("./workspaceState.js")
 
+	// Import GitCommitData type
+	type GitCommitData = import("./indexing/gitCommitExtractor.js").GitCommitData
+
 	// Load config to get embedder and vector store settings
 	const config = await loadConfig({ command: "start", workspacePath, logLevel: undefined })
 
@@ -223,53 +226,46 @@ async function indexHistoricalCommits(workspacePath: string, count: number): Pro
 	rootLogger.info(`📋 Found ${commitHashes.length} commits to process`)
 	rootLogger.info("")
 
-	// Process each commit
-	let indexed = 0
-	let errors = 0
+	// Prepare commits for batch processing
+	rootLogger.info("🔧 Preparing commits for batch processing...")
+	const commitsToProcess: Array<{ commitData: GitCommitData; promptText: string }> = []
+	let extractionErrors = 0
 
 	for (let i = 0; i < commitHashes.length; i++) {
 		const hash = commitHashes[i]
 		const shortHash = hash.slice(0, 7)
 
-		rootLogger.info(`[${i + 1}/${commitHashes.length}] Processing commit ${shortHash}...`)
-
 		try {
-			// Extract commit data
 			const commitData = await extractor.extractCommitData(hash, currentBranch)
 
 			if (!commitData) {
 				rootLogger.warn(`  ⚠️  Failed to extract data for ${shortHash}`)
-				errors++
+				extractionErrors++
 				continue
 			}
 
-			// Format prompt
 			const promptText = await formatter.formatPrompt(commitData)
-
-			// Index commit (upsert will handle duplicates automatically)
-			const result = await commitLlmService.indexSingleCommit(
-				commitData,
-				promptText,
-			)
-
-			if (result.indexed) {
-				rootLogger.info(`  ✅ Indexed ${shortHash}`)
-				indexed++
-			} else {
-				rootLogger.warn(`  ❌ Failed to index ${shortHash}`)
-				errors++
-			}
-
+			commitsToProcess.push({ commitData, promptText })
 		} catch (error) {
-			rootLogger.error(`  ❌ Error processing ${shortHash}`, error)
-			errors++
-		}
-
-		// Small delay to avoid overwhelming the LLM
-		if (i < commitHashes.length - 1) {
-			await new Promise(resolve => setTimeout(resolve, 500))
+			rootLogger.error(`  ❌ Error extracting ${shortHash}`, error)
+			extractionErrors++
 		}
 	}
+
+	if (commitsToProcess.length === 0) {
+		rootLogger.error("❌ No commits could be extracted. Aborting.")
+		return
+	}
+
+	rootLogger.info(`✅ Extracted ${commitsToProcess.length} commits (${extractionErrors} extraction errors)`)
+	rootLogger.info("")
+
+	// Batch process commits
+	const results = await commitLlmService.batchIndexCommits(commitsToProcess)
+
+	// Calculate stats
+	const indexed = results.filter(r => r.indexed).length
+	const errors = results.filter(r => !r.indexed).length
 
 	rootLogger.info("")
 	rootLogger.info("=" .repeat(60))

@@ -244,4 +244,175 @@ export class CommitLlmService {
 			return { indexed: false, reason: "error" }
 		}
 	}
+
+	/**
+	 * Batch index multiple commits efficiently
+	 * Phase 1: Analyze each commit with LLM (sequential, necessary)
+	 * Phase 2: Generate embeddings in batch (parallel API calls)
+	 * Phase 3: Upsert all points in batch to vector store
+	 *
+	 * This is significantly more efficient for indexing historical commits.
+	 *
+	 * @param commits Array of {commitData, promptText} to process
+	 * @returns Results for each commit {indexed, reason?, commitHash}
+	 */
+	async batchIndexCommits(
+		commits: Array<{ commitData: GitCommitData; promptText: string }>,
+	): Promise<Array<{ indexed: boolean; reason?: string; commitHash: string }>> {
+		if (!this.config) {
+			logger.warn("LLM not configured. Skipping batch commit analysis.")
+			return commits.map(c => ({
+				indexed: false,
+				reason: "llm-not-configured",
+				commitHash: c.commitData.metadata.hash,
+			}))
+		}
+
+		if (commits.length === 0) {
+			return []
+		}
+
+		logger.info(`Batch processing ${commits.length} commits...`)
+
+		// Phase 1: LLM Analysis (sequential, cannot be parallelized)
+		logger.info(`Phase 1/3: Analyzing commits with LLM...`)
+		const analyses: Array<{ commitData: GitCommitData; analysis: string; error?: Error }> = []
+
+		for (let i = 0; i < commits.length; i++) {
+			const { commitData, promptText } = commits[i]
+			const shortHash = commitData.metadata.hash.slice(0, 7)
+
+			try {
+				logger.info(`  [${i + 1}/${commits.length}] Analyzing commit ${shortHash}...`)
+				const analysis = await this.callLlm(promptText)
+				analyses.push({ commitData, analysis })
+				logger.debug(`  ✓ Analysis received (${analysis.length} chars)`)
+			} catch (error) {
+				logger.error(`  ✗ LLM analysis failed for ${shortHash}`, error)
+				analyses.push({ commitData, analysis: "", error: error as Error })
+			}
+
+			// Small delay to avoid overwhelming LLM
+			if (i < commits.length - 1) {
+				await new Promise(resolve => setTimeout(resolve, 300))
+			}
+		}
+
+		// Phase 2: Generate embeddings in batch (parallel API calls)
+		logger.info(`Phase 2/3: Generating embeddings in batch...`)
+		const successfulAnalyses = analyses.filter(a => !a.error)
+
+		if (successfulAnalyses.length === 0) {
+			logger.warn("No successful analyses to embed")
+			return analyses.map(a => ({
+				indexed: false,
+				reason: a.error ? "llm-analysis-failed" : "no-analysis",
+				commitHash: a.commitData.metadata.hash,
+			}))
+		}
+
+		// Prepare texts for embedding
+		const textsToEmbed = successfulAnalyses.map(({ commitData, analysis }) => {
+			const { metadata, changedFiles } = commitData
+			return [
+				`Commit: ${metadata.message}`,
+				`Author: ${metadata.author}`,
+				`Branch: ${metadata.branch}`,
+				`Files changed: ${changedFiles.map(f => f.filePath).join(", ")}`,
+				``,
+				`Analysis:`,
+				analysis,
+			].join("\n")
+		})
+
+		logger.info(`  Generating ${textsToEmbed.length} embeddings...`)
+		const embeddingResult = await this.embedder.createEmbeddings(textsToEmbed)
+
+		if (!embeddingResult.embeddings || embeddingResult.embeddings.length !== successfulAnalyses.length) {
+			logger.error("Embedding generation failed or returned incorrect count")
+			return analyses.map(a => ({
+				indexed: false,
+				reason: "embedding-failed",
+				commitHash: a.commitData.metadata.hash,
+			}))
+		}
+
+		logger.info(`  ✓ Generated ${embeddingResult.embeddings.length} embeddings`)
+
+		// Phase 3: Batch upsert to vector store
+		logger.info(`Phase 3/3: Upserting ${successfulAnalyses.length} points to vector store...`)
+		const points = successfulAnalyses.map(({ commitData, analysis }, index) => {
+			const { metadata, stats, changedFiles } = commitData
+			const embedding = embeddingResult.embeddings[index]
+
+			// Prepare metadata
+			const pointMetadata = {
+				workspacePath: this.workspacePath,
+				commitHash: metadata.hash,
+				branch: metadata.branch,
+				author: metadata.author,
+				authorEmail: metadata.authorEmail,
+				date: metadata.date.toISOString(),
+				message: metadata.message,
+				filesChanged: stats.filesChanged,
+				insertions: stats.insertions,
+				deletions: stats.deletions,
+				changedFilePaths: changedFiles.map(f => f.filePath),
+				analysis,
+				type: "git-commit-analysis",
+			}
+
+			// Generate point ID
+			const commitHashForId = crypto
+				.createHash("sha256")
+				.update(`commit-${metadata.hash}`)
+				.digest("hex")
+			const pointId = generatePointId(commitHashForId)
+
+			return {
+				id: pointId,
+				vector: embedding,
+				payload: pointMetadata,
+			}
+		})
+
+		try {
+			await this.vectorStore.upsertPoints(points)
+			logger.info(`  ✓ Batch upsert completed successfully`)
+		} catch (error) {
+			logger.error("Batch upsert failed", error)
+			return analyses.map(a => ({
+				indexed: false,
+				reason: "upsert-failed",
+				commitHash: a.commitData.metadata.hash,
+			}))
+		}
+
+		// Build results
+		const results: Array<{ indexed: boolean; reason?: string; commitHash: string }> = []
+		const successfulHashes = new Set(successfulAnalyses.map(a => a.commitData.metadata.hash))
+
+		for (const { commitData, error } of analyses) {
+			if (error) {
+				results.push({
+					indexed: false,
+					reason: "llm-analysis-failed",
+					commitHash: commitData.metadata.hash,
+				})
+			} else if (successfulHashes.has(commitData.metadata.hash)) {
+				results.push({
+					indexed: true,
+					commitHash: commitData.metadata.hash,
+				})
+			} else {
+				results.push({
+					indexed: false,
+					reason: "unknown-error",
+					commitHash: commitData.metadata.hash,
+				})
+			}
+		}
+
+		return results
+	}
 }
