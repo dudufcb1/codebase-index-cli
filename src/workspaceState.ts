@@ -38,6 +38,10 @@ export interface QdrantStats {
 	lastUpdated: string
 }
 
+export interface CommitStats {
+	totalIndexed: number
+}
+
 export interface WorkspaceState {
 	workspacePath: string
 	createdAt: string
@@ -46,11 +50,25 @@ export interface WorkspaceState {
 	indexingStatus?: IndexingStatus
 	lastActivity?: LastActivity
 	qdrantStats?: QdrantStats
+	commitStats?: CommitStats
 }
 
 const LEGACY_STATE_DIRNAME = ".roo-index-cli"
 const NEW_STATE_DIRNAME = ".codebase"
 const STATE_FILENAME = "state.json"
+
+function normalizeCommitStats(value: unknown): CommitStats | undefined {
+	if (!value || typeof value !== "object") {
+		return undefined
+	}
+
+	const total = (value as any).totalIndexed
+	if (typeof total !== "number" || !Number.isFinite(total) || total < 0) {
+		return undefined
+	}
+
+	return { totalIndexed: Math.floor(total) }
+}
 
 async function writeStateFile(statePath: string, state: WorkspaceState): Promise<void> {
 	// Atomic write: write to temp file first, then rename
@@ -91,6 +109,7 @@ export async function ensureWorkspaceState(workspacePath: string): Promise<Works
 				indexingStatus: parsed.indexingStatus,
 				lastActivity: parsed.lastActivity,
 				qdrantStats: parsed.qdrantStats,
+				commitStats: normalizeCommitStats(parsed.commitStats) ?? { totalIndexed: 0 },
 			}
 			state = hydrated
 		}
@@ -108,6 +127,7 @@ export async function ensureWorkspaceState(workspacePath: string): Promise<Works
 						indexingStatus: parsed.indexingStatus,
 						lastActivity: parsed.lastActivity,
 						qdrantStats: parsed.qdrantStats,
+						commitStats: normalizeCommitStats(parsed.commitStats) ?? { totalIndexed: 0 },
 					}
 					state = hydrated
 					console.warn(
@@ -132,6 +152,7 @@ export async function ensureWorkspaceState(workspacePath: string): Promise<Works
 			qdrantCollection: collectionName,
 			createdAt: new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
+			commitStats: { totalIndexed: 0 },
 		}
 	}
 
@@ -147,6 +168,12 @@ export async function saveWorkspaceState(
 	const statePath = path.join(stateDir, STATE_FILENAME)
 	await fs.mkdir(stateDir, { recursive: true })
 
+	const normalizedCommitStats =
+		normalizeCommitStats(state.commitStats) ??
+		(state.commitStats && typeof state.commitStats.totalIndexed === "number"
+			? { totalIndexed: Math.max(0, Math.floor(state.commitStats.totalIndexed)) }
+			: undefined)
+
 	const normalized: WorkspaceState = {
 		workspacePath,
 		qdrantCollection: state.qdrantCollection,
@@ -155,6 +182,7 @@ export async function saveWorkspaceState(
 		indexingStatus: state.indexingStatus,
 		lastActivity: state.lastActivity,
 		qdrantStats: state.qdrantStats,
+		commitStats: normalizedCommitStats ?? { totalIndexed: 0 },
 	}
 
 	await writeStateFile(statePath, normalized)
@@ -225,5 +253,20 @@ export async function updateQdrantStats(
 			...stats,
 			lastUpdated: new Date().toISOString(),
 		}
+	}))
+}
+
+export async function incrementIndexedCommitCount(
+	workspacePath: string,
+	amount = 1,
+): Promise<void> {
+	if (amount <= 0) {
+		return
+	}
+
+	await updateState(workspacePath, current => ({
+		commitStats: {
+			totalIndexed: (current.commitStats?.totalIndexed ?? 0) + amount,
+		},
 	}))
 }
