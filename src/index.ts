@@ -9,6 +9,7 @@ import { parseCliArgs, resolveConfig } from "./config.js"
 import { WorkspaceIndexer } from "./indexer.js"
 import { getGlobalEnvDirectories, loadEnvFiles } from "./env.js"
 import { QdrantClient } from "@qdrant/js-client-rest"
+import type { WorkspaceState } from "./workspaceState.js"
 
 function determineLogLevel(explicit?: LogLevel): LogLevel | undefined {
 	if (explicit) {
@@ -48,8 +49,8 @@ async function printWorkspaceStats(workspacePath: string): Promise<void> {
 	const cachePath = path.join(codebaseDir, "cache.json")
 
 	const state =
-		(await readJsonFile<{ qdrantCollection?: string; createdAt?: string; updatedAt?: string }>(statePath)) ??
-		(await readJsonFile<{ qdrantCollection?: string; createdAt?: string; updatedAt?: string }>(legacyStatePath))
+		(await readJsonFile<WorkspaceState>(statePath)) ??
+		(await readJsonFile<WorkspaceState>(legacyStatePath))
 	const cache =
 		(await readJsonFile<Record<string, string>>(cachePath)) ??
 		(await readJsonFile<Record<string, string>>(legacyCachePath)) ??
@@ -63,9 +64,14 @@ async function printWorkspaceStats(workspacePath: string): Promise<void> {
 		const collection = state.qdrantCollection ?? "unknown"
 		const createdAt = state.createdAt ?? "unknown"
 		const updatedAt = state.updatedAt ?? "unknown"
+		const indexedCommits =
+			typeof state.commitStats?.totalIndexed === "number"
+				? state.commitStats.totalIndexed
+				: 0
 		rootLogger.info(`Collection: ${collection}`)
 		rootLogger.info(`Created: ${createdAt}`)
 		rootLogger.info(`Last updated: ${updatedAt}`)
+		rootLogger.info(`Indexed commits: ${indexedCommits}`)
 	}
 
 	const trackedFiles = Object.keys(cache).length
