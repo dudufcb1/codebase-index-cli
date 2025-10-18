@@ -452,9 +452,55 @@ export function parseCliArgs(argv: string[]): CliOptions {
 	let workspacePath: string | undefined
 	let logLevel: ReturnType<typeof parseLogLevel> | undefined
 	let historyCount: number | undefined
+	let searchQuery: string | undefined
+	let searchCollection: string | undefined
+	let searchLimit: number | undefined
+	let searchRerank: boolean | undefined
 
 	for (let i = 2; i < argv.length; i++) {
 		const arg = argv[i] ?? ""
+
+		if (arg.startsWith("--rerank=")) {
+			if (command !== "semantic-search") {
+				throw new Error("--rerank is only supported with the semantic-search command")
+			}
+			const value = arg.slice("--rerank=".length)
+			if (!value) {
+				throw new Error("--rerank requires a boolean value")
+			}
+			const lowered = value.toLowerCase()
+			if (lowered !== "true" && lowered !== "false") {
+				throw new Error("--rerank value must be true or false")
+			}
+			searchRerank = lowered === "true"
+			continue
+		}
+
+		if (arg.startsWith("--collection=")) {
+			if (command !== "semantic-search") {
+				throw new Error("--collection is only supported with the semantic-search command")
+			}
+			const value = arg.slice("--collection=".length)
+			if (!value) {
+				throw new Error("--collection requires a value")
+			}
+			searchCollection = value
+			continue
+		}
+
+		if (arg.startsWith("--limit=") || arg.startsWith("--results=") || arg.startsWith("--max-results=")) {
+			if (command !== "semantic-search") {
+				throw new Error("--limit is only supported with the semantic-search command")
+			}
+			const prefix = arg.includes("--limit=") ? "--limit=" : arg.includes("--results=") ? "--results=" : "--max-results="
+			const value = arg.slice(prefix.length)
+			const parsed = parseInt(value, 10)
+			if (!Number.isFinite(parsed) || parsed <= 0) {
+				throw new Error("--limit value must be a positive integer")
+			}
+			searchLimit = parsed
+			continue
+		}
 
 		switch (arg) {
 			case "-start":
@@ -520,7 +566,6 @@ export function parseCliArgs(argv: string[]): CliOptions {
 				}
 				command = "index-history"
 				{
-					// Next argument should be the count
 					const countArg = argv[i + 1]
 					if (!countArg || countArg.startsWith("-")) {
 						throw new Error("-index-history requires a number argument (e.g., -index-history 50)")
@@ -529,11 +574,9 @@ export function parseCliArgs(argv: string[]): CliOptions {
 					if (!Number.isFinite(count) || count <= 0) {
 						throw new Error(`Invalid count for -index-history: ${countArg}. Must be a positive integer.`)
 					}
-					// Store the count
 					historyCount = count
 					i++
 
-					// Check if next is workspace path
 					const next = argv[i + 1]
 					if (next && !next.startsWith("-")) {
 						workspacePath = next
@@ -541,6 +584,71 @@ export function parseCliArgs(argv: string[]): CliOptions {
 					}
 				}
 				break
+			case "-semantic-search":
+			case "--semantic-search":
+				if (command) {
+					throw new Error("Only one command can be provided at a time")
+				}
+				command = "semantic-search"
+				{
+					const next = argv[i + 1]
+					if (!next || next.startsWith("-")) {
+						throw new Error("-semantic-search requires a query argument (e.g., -semantic-search \"find api\")")
+					}
+					searchQuery = next
+					i++
+				}
+				break
+			case "--collection": {
+				if (command !== "semantic-search") {
+					throw new Error("--collection is only supported with the semantic-search command")
+				}
+				const next = argv[i + 1]
+				if (!next) {
+					throw new Error("--collection requires a value")
+				}
+				searchCollection = next
+				i++
+				break
+			}
+			case "--limit":
+			case "--results":
+			case "--max-results": {
+				if (command !== "semantic-search") {
+					throw new Error("--limit is only supported with the semantic-search command")
+				}
+				const next = argv[i + 1]
+				if (!next) {
+					throw new Error("--limit requires a value")
+				}
+				const parsed = parseInt(next, 10)
+				if (!Number.isFinite(parsed) || parsed <= 0) {
+					throw new Error("--limit value must be a positive integer")
+				}
+				searchLimit = parsed
+				i++
+				break
+			}
+			case "--rerank": {
+				if (command !== "semantic-search") {
+					throw new Error("--rerank is only supported with the semantic-search command")
+				}
+				const next = argv[i + 1]
+				if (next && !next.startsWith("-") && (next.toLowerCase() === "true" || next.toLowerCase() === "false")) {
+					searchRerank = next.toLowerCase() === "true"
+					i++
+				} else {
+					searchRerank = true
+				}
+				break
+			}
+			case "--no-rerank": {
+				if (command !== "semantic-search") {
+					throw new Error("--no-rerank is only supported with the semantic-search command")
+				}
+				searchRerank = false
+				break
+			}
 			case "--log-level":
 			case "--level": {
 				const next = argv[i + 1]
@@ -553,15 +661,20 @@ export function parseCliArgs(argv: string[]): CliOptions {
 			}
 			default:
 				if (!command && !arg.startsWith("-")) {
-					// allow shorthand: cli <command> <path>
 					const normalized = arg.toLowerCase()
-					if (normalized === "start" || normalized === "restart" || normalized === "stats" || normalized === "full-reset" || normalized === "index-history") {
+					if (
+						normalized === "start" ||
+						normalized === "restart" ||
+						normalized === "stats" ||
+						normalized === "full-reset" ||
+						normalized === "index-history" ||
+						normalized === "semantic-search"
+					) {
 						if (command) {
 							throw new Error("Only one command can be provided at a time")
 						}
 						command = normalized as CliCommand
 
-						// Special handling for index-history
 						if (normalized === "index-history") {
 							const countArg = argv[i + 1]
 							if (!countArg || countArg.startsWith("-")) {
@@ -574,12 +687,18 @@ export function parseCliArgs(argv: string[]): CliOptions {
 							historyCount = count
 							i++
 
-							// Check if next is workspace path
 							const next2 = argv[i + 1]
 							if (next2 && !next2.startsWith("-")) {
 								workspacePath = next2
 								i++
 							}
+						} else if (normalized === "semantic-search") {
+							const next = argv[i + 1]
+							if (!next || next.startsWith("-")) {
+								throw new Error("semantic-search requires a query argument (e.g., semantic-search \"find api\")")
+							}
+							searchQuery = next
+							i++
 						} else {
 							const next = argv[i + 1]
 							if (next && !next.startsWith("-")) {
@@ -587,6 +706,32 @@ export function parseCliArgs(argv: string[]): CliOptions {
 								i++
 							}
 						}
+						break
+					}
+				}
+
+				if (command === "semantic-search" && !arg.startsWith("-")) {
+					const lower = arg.toLowerCase()
+					const numericValue = Number(arg)
+					const isFiniteNumber = Number.isFinite(numericValue) && arg.trim() !== ""
+					const looksLikePath = arg.includes("/") || arg.includes("\\") || arg === "." || arg === ".."
+
+					if (!searchLimit && isFiniteNumber) {
+						const limitValue = Math.trunc(numericValue)
+						if (limitValue <= 0) {
+							throw new Error("Search result limit must be a positive integer")
+						}
+						searchLimit = limitValue
+						break
+					}
+
+					if (searchRerank === undefined && (lower === "true" || lower === "false")) {
+						searchRerank = lower === "true"
+						break
+					}
+
+					if (!searchCollection && !looksLikePath) {
+						searchCollection = arg
 						break
 					}
 				}
@@ -601,16 +746,25 @@ export function parseCliArgs(argv: string[]): CliOptions {
 	}
 
 	if (!command) {
-		throw new Error("Please provide a command: -start, -restart, -stats, -full-reset, or -index-history <count>")
+		throw new Error("Please provide a command: -start, -restart, -stats, -full-reset, -index-history <count>, or -semantic-search <query>")
+	}
+
+	if (command === "semantic-search" && !searchQuery) {
+		throw new Error("semantic-search command requires a query string")
 	}
 
 	const resolvedWorkspace = workspacePath ?? "."
+	const resolvedSearchRerank = command === "semantic-search" ? (searchRerank ?? true) : searchRerank
 
 	return {
 		command,
 		workspacePath: resolvedWorkspace,
 		logLevel,
 		historyCount,
+		searchQuery,
+		searchCollection,
+		searchLimit,
+		searchRerank: resolvedSearchRerank,
 	}
 }
 

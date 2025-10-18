@@ -26,6 +26,7 @@
 		"sqlite-vec": "0.1.7-alpha.2",
 		"tree-sitter-wasms": "^0.1.13",
 		"uuid": "^9.0.1",
+		"voyageai": "^0.0.8",
 		"web-tree-sitter": "^0.25.10",
 		"zod": "^3.23.8"
 	},

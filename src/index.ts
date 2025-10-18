@@ -9,7 +9,9 @@ import { parseCliArgs, resolveConfig } from "./config.js"
 import { WorkspaceIndexer } from "./indexer.js"
 import { getGlobalEnvDirectories, loadEnvFiles } from "./env.js"
 import { QdrantClient } from "@qdrant/js-client-rest"
-import type { WorkspaceState } from "./workspaceState.js"
+import { ensureWorkspaceState, type WorkspaceState } from "./workspaceState.js"
+import { createEmbedder } from "./embedder/index.js"
+import type { CliOptions } from "./types.js"
 
 function determineLogLevel(explicit?: LogLevel): LogLevel | undefined {
 	if (explicit) {
@@ -39,6 +41,293 @@ async function readJsonFile<T>(filePath: string): Promise<T | null> {
 		}
 		return null
 	}
+}
+
+interface SemanticSearchPayload {
+	filePath: string
+	codeChunk: string
+	startLine: number
+	endLine: number
+	segmentHash?: string
+}
+
+interface SemanticSearchResult {
+	id: string
+	score: number
+	payload: SemanticSearchPayload
+	rerankScore?: number
+}
+
+type ResultWithMeta = SemanticSearchResult & { originalIndex: number }
+
+function isSemanticSearchPayload(payload: unknown): payload is SemanticSearchPayload {
+	if (!payload || typeof payload !== "object") {
+		return false
+	}
+
+	const candidate = payload as Record<string, unknown>
+	return (
+		typeof candidate.filePath === "string" &&
+		typeof candidate.codeChunk === "string" &&
+		typeof candidate.startLine === "number" &&
+		typeof candidate.endLine === "number"
+	)
+}
+
+function formatCodeSnippet(code: string, maxLines = 20): string[] {
+	const lines = code.split("\n")
+	if (lines.length <= maxLines) {
+		return lines
+	}
+
+	const visible = Math.max(1, maxLines - 1)
+	return [...lines.slice(0, visible), "..."]
+}
+
+function printSemanticSearchResults(
+	results: SemanticSearchResult[],
+	query: string,
+	collectionName: string,
+	usedRerank: boolean,
+	rerankModel?: string,
+): void {
+	const divider = "=".repeat(60)
+	const lines: string[] = []
+
+	lines.push(divider)
+	lines.push(`Semantic search query: ${query}`)
+	lines.push(`Collection: ${collectionName}`)
+	lines.push(`Results returned: ${results.length}`)
+	if (usedRerank) {
+		lines.push(`Reranker: ${rerankModel ?? "unknown"} (Voyage AI)`)
+	}
+	lines.push(divider)
+
+	if (results.length === 0) {
+		lines.push("No results to display.")
+	} else {
+		results.forEach((result, index) => {
+			lines.push(`${index + 1}. ${result.payload.filePath}:${result.payload.startLine}-${result.payload.endLine}`)
+
+			const scoreParts = [`vectorScore=${result.score.toFixed(4)}`]
+			if (typeof result.rerankScore === "number") {
+				scoreParts.push(`rerankScore=${result.rerankScore.toFixed(4)}`)
+			}
+			if (result.payload.segmentHash) {
+				scoreParts.push(`segment=${result.payload.segmentHash}`)
+			}
+			lines.push(`   ${scoreParts.join(" | ")}`)
+
+			for (const line of formatCodeSnippet(result.payload.codeChunk)) {
+				lines.push(`   ${line}`)
+			}
+
+			lines.push("")
+		})
+	}
+
+	rootLogger.info(lines.join("\n"))
+}
+
+async function runSemanticSearchCommand(options: CliOptions, workspacePath: string): Promise<void> {
+	const query = options.searchQuery?.trim()
+	if (!query) {
+		rootLogger.error("semantic-search requires a non-empty query string")
+		process.exit(1)
+	}
+
+	let resolvedConfig: Awaited<ReturnType<typeof resolveConfig>>
+	try {
+		resolvedConfig = await resolveConfig(options)
+	} catch (error) {
+		rootLogger.error("Failed to load configuration for semantic-search", error)
+		process.exit(1)
+	}
+
+	const config = resolvedConfig.config
+	if (config.vectorStore !== "qdrant") {
+		rootLogger.error(
+			"semantic-search requires the Qdrant vector store. Use the 'codebase' command or set VECTOR_STORE=qdrant.",
+		)
+		process.exit(1)
+	}
+
+	if (!config.qdrant) {
+		rootLogger.error("Qdrant configuration is missing; cannot perform semantic search.")
+		process.exit(1)
+	}
+
+	let workspaceState: WorkspaceState
+	try {
+		workspaceState = await ensureWorkspaceState(workspacePath)
+	} catch (error) {
+		rootLogger.error(`Failed to load workspace state from ${workspacePath}`, error)
+		process.exit(1)
+	}
+
+	const collectionName = options.searchCollection ?? workspaceState.qdrantCollection
+
+	const previousLogLevel = Logger.getGlobalLevel()
+	const suppressEmbedderLogs = previousLogLevel === "info" || previousLogLevel === "debug"
+
+	let queryVector: number[] | undefined
+	let embedderError: unknown
+	try {
+		if (suppressEmbedderLogs) {
+			Logger.setGlobalLevel("warn")
+		}
+
+		const embedder = createEmbedder(config.embedder)
+		await embedder.validateConfiguration()
+		const { embeddings } = await embedder.createEmbeddings([query])
+		queryVector = embeddings?.[0]
+	} catch (error) {
+		embedderError = error
+	} finally {
+		if (suppressEmbedderLogs) {
+			Logger.setGlobalLevel(previousLogLevel)
+		}
+	}
+
+	if (embedderError) {
+		rootLogger.error("Failed to prepare embeddings for semantic search", embedderError)
+		process.exit(1)
+	}
+
+	if (!Array.isArray(queryVector)) {
+		rootLogger.error("Embedding provider returned no vector for the query.")
+		process.exit(1)
+	}
+
+	const requestedLimit = options.searchLimit ?? config.qdrant.searchMaxResults ?? 10
+	const limit = Math.max(1, Math.trunc(requestedLimit))
+	const minScore = config.qdrant.searchMinScore
+
+	const client = new QdrantClient({
+		url: config.qdrant.url,
+		apiKey: config.qdrant.apiKey,
+	})
+
+	let points: any[]
+	try {
+		const response = await client.query(collectionName, {
+			query: queryVector,
+			limit,
+			score_threshold: typeof minScore === "number" ? minScore : undefined,
+			with_payload: {
+				include: ["filePath", "codeChunk", "startLine", "endLine", "segmentHash"],
+			},
+		})
+		points = Array.isArray(response?.points) ? response.points : []
+	} catch (error) {
+		rootLogger.error(`Failed to query Qdrant collection ${collectionName}`, error)
+		process.exit(1)
+	}
+
+	const baseResults: ResultWithMeta[] = points.reduce<ResultWithMeta[]>((acc, point, index) => {
+		const payload = point?.payload
+		if (!isSemanticSearchPayload(payload)) {
+			return acc
+		}
+
+		const idValue = point?.id
+		const id = typeof idValue === "string" ? idValue : String(idValue ?? index)
+		const score = typeof point?.score === "number" ? point.score : 0
+
+		acc.push({
+			id,
+			score,
+			payload: {
+				filePath: payload.filePath,
+				codeChunk: payload.codeChunk,
+				startLine: payload.startLine,
+				endLine: payload.endLine,
+				segmentHash: payload.segmentHash,
+			},
+			originalIndex: index,
+		})
+		return acc
+	}, [])
+
+	if (baseResults.length === 0) {
+		rootLogger.info(`No semantic matches found in collection ${collectionName} for query "${query}".`)
+		return
+	}
+
+	let orderedResultsWithMeta: ResultWithMeta[] = baseResults
+	let usedRerank = false
+	let rerankModelUsed: string | undefined
+
+	const shouldAttemptRerank = options.searchRerank !== false
+	const rerankApiKey =
+		process.env.VOYAGE_RERANK_API_KEY ??
+		process.env.VOYAGEAI_API_KEY
+
+	if (shouldAttemptRerank) {
+		if (!rerankApiKey) {
+			rootLogger.warn("VOYAGE_RERANK_API_KEY (o VOYAGEAI_API_KEY) no está definido; se omite el rerank.")
+		} else {
+			try {
+				const { VoyageAIClient } = await import("voyageai")
+				const rerankModel =
+					process.env.VOYAGE_RERANK_MODEL ??
+					process.env.VOYAGEAI_RERANK_MODEL ??
+					"rerank-lite-1"
+				const baseUrl =
+					process.env.VOYAGE_RERANK_BASE_URL ??
+					process.env.VOYAGEAI_BASE_URL
+				const voyageClient = new VoyageAIClient({
+					apiKey: rerankApiKey,
+					...(baseUrl ? { environment: baseUrl } : {}),
+				})
+				const rerankResponse = await voyageClient.rerank({
+					query,
+					documents: baseResults.map((result) => `${result.payload.filePath}\n${result.payload.codeChunk}`),
+					model: rerankModel,
+					topK: Math.min(limit, baseResults.length),
+				})
+
+				const data = Array.isArray(rerankResponse?.data) ? rerankResponse.data : []
+				const seen = new Set<number>()
+				const reranked: ResultWithMeta[] = []
+
+				for (const item of data) {
+					const idx = typeof item?.index === "number" ? item.index : undefined
+					if (idx === undefined || seen.has(idx)) {
+						continue
+					}
+					const base = baseResults[idx]
+					if (base) {
+						reranked.push({
+							...base,
+							rerankScore: typeof item?.relevanceScore === "number" ? item.relevanceScore : undefined,
+						})
+						seen.add(idx)
+					}
+				}
+
+				for (const base of baseResults) {
+					if (!seen.has(base.originalIndex)) {
+						reranked.push(base)
+					}
+				}
+
+				if (reranked.length > 0) {
+					orderedResultsWithMeta = reranked
+					usedRerank = true
+					rerankModelUsed = rerankModel
+				}
+			} catch (error) {
+				rootLogger.warn(
+					`Reranker failed (${(error as Error)?.message ?? error}). Returning vector search ordering.`,
+				)
+			}
+		}
+	}
+
+	const orderedResults: SemanticSearchResult[] = orderedResultsWithMeta.map(({ originalIndex, ...rest }) => rest)
+
+	printSemanticSearchResults(orderedResults, query, collectionName, usedRerank, rerankModelUsed)
 }
 
 async function printWorkspaceStats(workspacePath: string): Promise<void> {
@@ -321,6 +610,11 @@ async function main() {
 
 		if (options.command === "index-history") {
 			await indexHistoricalCommits(workspacePath, options.historyCount!)
+			return
+		}
+
+		if (options.command === "semantic-search") {
+			await runSemanticSearchCommand(options, workspacePath)
 			return
 		}
 

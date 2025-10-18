@@ -137,6 +137,7 @@ QDRANT_EMBED_DIMENSION=4096
 - `-stats <path>`: Show current collection and number of tracked files without modifying anything.
 - `-full-reset <path>`: **Completely removes** all local data (`.codebase/`, `.roo-index-cli/`, `.roo-code/`). Useful when you don't know which vector store you were using or want to start from scratch.
 - `-index-history <count> [path]`: **Retroactively index historical commits.** Processes the last N commits (excluding the most recent one, which is already indexed by real-time tracking) and indexes them with LLM analysis. **Requires Qdrant and LLM configuration.**
+- `-semantic-search <query> [path] [options]`: Runs an ad-hoc vector search against the workspace collection (Qdrant only). Generates a fresh embedding for the query, optionally reranks the results with Voyage AI, and prints a single compact report block. Supports `--collection=<name>`, `--limit=<n>`, `--rerank/--no-rerank`, and can infer the workspace path from the current directory.
 
 ### Examples
 
@@ -153,9 +154,27 @@ codebase -index-history 100 /path/to/project
 # Show stats
 codebase -stats .
 
+# Ad-hoc semantic search (rerank disabled)
+codebase semantic-search "tree sitter" --no-rerank
+
+# Same search forcing a collection and rerank model
+codebase semantic-search "database migrations" --collection=codebase-123 --limit=20 --rerank
+
 # Full reset
 codebase -full-reset .
 ```
+
+### Voyage reranker configuration
+
+The `semantic-search` command can re-score the top vector hits with Voyage AI. Configure it via environment variables:
+
+| Purpose | Primary variable | Fallback |
+| --- | --- | --- |
+| API key | `VOYAGE_RERANK_API_KEY` | `VOYAGEAI_API_KEY` |
+| Model | `VOYAGE_RERANK_MODEL` | `VOYAGEAI_RERANK_MODEL` → defaults to `rerank-lite-1` |
+| Base URL (optional) | `VOYAGE_RERANK_BASE_URL` | `VOYAGEAI_BASE_URL` |
+
+Set those values in your global `.env` (or per-session) before running `codebase semantic-search ...`. If the key is missing the rerank step is skipped automatically.
 
 ## Git Commit Tracking (Experimental)
 
