@@ -1,0 +1,1961 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Complete documentation for the Codebase Index CLI ecosystem - semantic code search for AI coding assistants">
+      
+      
+        <meta name="author" content="Eduardo (dudufcb1)">
+      
+      
+        <link rel="canonical" href="https://dudufcb1.github.io/codebase-index-cli/codebase-index-cli/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../semantic-search-mcp/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Codebase Index CLI - Codebase Index CLI - Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#codebase-index-cli" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Codebase Index CLI - Documentation" class="md-header__button md-logo" aria-label="Codebase Index CLI - Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Codebase Index CLI - Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Codebase Index CLI
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dudufcb1/codebase-index-cli" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dudufcb1/codebase-index-cli
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Codebase Index CLI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../semantic-search-mcp/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Semantic Search MCP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../claude-code-chat-ui/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Claude Code Chat UI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../claude-hooks/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Claude Hooks
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../prompt-configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Prompt Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../resources/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Resources
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../disclaimer/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About This Project
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Codebase Index CLI - Documentation" class="md-nav__button md-logo" aria-label="Codebase Index CLI - Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    Codebase Index CLI - Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dudufcb1/codebase-index-cli" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dudufcb1/codebase-index-cli
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Codebase Index CLI
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Codebase Index CLI
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#motivation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Motivation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Motivation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#integration-with-claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integration with Claude Code
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linux-tested" class="md-nav__link">
+    <span class="md-ellipsis">
+      Linux (Tested)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#macos-windows-untested" class="md-nav__link">
+    <span class="md-ellipsis">
+      macOS / Windows (Untested)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Start
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vector-store-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vector Store Options
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vector Store Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sqlite-vec-via-codesql-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQLite-vec (via codesql command)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qdrant-via-codebase-command" class="md-nav__link">
+    <span class="md-ellipsis">
+      Qdrant (via codebase command)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vector-store-specific-embedders" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vector-Store-Specific Embedders
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Vector-Store-Specific Embedders">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      Available Commands
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#voyage-reranker-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Voyage Reranker Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#git-commit-tracking-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      Git Commit Tracking (Experimental)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Git Commit Tracking (Experimental)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      How It Works
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#searching-commits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Searching Commits
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-indexed" class="md-nav__link">
+    <span class="md-ellipsis">
+      What Gets Indexed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Use Cases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retroactive-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Retroactive Indexing
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#manual-configuration-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      Manual Configuration (Optional)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#direct-usage-without-wrapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      Direct Usage Without Wrapper
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-does-the-cli-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      What Does the CLI Store?
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#client-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Client Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Client Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#code-search-sqlite-vec" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Search (SQLite-vec)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commit-history-search-qdrant" class="md-nav__link">
+    <span class="md-ellipsis">
+      Commit History Search (Qdrant)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-languages-tree-sitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported Languages (Tree-sitter)
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#claude-code-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Claude Code Integration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Claude Code Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#auto-start-on-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      Auto-Start on Session
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#status-line-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status Line Integration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#complete-configuration-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Complete Configuration Example
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#common-issues-and-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Issues and Solutions
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues and Solutions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-embedding-dimension-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Embedding Dimension Mismatch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-embedder-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Embedder Requirements
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-git-commit-tracking-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Git Commit Tracking Issues
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-llm-configuration-for-git-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. LLM Configuration for Git Tracking
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-collection-not-found-qdrant" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Collection Not Found (Qdrant)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-qdrant-server-not-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Qdrant Server Not Running
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-search-returns-no-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Search Returns No Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. Performance Issues
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuration-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration Best Practices
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      Getting Help
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-projects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related Projects
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Related Projects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#semantic-search-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Semantic Search MCP
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      License
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../semantic-search-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Semantic Search MCP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../claude-code-chat-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Claude Code Chat UI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../claude-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Claude Hooks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompt-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prompt Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../disclaimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    About This Project
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="codebase-index-cli">Codebase Index CLI</h1>
+<p><img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg" /> <img alt="Node" src="https://img.shields.io/badge/node-%3E%3D18-green.svg" /> <img alt="TypeScript" src="https://img.shields.io/badge/language-TypeScript-blue.svg" /></p>
+<p><strong>Node.js tool for semantic code indexing and search using vector embeddings. Includes automatic git commit tracking with LLM analysis for semantic commit history search.</strong></p>
+<p><strong>Repository:</strong> <a href="https://github.com/dudufcb1/codebase-index-cli">github.com/dudufcb1/codebase-index-cli</a></p>
+<hr />
+<h2 id="motivation">Motivation</h2>
+<p>This is an experimental project born from a simple need: giving semantic search capabilities to AI coding assistants that don't have it built-in.</p>
+<p>While working with tools like Claude Code, Cline, and Codex, I noticed they often struggle with large codebases because they lack native semantic search. They might miss relevant code scattered across multiple files, or fail to understand the broader context of a project.</p>
+<p>This CLI aims to be a lightweight semantic context engine that any AI assistant can use. It runs in the background, indexes your codebase in real-time, and makes it searchable through natural language queries.</p>
+<h3 id="integration-with-claude-code">Integration with Claude Code</h3>
+<p>The CLI is designed to hook into Claude Code seamlessly:</p>
+<ul>
+<li><strong>Auto-start on session:</strong> Automatically begins indexing when you start Claude Code</li>
+<li><strong>Real-time sync:</strong> Watches for file changes and keeps the index up-to-date</li>
+<li><strong>Status line integration:</strong> Shows indexing status directly in Claude's status line</li>
+<li><strong>Zero configuration:</strong> Works out of the box with Claude Code's hooks system</li>
+</ul>
+<p>See the <a href="#claude-code-integration">Claude Code Integration</a> section below for setup instructions.</p>
+<div class="admonition note">
+<p class="admonition-title">Humble Goals</p>
+<p>This project is humble in its goals: it's not trying to replace specialized tools, but rather to fill a gap for developers who want semantic code understanding in environments that don't natively support it.</p>
+</div>
+<hr />
+<h2 id="features">Features</h2>
+<ul>
+<li><strong>Semantic Code Search</strong> - Vector-based search across your entire codebase</li>
+<li><strong>Dual Storage Options</strong> - SQLite-vec (local) or Qdrant (scalable)</li>
+<li><strong>Real-time File Watching</strong> - Automatically re-indexes on file changes</li>
+<li><strong>Git Commit Tracking</strong> - Monitors commits and indexes them with LLM analysis</li>
+<li><strong>Tree-sitter Parsing</strong> - Semantic code parsing for 29+ languages</li>
+<li><strong>Flexible Configuration</strong> - Per-vector-store embedder configuration</li>
+</ul>
+<hr />
+<h2 id="installation">Installation</h2>
+<h3 id="linux-tested">Linux (Tested)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/dudufcb1/codebase-index-cli.git
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>codebase-index-cli
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>./scripts/install.sh
+</code></pre></div>
+<h3 id="macos-windows-untested">macOS / Windows (Untested)</h3>
+<p>Installation scripts are provided but have not been tested:</p>
+<ul>
+<li><strong>macOS:</strong> <code>./scripts/install-macos.sh</code></li>
+<li><strong>Windows:</strong> <code>powershell -ExecutionPolicy Bypass -File scripts\install.ps1</code></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Help Wanted</p>
+<p>If you test these scripts and they work (or you fix them), please submit a PR! See <code>INSTALL.md</code> for detailed platform-specific instructions and manual installation alternatives.</p>
+</div>
+<hr />
+<h2 id="quick-start">Quick Start</h2>
+<ol>
+<li><strong>Run the installer</strong> (see Installation above)</li>
+</ol>
+<p>The installer compiles the CLI and creates wrappers:
+   - <code>codebase</code> - Uses Qdrant vector store (remote server)
+   - <code>codesql</code> - Uses SQLite-vec (local database)
+   - <code>codebase-index</code> - Legacy compatibility</p>
+<ol>
+<li>
+<p><strong>Configure environment:</strong> Copy <code>.env.example</code> to <code>.env</code> (in the project root) and edit it with your credentials. This file serves as global configuration for all workspaces; no need to create additional <code>.env</code> files in each repository.</p>
+</li>
+<li>
+<p><strong>From any project directory:</strong></p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Using SQLite-vec (local database)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>codesql<span class="w"> </span>-start<span class="w"> </span>.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Using Qdrant (requires Qdrant server running)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>codebase<span class="w"> </span>-start<span class="w"> </span>.
+</code></pre></div>
+<p>The monitor performs a complete directory scan and watches for changes until you press <code>Ctrl+C</code>.</p>
+<p><img alt="Indexing in action" src="../assets/images/indexing.png" /></p>
+<p><em>CLI in action: <code>codebase start .</code> configuring workspace, embedder, and Qdrant, then starting the initial scan</em></p>
+<hr />
+<h2 id="vector-store-options">Vector Store Options</h2>
+<p>The vector store is determined by which command you use:</p>
+<h3 id="sqlite-vec-via-codesql-command">SQLite-vec (via <code>codesql</code> command)</h3>
+<ul>
+<li>Local database stored in <code>.codebase/vectors.db</code></li>
+<li>No external services required</li>
+<li>Portable - can be committed with your project</li>
+<li><strong>Best for:</strong> Small/medium projects, local development, offline usage</li>
+<li><strong>Usage:</strong> <code>codesql -start .</code></li>
+</ul>
+<h3 id="qdrant-via-codebase-command">Qdrant (via <code>codebase</code> command)</h3>
+<ul>
+<li>High performance vector search</li>
+<li>Scalable to millions of vectors</li>
+<li><strong>Best for:</strong> Large projects, production, multiple projects sharing an index</li>
+<li><strong>Requires:</strong> Qdrant server running (e.g., <code>docker run -p 6333:6333 qdrant/qdrant</code>)</li>
+<li><strong>Usage:</strong> <code>codebase -start .</code></li>
+</ul>
+<hr />
+<h2 id="vector-store-specific-embedders">Vector-Store-Specific Embedders</h2>
+<div class="admonition tip">
+<p class="admonition-title">NEW Feature</p>
+<p>You can now use different embedders for SQLite vs Qdrant!</p>
+</div>
+<p>This allows you to optimize your embedding strategy:</p>
+<ul>
+<li>Use a smaller/cheaper model for local SQLite development</li>
+<li>Use a larger/more accurate model for production Qdrant</li>
+<li>Use local Ollama for SQLite (offline) and cloud API for Qdrant (online)</li>
+</ul>
+<h3 id="quick-example">Quick Example</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Global fallback (used by both if no specific config)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">EMBED_PROVIDER</span><span class="o">=</span>openai-compatible
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nv">EMBED_BASE_URL</span><span class="o">=</span>https://api.studio.nebius.com/v1/
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">EMBED_API_KEY</span><span class="o">=</span>your-key
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">EMBED_MODEL</span><span class="o">=</span>Qwen/Qwen3-Embedding-8B
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># SQLite-specific (overrides global for SQLite)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">SQLITE_EMBED_MODEL</span><span class="o">=</span>text-embedding-3-small
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nv">SQLITE_EMBED_DIMENSION</span><span class="o">=</span><span class="m">1536</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Qdrant-specific (overrides global for Qdrant)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="nv">QDRANT_EMBED_MODEL</span><span class="o">=</span>Qwen/Qwen3-Embedding-8B
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nv">QDRANT_EMBED_DIMENSION</span><span class="o">=</span><span class="m">4096</span>
+</code></pre></div>
+<p>See <code>EMBEDDER_CONFIG.md</code> in the repository for detailed examples and use cases.</p>
+<hr />
+<h2 id="available-commands">Available Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-start &lt;path&gt;</code></td>
+<td>Start the monitor (creates collection if it doesn't exist, updates if it does)</td>
+</tr>
+<tr>
+<td><code>-restart &lt;path&gt;</code></td>
+<td>Clear local cache and recreate collection before re-indexing</td>
+</tr>
+<tr>
+<td><code>-stats &lt;path&gt;</code></td>
+<td>Show current collection and number of tracked files without modifying anything</td>
+</tr>
+<tr>
+<td><code>-full-reset &lt;path&gt;</code></td>
+<td>Completely removes all local data (<code>.codebase/</code>, <code>.roo-index-cli/</code>, <code>.roo-code/</code>). Useful when you don't know which vector store you were using or want to start from scratch</td>
+</tr>
+<tr>
+<td><code>-index-history &lt;count&gt; [path]</code></td>
+<td>Retroactively index historical commits. Processes the last N commits (excluding the most recent one) and indexes them with LLM analysis. Requires Qdrant and LLM configuration</td>
+</tr>
+<tr>
+<td><code>-semantic-search &lt;query&gt; [path] [options]</code></td>
+<td>Runs an ad-hoc vector search against the workspace collection (Qdrant only). Generates a fresh embedding for the query, optionally reranks the results with Voyage AI, and prints a single compact report block</td>
+</tr>
+</tbody>
+</table>
+<h3 id="examples">Examples</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Start real-time indexing</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>codebase<span class="w"> </span>-start<span class="w"> </span>.
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Index the last 50 commits (excluding the most recent)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>codebase<span class="w"> </span>-index-history<span class="w"> </span><span class="m">50</span><span class="w"> </span>.
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Index 100 commits from a specific directory</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>codebase<span class="w"> </span>-index-history<span class="w"> </span><span class="m">100</span><span class="w"> </span>/path/to/project
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># Show stats</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>codebase<span class="w"> </span>-stats<span class="w"> </span>.
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># Ad-hoc semantic search (rerank disabled)</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>codebase<span class="w"> </span>semantic-search<span class="w"> </span><span class="s2">&quot;tree sitter&quot;</span><span class="w"> </span>--no-rerank
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="c1"># Same search forcing a collection and rerank model</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>codebase<span class="w"> </span>semantic-search<span class="w"> </span><span class="s2">&quot;database migrations&quot;</span><span class="w"> </span>--collection<span class="o">=</span>codebase-123<span class="w"> </span>--limit<span class="o">=</span><span class="m">20</span><span class="w"> </span>--rerank
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="c1"># Full reset</span>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>codebase<span class="w"> </span>-full-reset<span class="w"> </span>.
+</code></pre></div>
+<h3 id="voyage-reranker-configuration">Voyage Reranker Configuration</h3>
+<p>The <code>semantic-search</code> command can re-score the top vector hits with Voyage AI. Configure it via environment variables:</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Primary variable</th>
+<th>Fallback</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API key</td>
+<td><code>VOYAGE_RERANK_API_KEY</code></td>
+<td><code>VOYAGEAI_API_KEY</code></td>
+</tr>
+<tr>
+<td>Model</td>
+<td><code>VOYAGE_RERANK_MODEL</code></td>
+<td><code>VOYAGEAI_RERANK_MODEL</code> → defaults to <code>rerank-lite-1</code></td>
+</tr>
+<tr>
+<td>Base URL (optional)</td>
+<td><code>VOYAGE_RERANK_BASE_URL</code></td>
+<td><code>VOYAGEAI_BASE_URL</code></td>
+</tr>
+</tbody>
+</table>
+<p>Set those values in your global <code>.env</code> (or per-session) before running <code>codebase semantic-search ...</code>. If the key is missing the rerank step is skipped automatically.</p>
+<hr />
+<h2 id="git-commit-tracking-experimental">Git Commit Tracking (Experimental)</h2>
+<p>Enable automatic git commit monitoring and LLM-powered analysis to make your commit history semantically searchable.</p>
+<div class="admonition warning">
+<p class="admonition-title">Important</p>
+<p>Git commit tracking is only supported with Qdrant. SQLite-vec currently has a hardcoded schema for code chunks only and does not support the additional metadata fields required for git commits.</p>
+<p><strong>Note for contributors:</strong> Git tracking support for SQLite-vec could be added by extending the schema or creating a separate table. See <code>src/vectorStore/sqliteVecClient.ts</code> for the current implementation.</p>
+</div>
+<h3 id="how-it-works">How It Works</h3>
+<p>When enabled, the CLI watches the <code>.git</code> directory and:</p>
+<ol>
+<li><strong>Detects commits</strong> - Monitors new commits, pulls, merges, and branch changes</li>
+<li><strong>Extracts metadata</strong> - Author, date, message, diff, changed files, and stats</li>
+<li><strong>LLM Analysis</strong> - Sends commit context to an LLM for semantic understanding</li>
+<li><strong>Vector Indexing</strong> - Stores the analysis in the same collection as your code</li>
+<li><strong>Semantic Search</strong> - Query your commit history using natural language</li>
+</ol>
+<h3 id="configuration">Configuration</h3>
+<p>Add these variables to your <code>.env</code> file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Enable git tracking</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nv">TRACK_GIT</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Configure LLM for commit analysis (required for indexing)</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nv">TRACK_GIT_LLM_PROVIDER</span><span class="o">=</span>openai-compatible
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nv">TRACK_GIT_LLM_ENDPOINT</span><span class="o">=</span>http://localhost:4141/v1
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nv">TRACK_GIT_LLM_MODEL</span><span class="o">=</span>gpt-4.1
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="nv">TRACK_GIT_LLM_API_KEY</span><span class="o">=</span>sk-your-key-here
+</code></pre></div>
+<h3 id="searching-commits">Searching Commits</h3>
+<p>Use the provided client example to search your commit history:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Get all commits (max 5)</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>node<span class="w"> </span>client_examples/search-commits.js<span class="w"> </span>codebase-908e5cbf73d44edcbc
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Semantic search</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>node<span class="w"> </span>client_examples/search-commits.js<span class="w"> </span>codebase-908e5cbf73d44edcbc<span class="w"> </span><span class="s2">&quot;cleanup and refactoring&quot;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>node<span class="w"> </span>client_examples/search-commits.js<span class="w"> </span>codebase-908e5cbf73d44edcbc<span class="w"> </span><span class="s2">&quot;authentication improvements&quot;</span>
+</code></pre></div>
+<p>The search returns:</p>
+<ul>
+<li>Commit hash, branch, author, and date</li>
+<li>Commit message</li>
+<li>Files changed with statistics</li>
+<li>LLM-generated semantic analysis</li>
+</ul>
+<h3 id="what-gets-indexed">What Gets Indexed</h3>
+<p>Each commit includes:</p>
+<ul>
+<li><strong>Metadata:</strong> Hash, author, email, date, branch</li>
+<li><strong>Changes:</strong> Files added/modified/deleted/renamed</li>
+<li><strong>Statistics:</strong> Insertions, deletions, files changed</li>
+<li><strong>Diff:</strong> Full unified diff (for LLM context)</li>
+<li><strong>Analysis:</strong> LLM-generated semantic summary</li>
+</ul>
+<h3 id="use-cases">Use Cases</h3>
+<ul>
+<li>"Find commits related to authentication"</li>
+<li>"Show refactoring work in the last month"</li>
+<li>"Commits that fixed database issues"</li>
+<li>"Changes affecting the user service"</li>
+<li>"Security-related updates"</li>
+</ul>
+<h3 id="retroactive-indexing">Retroactive Indexing</h3>
+<div class="admonition tip">
+<p class="admonition-title">NEW Feature</p>
+<p>You can now index historical commits retroactively!</p>
+</div>
+<p>The <code>-index-history</code> command allows you to process commits that happened before you started using this tool:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Index the last 50 commits (excluding the most recent)</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>codebase<span class="w"> </span>-index-history<span class="w"> </span><span class="m">50</span><span class="w"> </span>.
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Index 200 commits for comprehensive history</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>codebase<span class="w"> </span>-index-history<span class="w"> </span><span class="m">200</span><span class="w"> </span>/path/to/project
+</code></pre></div>
+<p><img alt="Indexing commit history" src="../assets/images/indexing_commits.png" /></p>
+<p><em>Retroactive commit indexing in action: <code>codebase -index-history 100</code> analyzing historical commits with LLM</em></p>
+<p><strong>How it works:</strong></p>
+<ol>
+<li>Fetches the last N commits from your git history (excluding the most recent one)</li>
+<li>Extracts metadata, diffs, and statistics for each commit</li>
+<li>Sends each commit to your configured LLM for semantic analysis</li>
+<li>Indexes the analysis in Qdrant alongside your code</li>
+</ol>
+<p><strong>Important notes:</strong></p>
+<ul>
+<li><strong>Excludes the most recent commit</strong> - The real-time tracking already indexed it</li>
+<li><strong>Requires LLM configuration</strong> - Same LLM env vars as real-time tracking</li>
+<li><strong>Only works with Qdrant</strong> - SQLite-vec implementation doesn't currently support git metadata</li>
+<li><strong>Upsert handles duplicates</strong> - Re-running with overlapping commits is safe</li>
+<li><strong>Processing time</strong> - Expect ~2-3 seconds per commit (LLM analysis time)</li>
+</ul>
+<p><strong>Example workflow:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># 1. Start real-time tracking (indexes new commits going forward)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>codebase<span class="w"> </span>-start<span class="w"> </span>.
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># 2. In another terminal, index 100 historical commits</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>codebase<span class="w"> </span>-index-history<span class="w"> </span><span class="m">100</span><span class="w"> </span>.
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1"># 3. Search across all indexed commits (past and future)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>node<span class="w"> </span>client_examples/search-commits.js<span class="w"> </span>codebase-xxx<span class="w"> </span><span class="s2">&quot;authentication changes&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="manual-configuration-optional">Manual Configuration (Optional)</h2>
+<p>You can create a <code>codebase-index.config.json</code> file in the project directory if you prefer to define everything explicitly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&quot;workspacePath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/path/to/workspace&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&quot;embedder&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nt">&quot;provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text-embedding-3-small&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="nt">&quot;apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sk-...&quot;</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="nt">&quot;qdrant&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:6333&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="nt">&quot;apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="nt">&quot;watch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="nt">&quot;debounceMs&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">500</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Important variables:</strong></p>
+<ul>
+<li><code>workspacePath</code>: Absolute path to the repository to index</li>
+<li><code>embedder</code>: Supported provider (openai, openai-compatible, ollama) and credentials</li>
+<li><code>qdrant</code>: Qdrant instance where vectors will be stored</li>
+</ul>
+<hr />
+<h2 id="direct-usage-without-wrapper">Direct Usage Without Wrapper</h2>
+<p>If you don't want to install the wrapper, you can run directly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pnpm<span class="w"> </span>--filter<span class="w"> </span>codebase-index-cli<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>node<span class="w"> </span>dist/index.js<span class="w"> </span>-start<span class="w"> </span>/path/to/workspace
+</code></pre></div>
+<hr />
+<h2 id="what-does-the-cli-store">What Does the CLI Store?</h2>
+<p>Each workspace maintains its own state in <code>.codebase/</code>:</p>
+<ul>
+<li><code>.codebase/state.json</code>: Assigned Qdrant collection, creation/update dates, indexing status</li>
+<li><code>.codebase/cache.json</code>: File hashes to detect changes. Automatically regenerated after <code>-restart</code></li>
+<li><code>.codebase/vectors.db</code>: SQLite database (when using <code>codesql</code> command)</li>
+</ul>
+<p>Legacy files (<code>.roo-index-cli/state.json</code> and <code>.roo-code/index-cache.json</code>) are migrated on first run.</p>
+<hr />
+<h2 id="client-examples">Client Examples</h2>
+<p>The <code>client_examples/</code> directory contains standalone scripts for querying your indexed codebase and commit history:</p>
+<h3 id="code-search-sqlite-vec">Code Search (SQLite-vec)</h3>
+<p>Interactive search scripts that connect directly to your local <code>.codebase/vectors.db</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># JavaScript (Node.js)</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nb">cd</span><span class="w"> </span>client_examples
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>npm<span class="w"> </span>install<span class="w"> </span>better-sqlite3<span class="w"> </span>sqlite-vec<span class="w"> </span>dotenv
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>node<span class="w"> </span>search-demo.js
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="c1"># Python</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>pip<span class="w"> </span>install<span class="w"> </span>sqlite-vec<span class="w"> </span>requests<span class="w"> </span>python-dotenv
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>python<span class="w"> </span>search-demo.py
+</code></pre></div>
+<h3 id="commit-history-search-qdrant">Commit History Search (Qdrant)</h3>
+<p>Search git commits analyzed by LLM (requires <code>TRACK_GIT=true</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># No dependencies needed - uses native fetch</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>node<span class="w"> </span>client_examples/search-commits.js<span class="w"> </span>&lt;collection-name&gt;<span class="w"> </span><span class="o">[</span>query<span class="o">]</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Examples:</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>node<span class="w"> </span>client_examples/search-commits.js<span class="w"> </span>codebase-908e5cbf73d44edcbc
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>node<span class="w"> </span>client_examples/search-commits.js<span class="w"> </span>codebase-908e5cbf73d44edcbc<span class="w"> </span><span class="s2">&quot;cleanup and refactoring&quot;</span>
+</code></pre></div>
+<p>See <code>client_examples/README.md</code> for detailed documentation.</p>
+<hr />
+<h2 id="architecture">Architecture</h2>
+<p>The CLI is built with a modular architecture:</p>
+<ul>
+<li><strong>Indexer Core</strong> (<code>src/indexer.ts</code>) - Main orchestrator</li>
+<li><strong>File Watching</strong> (<code>src/indexing/workspaceWatcher.ts</code>) - Real-time change detection</li>
+<li><strong>Git Integration</strong> (<code>src/indexing/gitCommitWatcher.ts</code>) - Commit monitoring</li>
+<li><strong>LLM Service</strong> (<code>src/indexing/commitLlmService.ts</code>) - Commit analysis</li>
+<li><strong>Vector Stores</strong> (<code>src/vectorStore/</code>) - Qdrant and SQLite-vec implementations</li>
+<li><strong>Embedders</strong> (<code>src/embedder/</code>) - OpenAI, OpenAI-compatible, and Ollama support</li>
+<li><strong>Tree-sitter</strong> (<code>src/services/tree-sitter/</code>) - Semantic code parsing for 29+ languages</li>
+</ul>
+<hr />
+<h2 id="supported-languages-tree-sitter">Supported Languages (Tree-sitter)</h2>
+<p>When <code>USE_TREE_SITTER=true</code>, the CLI parses code semantically for these languages:</p>
+<p>C, C++, C#, CSS, Elisp, Elixir, Go, HTML, Java, JavaScript, Kotlin, Lua, OCaml, PHP, Python, Ruby, Rust, Scala, Solidity, Swift, SystemRDL, TLA+, TOML, TypeScript, TSX, Vue, Zig, and more.</p>
+<hr />
+<h2 id="claude-code-integration">Claude Code Integration</h2>
+<p>This CLI integrates seamlessly with Claude Code through hooks and status line customization.</p>
+<h3 id="auto-start-on-session">Auto-Start on Session</h3>
+<p>Configure Claude Code to automatically start the indexer when you begin a session.</p>
+<p>Edit <code>~/.claude/settings.json</code> and add:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="nt">&quot;SessionStart&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">        </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">          </span><span class="p">{</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;command&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">            </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nohup ~/.local/bin/codebase -start \&quot;$CLAUDE_PROJECT_DIR\&quot; &gt; /dev/null 2&gt;&amp;1 &amp;&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">            </span><span class="nt">&quot;timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">          </span><span class="p">}</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">        </span><span class="p">]</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>What this does:</strong></p>
+<ul>
+<li>Automatically starts <code>codebase -start</code> when Claude Code opens a project</li>
+<li>Runs in background (<code>nohup ... &amp;</code>) so it doesn't block Claude</li>
+<li>Uses <code>$CLAUDE_PROJECT_DIR</code> to index the current project directory</li>
+<li>Times out after 10 seconds if something goes wrong</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Adjust the path (<code>~/.local/bin/codebase</code>) if you installed the CLI in a different location.</p>
+</div>
+<h3 id="status-line-integration">Status Line Integration</h3>
+<p>Show real-time indexing status in Claude's status line.</p>
+<p><strong>1. Create the status line script</strong> <code>~/.claude/statusline.sh</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="ch">#!/usr/bin/env bash</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="c1"># Line 1: Original context usage from ccstatusline</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>bunx<span class="w"> </span>-y<span class="w"> </span>ccstatusline@latest
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Line 2: Codebase indexing status with detailed stats</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CLAUDE_PROJECT_DIR</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CLAUDE_PROJECT_DIR</span><span class="s2">/.codebase/state.json&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">    </span><span class="nv">STATE_FILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$CLAUDE_PROJECT_DIR</span><span class="s2">/.codebase/state.json&quot;</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="w">    </span><span class="c1"># Extract indexing stats</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="w">    </span><span class="nv">INDEXING_STATE</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.indexingStatus.state // &quot;&quot;&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATE_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="w">    </span><span class="nv">LAST_ACTION</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.lastActivity.action // &quot;&quot;&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATE_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="w">    </span><span class="nv">TOTAL_VECTORS</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.qdrantStats.totalVectors // 0&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATE_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="w">    </span><span class="nv">UNIQUE_FILES</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.qdrantStats.uniqueFiles // 0&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATE_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="w">    </span><span class="nv">UPDATED_AT</span><span class="o">=</span><span class="k">$(</span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.updatedAt // &quot;&quot;&#39;</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$STATE_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">    </span><span class="c1"># Calculate time since last update</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$UPDATED_AT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="w">        </span><span class="nv">LAST_UPDATE</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$UPDATED_AT</span><span class="s2">&quot;</span><span class="w"> </span>+%s<span class="w"> </span><span class="m">2</span>&gt;/dev/null<span class="k">)</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="w">        </span><span class="nv">NOW</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%s<span class="k">)</span>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="w">        </span><span class="nv">SECONDS_AGO</span><span class="o">=</span><span class="k">$((</span><span class="nv">NOW</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nv">LAST_UPDATE</span><span class="k">))</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$SECONDS_AGO</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">60</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a><span class="w">            </span><span class="nv">TIME_AGO</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SECONDS_AGO</span><span class="si">}</span><span class="s2">s&quot;</span>
+<a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a><span class="w">        </span><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="nv">$SECONDS_AGO</span><span class="w"> </span>-lt<span class="w"> </span><span class="m">3600</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="w">            </span><span class="nv">TIME_AGO</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$((</span><span class="nv">SECONDS_AGO</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">60</span><span class="k">))</span><span class="s2">m&quot;</span>
+<a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a><span class="w">        </span><span class="k">else</span>
+<a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="w">            </span><span class="nv">TIME_AGO</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$((</span><span class="nv">SECONDS_AGO</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="m">3600</span><span class="k">))</span><span class="s2">h&quot;</span>
+<a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a><span class="w">        </span><span class="k">fi</span>
+<a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a><span class="w">    </span><span class="k">else</span>
+<a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a><span class="w">        </span><span class="nv">TIME_AGO</span><span class="o">=</span><span class="s2">&quot;unknown&quot;</span>
+<a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a><span class="w">    </span><span class="k">fi</span>
+<a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>
+<a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a><span class="w">    </span><span class="c1"># Set color based on state</span>
+<a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$INDEXING_STATE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;watching&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a><span class="w">        </span><span class="nv">STATE_COLOR</span><span class="o">=</span><span class="s2">&quot;\x1b[32m&quot;</span><span class="w">  </span><span class="c1"># green</span>
+<a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a><span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$INDEXING_STATE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;indexing&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a><span class="w">        </span><span class="nv">STATE_COLOR</span><span class="o">=</span><span class="s2">&quot;\x1b[33m&quot;</span><span class="w">  </span><span class="c1"># yellow</span>
+<a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a><span class="w">    </span><span class="k">elif</span><span class="w"> </span><span class="o">[</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$INDEXING_STATE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;error&quot;</span><span class="w"> </span><span class="o">]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a><span class="w">        </span><span class="nv">STATE_COLOR</span><span class="o">=</span><span class="s2">&quot;\x1b[31m&quot;</span><span class="w">  </span><span class="c1"># red</span>
+<a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a><span class="w">    </span><span class="k">else</span>
+<a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a><span class="w">        </span><span class="nv">STATE_COLOR</span><span class="o">=</span><span class="s2">&quot;\x1b[90m&quot;</span><span class="w">  </span><span class="c1"># gray</span>
+<a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a><span class="w">    </span><span class="k">fi</span>
+<a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a>
+<a id="__codelineno-13-45" name="__codelineno-13-45" href="#__codelineno-13-45"></a><span class="w">    </span><span class="c1"># Display status</span>
+<a id="__codelineno-13-46" name="__codelineno-13-46" href="#__codelineno-13-46"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">STATE_COLOR</span><span class="si">}${</span><span class="nv">INDEXING_STATE</span><span class="si">}</span><span class="s2">\x1b[0m | \x1b[36m</span><span class="si">${</span><span class="nv">LAST_ACTION</span><span class="si">}</span><span class="s2">\x1b[0m | \x1b[35m</span><span class="si">${</span><span class="nv">UNIQUE_FILES</span><span class="si">}</span><span class="s2"> files\x1b[0m | \x1b[34m</span><span class="si">${</span><span class="nv">TOTAL_VECTORS</span><span class="si">}</span><span class="s2"> blocks\x1b[0m | \x1b[90m</span><span class="si">${</span><span class="nv">TIME_AGO</span><span class="si">}</span><span class="s2"> ago\x1b[0m&quot;</span>
+<a id="__codelineno-13-47" name="__codelineno-13-47" href="#__codelineno-13-47"></a><span class="k">else</span>
+<a id="__codelineno-13-48" name="__codelineno-13-48" href="#__codelineno-13-48"></a><span class="w">    </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\x1b[90mcodebase: not initialized\x1b[0m&quot;</span>
+<a id="__codelineno-13-49" name="__codelineno-13-49" href="#__codelineno-13-49"></a><span class="k">fi</span>
+</code></pre></div>
+<p><strong>2. Make it executable:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>chmod<span class="w"> </span>+x<span class="w"> </span>~/.claude/statusline.sh
+</code></pre></div>
+<p><strong>3. Configure Claude Code</strong> in <code>~/.claude/settings.json</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">&quot;statusLine&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;command&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;~/.claude/statusline.sh&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">    </span><span class="nt">&quot;padding&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>What you'll see:</strong></p>
+<ul>
+<li><strong>Line 1:</strong> Claude's normal context usage (tokens, cost, etc.)</li>
+<li><strong>Line 2:</strong> Indexing status with color coding:</li>
+<li>🟢 <code>watching</code> - Index up-to-date, monitoring for changes</li>
+<li>🟡 <code>indexing</code> - Currently processing files</li>
+<li>🔴 <code>error</code> - Something went wrong</li>
+<li>⚪ <code>not initialized</code> - No index for this project yet</li>
+</ul>
+<p><strong>Example output:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>watching | indexed | 170 files | 1000 blocks | 5m ago
+</code></pre></div>
+<h3 id="complete-configuration-example">Complete Configuration Example</h3>
+<p>Here's a complete <code>~/.claude/settings.json</code> with both hooks and status line:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="p">{</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">    </span><span class="nt">&quot;SessionStart&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">      </span><span class="p">{</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">        </span><span class="nt">&quot;hooks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">          </span><span class="p">{</span>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">            </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;command&quot;</span><span class="p">,</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">            </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nohup ~/.local/bin/codebase -start \&quot;$CLAUDE_PROJECT_DIR\&quot; &gt; /dev/null 2&gt;&amp;1 &amp;&quot;</span><span class="p">,</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">            </span><span class="nt">&quot;timeout&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">          </span><span class="p">}</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">        </span><span class="p">]</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="w">  </span><span class="nt">&quot;statusLine&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;command&quot;</span><span class="p">,</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="w">    </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;~/.claude/statusline.sh&quot;</span><span class="p">,</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a><span class="w">    </span><span class="nt">&quot;padding&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Requirements:</strong></p>
+<ul>
+<li><code>jq</code> must be installed: <code>sudo apt install jq</code> (Linux) or <code>brew install jq</code> (macOS)</li>
+<li>Adjust paths if you installed the CLI in a different location</li>
+<li>The status line updates automatically (Claude polls it periodically)</li>
+</ul>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="common-issues-and-solutions">Common Issues and Solutions</h3>
+<h4 id="1-embedding-dimension-mismatch">1. Embedding Dimension Mismatch</h4>
+<p><strong>Problem:</strong> Errors like "dimension mismatch" or "vector size incompatible"</p>
+<p><strong>Cause:</strong> Your embedder configuration changed, but the collection was created with a different dimension.</p>
+<p><strong>Solutions:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Option 1: Full reset (deletes all indexed data)</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>codebase<span class="w"> </span>-full-reset<span class="w"> </span>.
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="c1"># Option 2: Restart with fresh collection (recommended)</span>
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>codebase<span class="w"> </span>-restart<span class="w"> </span>.
+</code></pre></div>
+<div class="admonition danger">
+<p class="admonition-title">Important</p>
+<p>When searching, always use the same embedder configuration (model and dimension) that you used for indexing.</p>
+</div>
+<h4 id="2-embedder-requirements">2. Embedder Requirements</h4>
+<p><strong>Problem:</strong> "Unsupported embedder provider" or connection errors</p>
+<p><strong>Required:</strong> This project requires an OpenAI-compatible API. It supports:</p>
+<p>✅ <strong>Supported:</strong>
+- OpenAI official API (<code>provider: openai</code>)
+- OpenAI-compatible APIs (<code>provider: openai-compatible</code>)
+  - LM Studio
+  - Nebius AI Studio
+  - Together AI
+  - Any API following OpenAI's format
+- Ollama (<code>provider: ollama</code>) - requires explicit dimension configuration</p>
+<p>❌ <strong>Not supported:</strong>
+- Google Gemini API (different format)
+- Anthropic Claude API (different format)
+- Custom embedding APIs (unless OpenAI-compatible)</p>
+<p><strong>Configuration example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># OpenAI-compatible provider (recommended)</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="nv">EMBED_PROVIDER</span><span class="o">=</span>openai-compatible
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="nv">EMBED_BASE_URL</span><span class="o">=</span>http://localhost:4141/v1<span class="w">  </span><span class="c1"># Your API endpoint</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="nv">EMBED_API_KEY</span><span class="o">=</span>sk-your-key-here
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="nv">EMBED_MODEL</span><span class="o">=</span>text-embedding-3-small
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="nv">EMBED_DIMENSION</span><span class="o">=</span><span class="m">1536</span><span class="w">  </span><span class="c1"># Must match your model&#39;s output</span>
+</code></pre></div>
+<h4 id="3-git-commit-tracking-issues">3. Git Commit Tracking Issues</h4>
+<p><strong>Problem:</strong> "Git commit tracking only works with Qdrant" error</p>
+<p><strong>Cause:</strong> You're using <code>codesql</code> (SQLite-vec) but git tracking requires Qdrant.</p>
+<p><strong>Solution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Use the codebase command instead</span>
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>codebase<span class="w"> </span>-start<span class="w"> </span>.
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="c1"># Or set the environment variable</span>
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="nv">VECTOR_STORE</span><span class="o">=</span>qdrant<span class="w"> </span>./dist/index.js<span class="w"> </span>-start<span class="w"> </span>.
+</code></pre></div>
+<p><strong>Why:</strong> The current SQLite-vec implementation uses a hardcoded schema designed for code chunks only. Git commits require additional metadata fields that haven't been implemented yet.</p>
+<h4 id="4-llm-configuration-for-git-tracking">4. LLM Configuration for Git Tracking</h4>
+<p><strong>Problem:</strong> Git tracking enabled but commits aren't being analyzed</p>
+<p><strong>Cause:</strong> Missing LLM configuration variables.</p>
+<p><strong>Required environment variables:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nv">TRACK_GIT</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nv">TRACK_GIT_LLM_PROVIDER</span><span class="o">=</span>openai-compatible
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nv">TRACK_GIT_LLM_ENDPOINT</span><span class="o">=</span>http://localhost:4141/v1
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="nv">TRACK_GIT_LLM_MODEL</span><span class="o">=</span>gpt-4.1
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="nv">TRACK_GIT_LLM_API_KEY</span><span class="o">=</span>sk-your-key-here
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The LLM for git tracking is separate from the embedder. You can use different providers and models for each.</p>
+</div>
+<h4 id="5-collection-not-found-qdrant">5. Collection Not Found (Qdrant)</h4>
+<p><strong>Problem:</strong> "Collection doesn't exist" when using <code>-index-history</code> or search</p>
+<p><strong>Cause:</strong> Collection hasn't been created yet.</p>
+<p><strong>Solution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="c1"># Create the collection by starting the indexer first</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>codebase<span class="w"> </span>-start<span class="w"> </span>.
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="c1"># Then in another terminal, index historical commits</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>codebase<span class="w"> </span>-index-history<span class="w"> </span><span class="m">50</span><span class="w"> </span>.
+</code></pre></div>
+<h4 id="6-qdrant-server-not-running">6. Qdrant Server Not Running</h4>
+<p><strong>Problem:</strong> "Connection refused" or "ECONNREFUSED" errors</p>
+<p><strong>Cause:</strong> Qdrant server is not running or wrong URL.</p>
+<p><strong>Solution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="c1"># Start Qdrant with Docker (recommended)</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>docker<span class="w"> </span>run<span class="w"> </span>-p<span class="w"> </span><span class="m">6333</span>:6333<span class="w"> </span>qdrant/qdrant
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="c1"># Or specify custom Qdrant URL</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="nv">QDRANT_URL</span><span class="o">=</span>http://your-qdrant-server:6333
+</code></pre></div>
+<h4 id="7-search-returns-no-results">7. Search Returns No Results</h4>
+<p><strong>Possible causes:</strong></p>
+<ul>
+<li>Dimension mismatch - See issue #1 above</li>
+<li>Different embedder - Search must use the same model as indexing</li>
+<li>Empty index - Run <code>codebase -stats .</code> to check if files are indexed</li>
+<li>Wrong collection - Verify collection name in <code>.codebase/state.json</code></li>
+</ul>
+<p><strong>Debug steps:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="c1"># 1. Check stats</span>
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>codebase<span class="w"> </span>-stats<span class="w"> </span>.
+<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>
+<a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="c1"># 2. Verify embedder configuration</span>
+<a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>cat<span class="w"> </span>.env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>EMBED
+<a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+<a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="c1"># 3. Check collection state</span>
+<a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>cat<span class="w"> </span>.codebase/state.json
+<a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>
+<a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="c1"># 4. If all else fails, restart</span>
+<a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a>codebase<span class="w"> </span>-restart<span class="w"> </span>.
+</code></pre></div>
+<h4 id="8-performance-issues">8. Performance Issues</h4>
+<p><strong>Problem:</strong> Indexing is very slow</p>
+<p><strong>Solutions:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="c1"># Increase batch size</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="nv">INDEXER_BATCH_SIZE</span><span class="o">=</span><span class="m">100</span><span class="w">  </span><span class="c1"># Default: 50</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="c1"># Use smaller embedding model</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="nv">EMBED_MODEL</span><span class="o">=</span>text-embedding-3-small<span class="w">  </span><span class="c1"># Faster than large models</span>
+<a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a>
+<a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="c1"># Adjust file globs to exclude large directories</span>
+<a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="nv">INDEXER_FILE_GLOBS</span><span class="o">=</span><span class="s2">&quot;src/**/*.ts,src/**/*.js&quot;</span>
+<a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a>
+<a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="c1"># Disable tree-sitter parsing</span>
+<a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="nv">USE_TREE_SITTER</span><span class="o">=</span><span class="nb">false</span><span class="w">  </span><span class="c1"># Faster, but less semantic</span>
+</code></pre></div>
+<h3 id="configuration-best-practices">Configuration Best Practices</h3>
+<ul>
+<li>Always use the same embedder for indexing and searching</li>
+<li>Specify dimension explicitly to avoid mismatches</li>
+<li>Keep <code>.env</code> file in project root for consistent configuration</li>
+<li>Use Qdrant for production and large projects</li>
+<li>Use SQLite-vec for small projects and offline development</li>
+<li>Test with <code>-stats</code> command before heavy indexing</li>
+</ul>
+<h3 id="getting-help">Getting Help</h3>
+<p>If you encounter issues not covered here:</p>
+<ol>
+<li>Check the logs for detailed error messages</li>
+<li>Run with <code>--log-level debug</code> for verbose output</li>
+<li>Verify your <code>.env</code> configuration</li>
+<li>Check <code>.codebase/state.json</code> for collection info</li>
+<li>Try <code>-full-reset</code> as a last resort (deletes all indexed data)</li>
+<li>Open an issue on <a href="https://github.com/dudufcb1/codebase-index-cli/issues">GitHub</a> with logs and configuration</li>
+</ol>
+<hr />
+<h2 id="related-projects">Related Projects</h2>
+<h3 id="semantic-search-mcp">Semantic Search MCP</h3>
+<p>MCP server that enables semantic search across multiple IDEs (Claude Code, Cline, Cursor, etc.) by connecting to the indexes created by this CLI tool.</p>
+<p>While this CLI handles the indexing, the MCP server provides:</p>
+<ul>
+<li><strong>Universal search interface</strong> - Works with any MCP-compatible IDE</li>
+<li><strong>Code search</strong> - Query indexed codebases using natural language</li>
+<li><strong>Commit history search</strong> - Semantic search across git commits</li>
+<li><strong>Multi-project support</strong> - Search across different workspaces</li>
+<li><strong>SQLite and Qdrant support</strong> - Compatible with both storage backends</li>
+</ul>
+<p><strong>Perfect companion:</strong> Index your codebase with this CLI, search it from your favorite IDE using the MCP server.</p>
+<p><strong>Repository:</strong> <a href="https://github.com/dudufcb1/semantic-search">github.com/dudufcb1/semantic-search</a></p>
+<hr />
+<h2 id="license">License</h2>
+<p>MIT</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href=".." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../semantic-search-mcp/" class="md-footer__link md-footer__link--next" aria-label="Next: Semantic Search MCP">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Semantic Search MCP
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow", "toc.integrate"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

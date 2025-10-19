@@ -1,0 +1,1735 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Complete documentation for the Codebase Index CLI ecosystem - semantic code search for AI coding assistants">
+      
+      
+        <meta name="author" content="Eduardo (dudufcb1)">
+      
+      
+        <link rel="canonical" href="https://dudufcb1.github.io/codebase-index-cli/semantic-search-mcp/">
+      
+      
+        <link rel="prev" href="../codebase-index-cli/">
+      
+      
+        <link rel="next" href="../claude-code-chat-ui/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Semantic Search MCP - Codebase Index CLI - Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#semantic-search-mcp" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Codebase Index CLI - Documentation" class="md-header__button md-logo" aria-label="Codebase Index CLI - Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Codebase Index CLI - Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Semantic Search MCP
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dudufcb1/codebase-index-cli" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dudufcb1/codebase-index-cli
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../codebase-index-cli/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Codebase Index CLI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Semantic Search MCP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../claude-code-chat-ui/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Claude Code Chat UI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../claude-hooks/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Claude Hooks
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../prompt-configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Prompt Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../resources/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Resources
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../disclaimer/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About This Project
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Codebase Index CLI - Documentation" class="md-nav__button md-logo" aria-label="Codebase Index CLI - Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    Codebase Index CLI - Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dudufcb1/codebase-index-cli" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dudufcb1/codebase-index-cli
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codebase-index-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Codebase Index CLI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Semantic Search MCP
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Semantic Search MCP
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-this-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      What This Does
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-these-projects-work-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      How These Projects Work Together
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Core Features
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#critical-configuration-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Critical Configuration Requirements
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Critical Configuration Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-embedder-model-consistency" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Embedder Model Consistency
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-llm-for-refined-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. LLM for Refined Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reranking-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reranking Options
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-vector-storage-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Vector Storage Backends
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-two-server-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Two Server Modes
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-and-run-the-indexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 1: Install and Run the Indexer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-install-this-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      Step 2: Install This MCP Server
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Configuration
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mcp-client-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      MCP Client Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MCP Client Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#claude-desktop-claude_desktop_configjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      Claude Desktop (claude_desktop_config.json)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clinewindsurf-mcptoml" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cline/Windsurf (.mcp.toml)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tools-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tools Reference
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tools Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#semantic_search" class="md-nav__link">
+    <span class="md-ellipsis">
+      semantic_search
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#search_commit_history" class="md-nav__link">
+    <span class="md-ellipsis">
+      search_commit_history
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visit_other_project" class="md-nav__link">
+    <span class="md-ellipsis">
+      visit_other_project
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semantic_parallel_search" class="md-nav__link">
+    <span class="md-ellipsis">
+      semantic_parallel_search
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-codebasestatejson" class="md-nav__link">
+    <span class="md-ellipsis">
+      Understanding .codebase/state.json
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding .codebase/state.json">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#statejson-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      state.json Format
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-mcp-server-uses-statejson" class="md-nav__link">
+    <span class="md-ellipsis">
+      How the MCP Server Uses state.json
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-pitfalls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Pitfalls
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Pitfalls">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#0-indexer-not-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      0. Indexer Not Running
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-model-mismatch" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Model Mismatch
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-missing-llm-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Missing LLM Config
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-empty-search-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Empty Search Results
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-commit-history-not-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Commit History Not Working
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#search-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Search Speed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-usage-with-refined_answertrue" class="md-nav__link">
+    <span class="md-ellipsis">
+      Token Usage (with refined_answer=True)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#memory-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Memory Usage
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-links" class="md-nav__link">
+    <span class="md-ellipsis">
+      Project Links
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      License
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributing
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../claude-code-chat-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Claude Code Chat UI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../claude-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Claude Hooks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompt-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prompt Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../disclaimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    About This Project
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="semantic-search-mcp">Semantic Search MCP</h1>
+<p><strong>A powerful Model Context Protocol (MCP) server for semantic code search using vector embeddings and LLM-powered reranking.</strong></p>
+<hr />
+<h2 id="what-this-does">What This Does</h2>
+<p>This MCP server provides semantic search capabilities for your codebase. Instead of keyword matching, it understands the meaning of your queries and finds the most relevant code, even if it uses different terminology.</p>
+<p><strong>This is the search/query component.</strong> For indexing your codebase, see the companion project: <a href="https://github.com/dudufcb1/codebase-index-cli">codebase-index-cli</a> (Node.js real-time indexer with file watching and git commit tracking).</p>
+<hr />
+<h2 id="how-these-projects-work-together">How These Projects Work Together</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│                    Your Workflow                                │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└─────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>1. INDEX (codebase-index-cli - Node.js)
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   ├─ Watches your codebase for changes
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>   ├─ Parses code with tree-sitter (29+ languages)
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>   ├─ Creates embeddings with your chosen model
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>   ├─ Stores vectors in Qdrant or SQLite
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>   ├─ Tracks git commits with LLM analysis
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>   └─ Maintains .codebase/state.json with collection info
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>2. SEARCH (semantic-search - Python MCP Server)
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>   ├─ Reads collection info from .codebase/state.json
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>   ├─ Queries the indexed vectors (Qdrant or SQLite)
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>   ├─ Uses same embedding model for consistency
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>   ├─ Returns semantically relevant code
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>   └─ Optionally reranks with LLM analysis
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>3. CONSUME (Your AI Coding Assistant)
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>   ├─ Claude Code / Claude Desktop
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>   ├─ Cline (VS Code)
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>   ├─ Windsurf
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>   └─ Any MCP-compatible client
+</code></pre></div>
+<p><strong>In short:</strong></p>
+<ul>
+<li><strong>codebase-index-cli</strong> = Indexer (creates the searchable vectors)</li>
+<li><strong>semantic-search</strong> = MCP Server (provides search tools to AI assistants)</li>
+</ul>
+<p><img alt="MCP in action" src="../assets/images/using_mcp.png" /></p>
+<p><em>The MCP server in action: Agent naturally using <code>semantic_search</code> tool as part of its workflow, with todo list tracking and "Thinking..." state visible</em></p>
+<hr />
+<h2 id="core-features">Core Features</h2>
+<ul>
+<li><strong>Semantic Search</strong> - Natural language queries to find code by intent</li>
+<li><strong>LLM-Powered Reranking</strong> - AI-assisted relevance scoring and filtering</li>
+<li><strong>Git Commit History Search</strong> - Search through analyzed commit history</li>
+<li><strong>Multi-Project Search</strong> - Query other codebases/workspaces</li>
+<li><strong>SQLite &amp; Qdrant Support</strong> - Flexible vector storage backends</li>
+</ul>
+<hr />
+<h2 id="critical-configuration-requirements">Critical Configuration Requirements</h2>
+<h3 id="1-embedder-model-consistency">1. Embedder Model Consistency</h3>
+<div class="admonition danger">
+<p class="admonition-title">CRITICAL</p>
+<p>The embedder model used for search <strong>MUST MATCH</strong> the model used for indexing.</p>
+</div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Your indexer used this:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">EMBEDDER_MODEL_ID</span><span class="o">=</span>text-embedding-3-small
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nv">EMBEDDER_DIMENSION</span><span class="o">=</span><span class="m">1536</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="c1"># Your search server MUST use the EXACT same:</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="nv">MCP_CODEBASE_EMBEDDER_MODEL_ID</span><span class="o">=</span>text-embedding-3-small
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nv">MCP_CODEBASE_EMBEDDER_DIMENSION</span><span class="o">=</span><span class="m">1536</span>
+</code></pre></div>
+<p><strong>Why this matters:</strong></p>
+<ul>
+<li>Different models produce incompatible vector spaces</li>
+<li>Mismatched dimensions will cause search failures</li>
+<li>Using <code>text-embedding-3-large</code> when indexed with <code>-small</code> = broken search</li>
+<li>OpenAI models vs other providers = different vector spaces</li>
+</ul>
+<p><strong>Compatibility Matrix:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Indexer Model</th>
+<th>Search Model</th>
+<th>Compatible?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>text-embedding-3-small</td>
+<td>text-embedding-3-small</td>
+<td>✅ YES</td>
+</tr>
+<tr>
+<td>text-embedding-3-small</td>
+<td>text-embedding-3-large</td>
+<td>❌ NO</td>
+</tr>
+<tr>
+<td>text-embedding-3-small (1536d)</td>
+<td>text-embedding-3-small (512d)</td>
+<td>❌ NO</td>
+</tr>
+<tr>
+<td>nomic-embed-text-v1.5</td>
+<td>nomic-embed-text-v1.5</td>
+<td>✅ YES</td>
+</tr>
+<tr>
+<td>OpenAI model</td>
+<td>HuggingFace model</td>
+<td>❌ NO</td>
+</tr>
+</tbody>
+</table>
+<h3 id="2-llm-for-refined-results">2. LLM for Refined Results</h3>
+<p>When using <code>refined_answer=True</code>, the system uses an LLM (Judge) to:</p>
+<ul>
+<li>Analyze relevance of each code fragment</li>
+<li>Filter out noise and boilerplate</li>
+<li>Identify missing imports/references</li>
+<li>Generate a structured brief summary</li>
+</ul>
+<p><strong>Configuration:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Reranking: Choose between Voyage AI or LLM Judge</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># Option 1: Voyage AI Native Reranker</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Fast, specialized reranking model (~200ms)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># Get FREE API key at: https://www.voyageai.com/ (generous free tier)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">MCP_CODEBASE_NATIVE_RERANK</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="nv">MCP_CODEBASE_VOYAGE_API_KEY</span><span class="o">=</span>pa-your-voyage-api-key
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nv">MCP_CODEBASE_VOYAGE_RERANK_MODEL</span><span class="o">=</span>rerank-2.5
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Option 2: LLM Judge</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="c1"># Flexible, can provide detailed explanations (~2-5s)</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="c1"># Only used when NATIVE_RERANK=false</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="nv">MCP_CODEBASE_JUDGE_PROVIDER</span><span class="o">=</span>openai-compatible
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="nv">MCP_CODEBASE_JUDGE_API_KEY</span><span class="o">=</span>your-api-key
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="nv">MCP_CODEBASE_JUDGE_BASE_URL</span><span class="o">=</span>https://your-llm-endpoint.com/v1
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="nv">MCP_CODEBASE_JUDGE_MODEL_ID</span><span class="o">=</span>gpt-4o-mini
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="nv">MCP_CODEBASE_JUDGE_MAX_TOKENS</span><span class="o">=</span><span class="m">32000</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="nv">MCP_CODEBASE_JUDGE_TEMPERATURE</span><span class="o">=</span><span class="m">0</span>.0
+</code></pre></div>
+<h3 id="reranking-options">Reranking Options</h3>
+<p><strong>Voyage AI Native Rerank:</strong></p>
+<ul>
+<li>Fast (~200ms response time)</li>
+<li>Specialized reranking models</li>
+<li>Cost-effective for high-volume usage</li>
+<li>Free tier available at <a href="https://www.voyageai.com/">voyageai.com</a></li>
+<li>+42% improvement in relevance scores vs pure vector search</li>
+</ul>
+<p><strong>LLM Judge:</strong></p>
+<ul>
+<li>Flexible, can provide explanations and reasoning</li>
+<li>Uses general-purpose LLM</li>
+<li>Response time: ~2-5s</li>
+<li>Good for complex analysis with detailed context</li>
+</ul>
+<p><strong>When to use reranking:</strong></p>
+<ul>
+<li>Complex architectural questions</li>
+<li>Finding patterns across multiple files</li>
+<li>Understanding relationships between components</li>
+<li>Production deployments requiring high accuracy</li>
+</ul>
+<p><strong>When NOT to use reranking:</strong></p>
+<ul>
+<li>Quick searches where raw speed is priority</li>
+<li>Simple queries with obvious answers</li>
+<li>When you want raw vector similarity scores</li>
+</ul>
+<h3 id="3-vector-storage-backends">3. Vector Storage Backends</h3>
+<p><strong>Qdrant (Primary)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nv">MCP_CODEBASE_QDRANT_URL</span><span class="o">=</span>http://localhost:6333
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">MCP_CODEBASE_QDRANT_API_KEY</span><span class="o">=</span>optional-api-key
+</code></pre></div>
+<ul>
+<li>Scalable for large codebases</li>
+<li>Supports filtering and complex queries</li>
+<li>Required for commit history search</li>
+<li>Collection names: auto-generated from workspace path hash</li>
+</ul>
+<p><strong>SQLite (Alternative)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># No config needed - auto-detected at:</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="c1"># &lt;workspace&gt;/.codebase/vectors.db</span>
+</code></pre></div>
+<ul>
+<li>Good for single-user local development</li>
+<li>Lower memory footprint</li>
+<li>Embedded in workspace directory</li>
+<li><strong>Limitations:</strong> No commit history support</li>
+</ul>
+<h3 id="4-two-server-modes">4. Two Server Modes</h3>
+<p><strong>Mode 1: server_qdrant.py</strong> (Qdrant-based)</p>
+<p>Tools:
+- <code>semantic_search</code> - Basic semantic search
+- <code>visit_other_project</code> - Search other workspaces
+- <code>search_commit_history</code> - Query git history</p>
+<p>Best for:
+- Multi-project workflows
+- Teams using shared Qdrant instance
+- Git commit analysis
+- Production deployments</p>
+<p><strong>Mode 2: server_sqlite.py</strong> (SQLite-based)</p>
+<p>Tools:
+- <code>semantic_search</code> - Basic semantic search
+- <code>visit_other_project</code> - Search other workspaces (SQLite or Qdrant)</p>
+<p>Best for:
+- Single developer local workflows
+- Offline development
+- Lower resource usage
+- Quick prototyping</p>
+<hr />
+<h2 id="installation">Installation</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<div class="admonition warning">
+<p class="admonition-title">Before using this MCP server</p>
+<p>You <strong>MUST</strong> index your codebase first.</p>
+</div>
+<h3 id="step-1-install-and-run-the-indexer">Step 1: Install and Run the Indexer</h3>
+<p>Use <a href="https://github.com/dudufcb1/codebase-index-cli">codebase-index-cli</a> to index your codebase:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Install indexer globally</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>codebase-index-cli
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Navigate to your project</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nb">cd</span><span class="w"> </span>/path/to/your/project
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Index with SQLite (local, portable)</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>codesql
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="c1"># OR index with Qdrant (scalable, remote)</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>codebase
+</code></pre></div>
+<p>The indexer will:</p>
+<ul>
+<li>Create <code>.codebase/</code> directory in your project</li>
+<li>Generate <code>state.json</code> with collection info</li>
+<li>Parse and embed your code</li>
+<li>Watch for changes in real-time</li>
+<li>Track git commits (optional)</li>
+</ul>
+<h3 id="step-2-install-this-mcp-server">Step 2: Install This MCP Server</h3>
+<p><strong>Requirements for the search server:</strong></p>
+<ul>
+<li>Python 3.10+</li>
+<li>Embedder API access (OpenAI, OpenRouter, local, etc.)</li>
+<li>LLM API access (for refined results - optional)</li>
+<li>Qdrant server (if using Qdrant mode) OR SQLite database (auto-created by indexer)</li>
+</ul>
+<p><strong>Setup:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Clone repository</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/dudufcb1/semantic-search
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nb">cd</span><span class="w"> </span>semantic_search
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Create virtual environment</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>venv
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="nb">source</span><span class="w"> </span>venv/bin/activate<span class="w">  </span><span class="c1"># Windows: venv\Scripts\activate</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="c1"># Install dependencies</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>pip<span class="w"> </span>install<span class="w"> </span>fastmcp<span class="w"> </span>qdrant-client<span class="w"> </span>httpx<span class="w"> </span>pydantic<span class="w"> </span>pydantic-settings<span class="w"> </span>python-dotenv
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="c1"># Configure environment</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="c1"># Edit .env with your settings</span>
+</code></pre></div>
+<h3 id="environment-configuration">Environment Configuration</h3>
+<p><strong>Minimal configuration:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Embedder (REQUIRED)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nv">MCP_CODEBASE_EMBEDDER_PROVIDER</span><span class="o">=</span>openai-compatible
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="nv">MCP_CODEBASE_EMBEDDER_API_KEY</span><span class="o">=</span>your-key
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="nv">MCP_CODEBASE_EMBEDDER_BASE_URL</span><span class="o">=</span>https://api.example.com/v1
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="nv">MCP_CODEBASE_EMBEDDER_MODEL_ID</span><span class="o">=</span>text-embedding-3-small
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="nv">MCP_CODEBASE_EMBEDDER_DIMENSION</span><span class="o">=</span><span class="m">1536</span><span class="w">  </span><span class="c1"># Optional, model default if omitted</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="c1"># Qdrant (REQUIRED for server_qdrant.py)</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nv">MCP_CODEBASE_QDRANT_URL</span><span class="o">=</span>http://localhost:6333
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="nv">MCP_CODEBASE_QDRANT_API_KEY</span><span class="o">=</span>optional-key
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="c1"># Judge/LLM (REQUIRED for refined_answer=True)</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="nv">MCP_CODEBASE_JUDGE_PROVIDER</span><span class="o">=</span>openai-compatible
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="nv">MCP_CODEBASE_JUDGE_API_KEY</span><span class="o">=</span>your-key
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="nv">MCP_CODEBASE_JUDGE_BASE_URL</span><span class="o">=</span>https://api.example.com/v1
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="nv">MCP_CODEBASE_JUDGE_MODEL_ID</span><span class="o">=</span>gpt-4o-mini
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="nv">MCP_CODEBASE_JUDGE_MAX_TOKENS</span><span class="o">=</span><span class="m">32000</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="nv">MCP_CODEBASE_JUDGE_TEMPERATURE</span><span class="o">=</span><span class="m">0</span>.0
+</code></pre></div>
+<hr />
+<h2 id="mcp-client-configuration">MCP Client Configuration</h2>
+<h3 id="claude-desktop-claude_desktop_configjson">Claude Desktop (claude_desktop_config.json)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nt">&quot;semantic-search&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/absolute/path/to/semantic_search/venv/bin/python&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/absolute/path/to/semantic_search/src/server_qdrant.py&quot;</span><span class="p">],</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">        </span><span class="nt">&quot;MCP_CODEBASE_EMBEDDER_PROVIDER&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;openai-compatible&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">        </span><span class="nt">&quot;MCP_CODEBASE_EMBEDDER_API_KEY&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-key&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">        </span><span class="nt">&quot;MCP_CODEBASE_EMBEDDER_BASE_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://api.example.com/v1&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">        </span><span class="nt">&quot;MCP_CODEBASE_EMBEDDER_MODEL_ID&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text-embedding-3-small&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">        </span><span class="nt">&quot;MCP_CODEBASE_QDRANT_URL&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:6333&quot;</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="clinewindsurf-mcptoml">Cline/Windsurf (.mcp.toml)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">[mcp_servers.semantic-search]</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;stdio&quot;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">command</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/absolute/path/to/semantic_search/venv/bin/python&quot;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="n">args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;/absolute/path/to/semantic_search/src/server_qdrant.py&quot;</span><span class="p">]</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3600</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="k">[mcp_servers.semantic-search.env]</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">MCP_CODEBASE_EMBEDDER_PROVIDER</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;openai-compatible&quot;</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="n">MCP_CODEBASE_EMBEDDER_API_KEY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;your-key&quot;</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="n">MCP_CODEBASE_EMBEDDER_BASE_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;https://api.example.com/v1&quot;</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="n">MCP_CODEBASE_EMBEDDER_MODEL_ID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;text-embedding-3-small&quot;</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="n">MCP_CODEBASE_QDRANT_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;http://localhost:6333&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="tools-reference">Tools Reference</h2>
+<h3 id="semantic_search">semantic_search</h3>
+<p>Basic semantic code search.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>query</code> (string, required) - Natural language query</li>
+<li><code>qdrant_collection</code> (string, required) - Collection name from <code>.codebase/state.json</code></li>
+<li><code>max_results</code> (int, optional) - Max results to return (default: 20)</li>
+<li><code>refined_answer</code> (bool, optional) - Use LLM analysis (default: false)</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;authentication middleware implementation&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;qdrant_collection&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;codebase-7a1480dc62504bc490&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">&quot;max_results&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span><span class="p">,</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nt">&quot;refined_answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Returns:</strong></p>
+<ul>
+<li>Without <code>refined_answer</code>: Ranked code fragments with similarity scores</li>
+<li>With <code>refined_answer</code>: AI-analyzed brief + ranked relevant files + noise detection</li>
+</ul>
+<h3 id="search_commit_history">search_commit_history</h3>
+<p>Search through git commit history that has been indexed and analyzed by LLM.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>query</code> (string, required) - What to search for in commit history</li>
+<li><code>qdrant_collection</code> (string, required) - Collection name</li>
+<li><code>max_results</code> (int, optional) - Max commits to return (default: 10)</li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;when was SQLite storage implemented&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nt">&quot;qdrant_collection&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;codebase-7a1480dc62504bc490&quot;</span><span class="p">,</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nt">&quot;max_results&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Requirements:</strong></p>
+<ul>
+<li>Git tracking must be enabled during indexing</li>
+<li>Commits must have been analyzed by LLM</li>
+<li>Qdrant backend required (not available with SQLite)</li>
+</ul>
+<h3 id="visit_other_project">visit_other_project</h3>
+<p>Search in a different workspace/codebase.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><code>query</code> (string, required) - Search query</li>
+<li><code>workspace_path</code> (string, optional) - Absolute path to workspace</li>
+<li><code>qdrant_collection</code> (string, optional) - Explicit collection name</li>
+<li><code>storage_type</code> (string, optional) - "sqlite" or "qdrant" (default: "qdrant")</li>
+<li><code>refined_answer</code> (bool, optional) - Use LLM analysis (default: false)</li>
+<li><code>max_results</code> (int, optional) - Max results (default: 20)</li>
+</ul>
+<p><strong>Resolution logic:</strong></p>
+<ol>
+<li>If <code>qdrant_collection</code> specified → use Qdrant with that collection</li>
+<li>If <code>storage_type="sqlite"</code> + <code>workspace_path</code> → try SQLite at <code>&lt;workspace&gt;/.codebase/vectors.db</code></li>
+<li>If SQLite not found → fallback to Qdrant (calculate collection from <code>workspace_path</code>)</li>
+<li>If <code>storage_type="qdrant"</code> → calculate collection from <code>workspace_path</code></li>
+</ol>
+<p><strong>Example:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;payment processing flow&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nt">&quot;workspace_path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/home/user/other-project&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="nt">&quot;storage_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sqlite&quot;</span><span class="p">,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="nt">&quot;refined_answer&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="semantic_parallel_search">semantic_parallel_search</h3>
+<div class="admonition tip">
+<p class="admonition-title">Big Game Changer</p>
+<p>This is the most powerful search tool available.</p>
+</div>
+<p><strong>Why this matters:</strong></p>
+<p>Previously, every semantic search relied on a single query or on LLM-generated variations. That made it hard to control coverage and slowed things down when the model had to invent extra prompts.</p>
+<p><strong>What it does:</strong></p>
+<ul>
+<li><strong>Directed multi-query:</strong> You decide up to five additional variations (queries) that run in parallel. No extra LLM round-trip needed.</li>
+<li><strong>Smart deduplication:</strong> Merges results by file + line range, removing noise and duplicates.</li>
+<li><strong>Optional rerank:</strong> If <code>settings.native_rerank</code> is enabled, Voyage still reranks just like before.</li>
+<li><strong>Optional brief:</strong> The LLM is only used when you request <code>refined_answer=True</code>; otherwise you get raw merged results straight from Qdrant.</li>
+</ul>
+<p><strong>Why it's a game changer:</strong></p>
+<ul>
+<li><strong>Tighter coverage:</strong> Hit different angles (webhooks, validation, edge cases) in a single call.</li>
+<li><strong>Faster execution:</strong> <code>asyncio.gather</code> builds embeddings and runs Qdrant searches concurrently without waiting for LLM creativity.</li>
+<li><strong>Traceable output:</strong> Each file in the response lists the exact queries that surfaced it ("Consultas que lo devolvieron").</li>
+</ul>
+<p><strong>How to use it:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">result</span> <span class="o">=</span> <span class="n">semantic_parallel_search</span><span class="p">(</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;How do we handle payment processing?&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">qdrant_collection</span><span class="o">=</span><span class="s2">&quot;codebase-1d85d0a83c1348b3be&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    <span class="n">queries</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>        <span class="s2">&quot;payment gateway integration stripe&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>        <span class="s2">&quot;transaction validation error handling&quot;</span><span class="p">,</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>        <span class="s2">&quot;payment confirmation webhooks&quot;</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>    <span class="p">],</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>    <span class="n">max_results</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="n">refined_answer</span><span class="o">=</span><span class="kc">False</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="p">)</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <code>queries</code> is None or empty, the tool just reuses the base query. The response annotates each file with the list of queries that returned it, so you can see which phrasing worked.</p>
+</div>
+<hr />
+<h2 id="understanding-codebasestatejson">Understanding .codebase/state.json</h2>
+<p>The indexer (codebase-index-cli) creates a <code>.codebase/</code> directory in your project with this structure:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>your-project/
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>└── .codebase/
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    ├── state.json       # Collection info, indexing status, stats
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    ├── cache.json       # File hashes for change detection
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    └── vectors.db       # SQLite database (if using `codesql` command)
+</code></pre></div>
+<h3 id="statejson-format">state.json Format</h3>
+<p>This file contains critical information that the MCP server reads to find your indexed vectors:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">&quot;workspacePath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/absolute/path/to/your/project&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">  </span><span class="nt">&quot;qdrantCollection&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;codebase-1d85d0a83c1348b3be&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-17T10:13:48.454Z&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="nt">&quot;updatedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-17T10:39:00.715Z&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="nt">&quot;indexingStatus&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="nt">&quot;state&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;watching&quot;</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">  </span><span class="nt">&quot;lastActivity&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-17T10:39:00.712Z&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">    </span><span class="nt">&quot;action&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;indexed&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">    </span><span class="nt">&quot;filePath&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;README.md&quot;</span><span class="p">,</span>
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="w">    </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a><span class="w">      </span><span class="nt">&quot;blockCount&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">48</span>
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a><span class="w">  </span><span class="nt">&quot;qdrantStats&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a><span class="w">    </span><span class="nt">&quot;totalVectors&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">396</span><span class="p">,</span>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a><span class="w">    </span><span class="nt">&quot;uniqueFiles&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span>
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a><span class="w">    </span><span class="nt">&quot;vectorDimension&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1536</span><span class="p">,</span>
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a><span class="w">    </span><span class="nt">&quot;lastUpdated&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-10-17T10:30:03.891Z&quot;</span>
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>Key Fields:</strong></p>
+<ul>
+<li><code>qdrantCollection</code> - The collection name to use when calling <code>semantic_search()</code></li>
+<li><code>workspacePath</code> - Absolute path to the indexed project</li>
+<li><code>vectorDimension</code> - The dimension of the embedding model used (MUST match your MCP server config)</li>
+<li><code>indexingStatus.state</code> - Current state: "watching", "indexing", "idle", or "error"</li>
+<li><code>qdrantStats.totalVectors</code> - Number of indexed code chunks</li>
+<li><code>qdrantStats.uniqueFiles</code> - Number of files in the index</li>
+</ul>
+<h3 id="how-the-mcp-server-uses-statejson">How the MCP Server Uses state.json</h3>
+<p>When you call <code>semantic_search()</code>, the server:</p>
+<ol>
+<li>Reads <code>&lt;workspace&gt;/.codebase/state.json</code></li>
+<li>Extracts <code>qdrantCollection</code> (e.g., "codebase-1d85d0a83c1348b3be")</li>
+<li>Connects to Qdrant/SQLite using that collection</li>
+<li>Performs the semantic search</li>
+<li>Returns ranked results</li>
+</ol>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>You don't need to manually create or edit this file - the indexer manages it automatically.</p>
+</div>
+<hr />
+<h2 id="common-pitfalls">Common Pitfalls</h2>
+<h3 id="0-indexer-not-running">0. Indexer Not Running</h3>
+<p><strong>Problem:</strong> No <code>.codebase/state.json</code> file found or "collection doesn't exist" errors</p>
+<p><strong>Cause:</strong> You haven't indexed your codebase yet</p>
+<p><strong>Solution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Install and run the indexer first</span>
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>npm<span class="w"> </span>install<span class="w"> </span>-g<span class="w"> </span>codebase-index-cli
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># Navigate to your project</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="nb">cd</span><span class="w"> </span>/path/to/your/project
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="c1"># Run the indexer (choose one)</span>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>codesql<span class="w">        </span><span class="c1"># For SQLite storage</span>
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>codebase<span class="w">       </span><span class="c1"># For Qdrant storage</span>
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The indexer <strong>MUST</strong> be running or have completed indexing before you can use this MCP server. See <a href="https://github.com/dudufcb1/codebase-index-cli">codebase-index-cli</a> for details.</p>
+</div>
+<h3 id="1-model-mismatch">1. Model Mismatch</h3>
+<p><strong>Problem:</strong> Search returns irrelevant results or errors</p>
+<p><strong>Cause:</strong> Embedder model doesn't match indexing model</p>
+<p><strong>Solution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="c1"># Check your indexer config</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>cat<span class="w"> </span>.codebase/config.json
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c1"># Match these settings exactly:</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nv">MCP_CODEBASE_EMBEDDER_MODEL_ID</span><span class="o">=</span>&lt;same-as-indexer&gt;
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="nv">MCP_CODEBASE_EMBEDDER_DIMENSION</span><span class="o">=</span>&lt;same-as-indexer&gt;
+</code></pre></div>
+<h3 id="2-missing-llm-config">2. Missing LLM Config</h3>
+<p><strong>Problem:</strong> <code>refined_answer=True</code> fails with authentication errors</p>
+<p><strong>Cause:</strong> Judge/LLM credentials not configured</p>
+<p><strong>Solution:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="c1"># Configure LLM for refined results</span>
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nv">MCP_CODEBASE_JUDGE_API_KEY</span><span class="o">=</span>your-llm-api-key
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nv">MCP_CODEBASE_JUDGE_BASE_URL</span><span class="o">=</span>https://your-llm-endpoint/v1
+</code></pre></div>
+<h3 id="3-empty-search-results">3. Empty Search Results</h3>
+<p><strong>Problem:</strong> No results returned for valid queries</p>
+<p><strong>Causes:</strong></p>
+<ul>
+<li>Workspace not indexed yet</li>
+<li>Wrong collection name</li>
+<li>Qdrant server not running</li>
+<li>Score threshold too high</li>
+</ul>
+<p><strong>Solutions:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Verify collection exists</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>curl<span class="w"> </span>http://localhost:6333/collections
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># Check state file for correct collection name</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>cat<span class="w"> </span>&lt;workspace&gt;/.codebase/state.json
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="c1"># Lower score threshold</span>
+<a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a><span class="nv">MCP_CODEBASE_SEARCH_MIN_SCORE</span><span class="o">=</span><span class="m">0</span>.1<span class="w">  </span><span class="c1"># Default: 0.4</span>
+</code></pre></div>
+<h3 id="4-commit-history-not-working">4. Commit History Not Working</h3>
+<p><strong>Problem:</strong> <code>search_commit_history</code> returns no results</p>
+<p><strong>Causes:</strong></p>
+<ul>
+<li>Git tracking not enabled during indexing</li>
+<li>Using SQLite backend (not supported)</li>
+<li>No commits analyzed yet</li>
+</ul>
+<p><strong>Solution:</strong></p>
+<ul>
+<li>Ensure Qdrant backend is used</li>
+<li>Enable git tracking in indexer</li>
+<li>Wait for commits to be analyzed and indexed</li>
+</ul>
+<hr />
+<h2 id="performance-considerations">Performance Considerations</h2>
+<h3 id="search-speed">Search Speed</h3>
+<ul>
+<li>Basic search: ~100-500ms (depends on collection size)</li>
+<li>With <code>refined_answer</code>: +2-10s (LLM processing overhead)</li>
+<li>Commit history: ~200-800ms (filtered search)</li>
+</ul>
+<h3 id="token-usage-with-refined_answertrue">Token Usage (with refined_answer=True)</h3>
+<ul>
+<li>Input tokens: ~2000-8000 per search (depends on result count)</li>
+<li>Output tokens: ~500-3000 (depends on complexity)</li>
+<li>Cost estimate: $0.01-0.05 per refined search (varies by LLM provider)</li>
+</ul>
+<h3 id="memory-usage">Memory Usage</h3>
+<ul>
+<li>Qdrant mode: ~50-200MB (depends on client connections)</li>
+<li>SQLite mode: ~20-100MB (embedded database)</li>
+<li>Peak during search: +100-300MB (vector operations)</li>
+</ul>
+<hr />
+<h2 id="project-links">Project Links</h2>
+<ul>
+<li><strong>Semantic Search MCP:</strong> <a href="https://github.com/dudufcb1/semantic-search">github.com/dudufcb1/semantic-search</a></li>
+<li><strong>Codebase Index CLI:</strong> <a href="https://github.com/dudufcb1/codebase-index-cli">github.com/dudufcb1/codebase-index-cli</a></li>
+</ul>
+<hr />
+<h2 id="license">License</h2>
+<p>MIT</p>
+<h2 id="contributing">Contributing</h2>
+<p>This project is designed to be feature-complete for its intended use case. For bugs, documentation improvements, or critical features, see the <a href="https://github.com/dudufcb1/semantic-search#contributing">Contributing guidelines</a> in the repository.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../codebase-index-cli/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Codebase Index CLI">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Codebase Index CLI
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../claude-code-chat-ui/" class="md-footer__link md-footer__link--next" aria-label="Next: Claude Code Chat UI">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Claude Code Chat UI
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow", "toc.integrate"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

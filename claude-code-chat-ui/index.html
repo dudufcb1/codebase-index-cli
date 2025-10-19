@@ -1,0 +1,1606 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Complete documentation for the Codebase Index CLI ecosystem - semantic code search for AI coding assistants">
+      
+      
+        <meta name="author" content="Eduardo (dudufcb1)">
+      
+      
+        <link rel="canonical" href="https://dudufcb1.github.io/codebase-index-cli/claude-code-chat-ui/">
+      
+      
+        <link rel="prev" href="../semantic-search-mcp/">
+      
+      
+        <link rel="next" href="../claude-hooks/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Claude Code Chat UI - Codebase Index CLI - Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#claude-code-chat-ui" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Codebase Index CLI - Documentation" class="md-header__button md-logo" aria-label="Codebase Index CLI - Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Codebase Index CLI - Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Claude Code Chat UI
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dudufcb1/codebase-index-cli" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dudufcb1/codebase-index-cli
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../codebase-index-cli/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Codebase Index CLI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../semantic-search-mcp/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Semantic Search MCP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Claude Code Chat UI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../claude-hooks/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Claude Hooks
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../prompt-configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Prompt Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../resources/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Resources
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../disclaimer/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About This Project
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Codebase Index CLI - Documentation" class="md-nav__button md-logo" aria-label="Codebase Index CLI - Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    Codebase Index CLI - Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dudufcb1/codebase-index-cli" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dudufcb1/codebase-index-cli
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../codebase-index-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Codebase Index CLI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../semantic-search-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Semantic Search MCP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Claude Code Chat UI
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Claude Code Chat UI
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#about-this-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      About This Version
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-makes-this-version-different" class="md-nav__link">
+    <span class="md-ellipsis">
+      What Makes This Version Different
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Makes This Version Different">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#indexer-controls-in-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      Indexer Controls in UI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-time-status-badge" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-Time Status Badge
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smart-ux-during-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Smart UX During Indexing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI Configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#session-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      Session Safety
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subagent-parallelization" class="md-nav__link">
+    <span class="md-ellipsis">
+      Subagent Parallelization
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-repository-hygiene" class="md-nav__link">
+    <span class="md-ellipsis">
+      Clean Repository Hygiene
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-this-integration-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why This Integration Matters
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why This Integration Matters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#end-to-end-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      End-to-End Control
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-time-visibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      Real-Time Visibility
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safe-multi-agent-workflows" class="md-nav__link">
+    <span class="md-ellipsis">
+      Safe Multi-Agent Workflows
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#consistent-onboarding" class="md-nav__link">
+    <span class="md-ellipsis">
+      Consistent Onboarding
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      Prerequisites
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#install-the-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      Install the Extension
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#required-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Required Settings
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Variables
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-a-chat-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      Starting a Chat Session
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-indexer-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using Indexer Controls
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#monitoring-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring Status
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chat-with-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      Chat with Context
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subagent-parallelization-advanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      Subagent Parallelization (Advanced)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#features-from-original-extension" class="md-nav__link">
+    <span class="md-ellipsis">
+      Features from Original Extension
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works-with-the-ecosystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      How It Works with the Ecosystem
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#status-badge-shows-not-initialized" class="md-nav__link">
+    <span class="md-ellipsis">
+      Status Badge Shows "Not Initialized"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indexer-controls-disabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      Indexer Controls Disabled
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-chat-button-disabled" class="md-nav__link">
+    <span class="md-ellipsis">
+      "New Chat" Button Disabled
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-path-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      CLI Path Not Found
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables-not-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      Environment Variables Not Working
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration Examples
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimal-setup-sqlite-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      Minimal Setup (SQLite local)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-setup-qdrant-git-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      Production Setup (Qdrant + Git Tracking)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ecosystem-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ecosystem Integration
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ecosystem Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#codebase-index-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Codebase Index CLI
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semantic-search-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      Semantic Search MCP
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#claude-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      Claude Code
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#credits" class="md-nav__link">
+    <span class="md-ellipsis">
+      Credits
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-claude-hooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Related: Claude Hooks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#license" class="md-nav__link">
+    <span class="md-ellipsis">
+      License
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../claude-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Claude Hooks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prompt-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prompt Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../resources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../disclaimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    About This Project
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="claude-code-chat-ui">Claude Code Chat UI</h1>
+<p><img alt="VS Code Extension" src="https://img.shields.io/badge/VS%20Code-Extension-blue?style=for-the-badge&amp;logo=visual-studio-code" /> <img alt="Claude Code" src="https://img.shields.io/badge/Powered%20by-Claude%20Code-orange?style=for-the-badge" /> <img alt="TypeScript" src="https://img.shields.io/badge/Built%20with-TypeScript-3178C6?style=for-the-badge&amp;logo=typescript" /></p>
+<p><strong>A VS Code webview extension that brings a chat-like interface for Claude Code, enhanced with Codebase Index CLI integration.</strong></p>
+<p><img alt="Claude Code Chat UI" src="https://github.com/user-attachments/assets/5954a74c-eff7-4205-8482-6a1c9de6e102" /></p>
+<hr />
+<h2 id="about-this-version">About This Version</h2>
+<p>This is an enhanced version of the <a href="https://github.com/andrepimenta/claude-code-chat">original Claude Code Chat</a> by André Pimenta. This version adds seamless integration with <strong>Codebase Index CLI</strong>, providing real-time indexing status, controls, and enhanced workflow for AI-assisted development.</p>
+<p><strong>Repository:</strong> <a href="https://github.com/dudufcb1/claude-code-chat-ui">github.com/dudufcb1/claude-code-chat-ui</a></p>
+<p><strong>Original Project:</strong> <a href="https://github.com/andrepimenta/claude-code-chat">github.com/andrepimenta/claude-code-chat</a> by André Pimenta</p>
+<div class="admonition tip">
+<p class="admonition-title">Platform Compatibility</p>
+<p>Tested on Linux, but should work on all operating systems supported by VS Code.</p>
+</div>
+<hr />
+<h2 id="what-makes-this-version-different">What Makes This Version Different</h2>
+<p>This enhanced version adds complete integration with the Codebase Index CLI ecosystem, providing:</p>
+<h3 id="indexer-controls-in-ui">Indexer Controls in UI</h3>
+<p>Direct control of the indexer from the webview interface:</p>
+<ul>
+<li><strong>Start</strong> - Begin indexing current workspace</li>
+<li><strong>Stats</strong> - View current indexing statistics</li>
+<li><strong>History</strong> - Index git commit history retroactively</li>
+<li><strong>Full Reset</strong> - Clear all indexed data and start fresh</li>
+</ul>
+<p>All controls include:
+- Tooltips explaining each action
+- Disabled state logic based on current indexer status
+- Visual feedback during operations</p>
+<h3 id="real-time-status-badge">Real-Time Status Badge</h3>
+<p>Live status monitoring with color-coded indicators:</p>
+<ul>
+<li>🟢 <strong>watching</strong> - Index up-to-date, monitoring for changes</li>
+<li>🟡 <strong>indexing</strong> - Currently processing files</li>
+<li>🔴 <strong>error</strong> - Something went wrong</li>
+<li>⚪ <strong>idle</strong> - Indexer not running</li>
+</ul>
+<p>The extension reads <code>.codebase/state.json</code> periodically to reflect the current state and update the badge automatically.</p>
+<h3 id="smart-ux-during-indexing">Smart UX During Indexing</h3>
+<ul>
+<li><strong>Indexing warning</strong> prioritized over other notifications</li>
+<li>Clear visual feedback while indexer works</li>
+<li>Safe operation controls that prevent conflicts</li>
+</ul>
+<h3 id="cli-configuration">CLI Configuration</h3>
+<p>New setting for codebase CLI path:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;claudeCodeChat.codebase.path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;~/.local/bin/codebase&quot;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">}</span>
+</code></pre></div>
+<p>Allows customization of the CLI location based on your installation.</p>
+<h3 id="session-safety">Session Safety</h3>
+<ul>
+<li><strong>Blocks "New Chat"</strong> while agents are processing</li>
+<li>Prevents session "poisoning" from overlapping operations</li>
+<li>Ensures clean state between conversations</li>
+</ul>
+<h3 id="subagent-parallelization">Subagent Parallelization</h3>
+<p>Prepared infrastructure for parallel subagent execution:</p>
+<ul>
+<li>Toggle for next message processing</li>
+<li>Documented in UI and settings</li>
+<li>Ready for advanced multi-agent workflows</li>
+</ul>
+<h3 id="clean-repository-hygiene">Clean Repository Hygiene</h3>
+<p>Automatically ignores indexer artifacts:</p>
+<ul>
+<li><code>.codebase/</code> - Indexer state and cache</li>
+<li><code>.env</code> - Environment variables</li>
+<li><code>agents_messaging.db</code> - Agent communication database</li>
+</ul>
+<p>Includes <code>env.example</code> for easy onboarding without exposing secrets.</p>
+<hr />
+<h2 id="why-this-integration-matters">Why This Integration Matters</h2>
+<h3 id="end-to-end-control">End-to-End Control</h3>
+<p>Manage your entire semantic code indexing workflow from VS Code:</p>
+<ol>
+<li>Start indexer from the extension</li>
+<li>Monitor status in real-time</li>
+<li>Search your codebase semantically via Claude</li>
+<li>Index historical commits</li>
+<li>Reset and restart as needed</li>
+</ol>
+<p>No need to switch to terminal or manage separate processes.</p>
+<h3 id="real-time-visibility">Real-Time Visibility</h3>
+<p>The status badge and warnings keep you informed:</p>
+<ul>
+<li>Know exactly when indexing is happening</li>
+<li>See how many files and blocks are indexed</li>
+<li>Get alerts if something goes wrong</li>
+<li>Understand indexer state at a glance</li>
+</ul>
+<h3 id="safe-multi-agent-workflows">Safe Multi-Agent Workflows</h3>
+<p>The session safety features prevent common issues:</p>
+<ul>
+<li>No accidental parallel indexing operations</li>
+<li>Clean state between chat sessions</li>
+<li>Safe subagent parallelization when ready</li>
+</ul>
+<h3 id="consistent-onboarding">Consistent Onboarding</h3>
+<ul>
+<li><code>env.example</code> guides new users through configuration</li>
+<li><code>.gitignore</code> prevents accidentally committing sensitive data</li>
+<li>Clear documentation of all features</li>
+</ul>
+<hr />
+<h2 id="installation">Installation</h2>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>Before installing this extension, you need:</p>
+<ol>
+<li><strong>VS Code or VS Codium</strong></li>
+<li><strong>Claude Code</strong> installed and configured</li>
+<li><strong>Codebase Index CLI</strong> installed globally</li>
+</ol>
+<p>See the <a href="../codebase-index-cli/">Codebase Index CLI</a> page for installation instructions.</p>
+<h3 id="install-the-extension">Install the Extension</h3>
+<p><strong>Option 1: From VSIX (Recommended)</strong></p>
+<ol>
+<li>Download the latest <code>.vsix</code> from <a href="https://github.com/dudufcb1/claude-code-chat-ui/releases">Releases</a></li>
+<li>In VS Code: <code>Extensions</code> → <code>...</code> → <code>Install from VSIX</code></li>
+<li>Select the downloaded file</li>
+</ol>
+<p><strong>Option 2: Build from Source</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/dudufcb1/claude-code-chat-ui.git
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">cd</span><span class="w"> </span>claude-code-chat-ui
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>npm<span class="w"> </span>install
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>npm<span class="w"> </span>run<span class="w"> </span>compile
+</code></pre></div>
+<p>Then install the extension from the <code>claude-code-chat-ui</code> folder in VS Code.</p>
+<hr />
+<h2 id="configuration">Configuration</h2>
+<h3 id="required-settings">Required Settings</h3>
+<p>Configure the extension in VS Code settings (<code>settings.json</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="c1">// Path to your codebase CLI installation</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;claudeCodeChat.codebase.path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;~/.local/bin/codebase&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="c1">// Claude API settings (from original extension)</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">&quot;claudeCodeChat.apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-claude-api-key&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">&quot;claudeCodeChat.model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;claude-sonnet-4&quot;</span><span class="p">,</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">  </span><span class="c1">// Optional: Custom prompt prepend</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">  </span><span class="nt">&quot;claudeCodeChat.prependPrompt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;You are an expert developer assistant...&quot;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">}</span>
+</code></pre></div>
+<p><img alt="Codebase Path Configuration" src="../assets/images/codebase_path.png" /></p>
+<p><em>Configure the path to your codebase CLI installation</em></p>
+<h3 id="environment-variables">Environment Variables</h3>
+<p>Create a <code>.env</code> file in your workspace (the extension will ignore it in git):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Codebase Index CLI configuration</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nv">EMBED_PROVIDER</span><span class="o">=</span>openai-compatible
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nv">EMBED_BASE_URL</span><span class="o">=</span>https://api.example.com/v1
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nv">EMBED_API_KEY</span><span class="o">=</span>your-api-key
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nv">EMBED_MODEL</span><span class="o">=</span>text-embedding-3-small
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># Qdrant configuration (if using)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">QDRANT_URL</span><span class="o">=</span>http://localhost:6333
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nv">QDRANT_API_KEY</span><span class="o">=</span>optional
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># Git tracking (optional)</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="nv">TRACK_GIT</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="nv">TRACK_GIT_LLM_PROVIDER</span><span class="o">=</span>openai-compatible
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nv">TRACK_GIT_LLM_ENDPOINT</span><span class="o">=</span>http://localhost:4141/v1
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nv">TRACK_GIT_LLM_MODEL</span><span class="o">=</span>gpt-4.1
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nv">TRACK_GIT_LLM_API_KEY</span><span class="o">=</span>your-key
+</code></pre></div>
+<p>Use <code>env.example</code> as a template (included in the extension).</p>
+<hr />
+<h2 id="usage">Usage</h2>
+<h3 id="starting-a-chat-session">Starting a Chat Session</h3>
+<ol>
+<li>Open Command Palette (<code>Ctrl+Shift+P</code> / <code>Cmd+Shift+P</code>)</li>
+<li>Run <code>Claude Code Chat: Open Chat</code></li>
+<li>The webview will open with indexer controls visible</li>
+</ol>
+<p><img alt="Claude Code Chat UI in VSCodium" src="../assets/images/codium.png" /></p>
+<p><em>Complete view showing the chat interface, indexer status badge, and warning banner</em></p>
+<h3 id="using-indexer-controls">Using Indexer Controls</h3>
+<p>Access the indexer controls through the Settings panel (⚙️ icon):</p>
+<p><img alt="Codebase CLI Controls" src="../assets/images/config_codebase.png" /></p>
+<p><em>Codebase CLI control panel with Start, Stats, History, and Full reset buttons</em></p>
+<p><strong>Start Indexing:</strong>
+1. Click <strong>Start</strong> button in the UI
+2. Wait for status badge to show 🟢 watching
+3. Your codebase is now semantically indexed</p>
+<p><strong>View Stats:</strong>
+- Click <strong>Stats</strong> to see:
+  - Total vectors indexed
+  - Unique files tracked
+  - Last update time
+  - Collection name</p>
+<p><strong>Index History:</strong>
+- Click <strong>History</strong> to retroactively index git commits
+- Requires Qdrant and LLM configuration
+- Processes last N commits (configurable)</p>
+<p><strong>Full Reset:</strong>
+- Click <strong>Full Reset</strong> to clear all indexed data
+- Useful when changing embedding models
+- Recreates collection from scratch</p>
+<h3 id="monitoring-status">Monitoring Status</h3>
+<p>The status badge shows real-time indexer state:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>🟢 watching | 170 files | 1000 blocks | 5m ago
+</code></pre></div>
+<ul>
+<li><strong>State:</strong> Current indexer status</li>
+<li><strong>Files:</strong> Number of unique files indexed</li>
+<li><strong>Blocks:</strong> Total code chunks indexed</li>
+<li><strong>Time:</strong> Last update timestamp</li>
+</ul>
+<h3 id="chat-with-context">Chat with Context</h3>
+<p>Once indexed, chat with Claude normally. The semantic search integration happens automatically through Claude Code's context system.</p>
+<p>Example queries:
+- "Explain the authentication flow"
+- "Find all API endpoints"
+- "Show me error handling patterns"
+- "Where is database configuration?"</p>
+<h3 id="subagent-parallelization-advanced">Subagent Parallelization (Advanced)</h3>
+<p>Toggle parallel subagent execution for next message:</p>
+<ol>
+<li>Enable parallelization toggle in UI</li>
+<li>Next message will coordinate multiple agents</li>
+<li>Useful for complex refactoring tasks</li>
+</ol>
+<div class="admonition warning">
+<p class="admonition-title">Experimental</p>
+<p>Subagent parallelization is prepared but experimental. Use with caution on production code.</p>
+</div>
+<hr />
+<h2 id="features-from-original-extension">Features from Original Extension</h2>
+<p>This version preserves all features from the original Claude Code Chat:</p>
+<ul>
+<li><strong>Chat-like interface</strong> for Claude Code</li>
+<li><strong>Conversation history</strong> with persistent storage</li>
+<li><strong>Multiple models</strong> support (Claude Sonnet, Opus, etc.)</li>
+<li><strong>Markdown rendering</strong> with syntax highlighting</li>
+<li><strong>Code block actions</strong> (copy, insert, etc.)</li>
+<li><strong>Conversation management</strong> (save, load, delete)</li>
+<li><strong>Custom system prompts</strong></li>
+<li><strong>Token usage tracking</strong></li>
+</ul>
+<p>See the <a href="https://github.com/andrepimenta/claude-code-chat">original documentation</a> for details on these features.</p>
+<hr />
+<h2 id="how-it-works-with-the-ecosystem">How It Works with the Ecosystem</h2>
+<p>This extension completes the Codebase Index CLI ecosystem:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>┌─────────────────────────────────────────────────────────────────┐
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>│                    Complete Workflow                            │
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>└─────────────────────────────────────────────────────────────────┘
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>1. EXTENSION (Claude Code Chat UI)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>   ├─ User opens chat in VS Code
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>   ├─ Controls indexer via UI buttons
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>   ├─ Monitors status in real-time
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>   └─ Safe session management
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>2. INDEXER (Codebase Index CLI)
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>   ├─ Runs in background (triggered by extension)
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>   ├─ Watches workspace for changes
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>   ├─ Parses code with tree-sitter
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>   ├─ Creates embeddings
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>   ├─ Stores in Qdrant/SQLite
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>   └─ Updates .codebase/state.json
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>3. SEARCH (Semantic Search MCP)
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>   ├─ Reads .codebase/state.json
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>   ├─ Queries indexed vectors
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>   ├─ Returns relevant code
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>   └─ Powers Claude&#39;s context
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>4. AI ASSISTANT (Claude Code)
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>   ├─ Receives semantic context
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>   ├─ Understands your codebase
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>   ├─ Provides accurate answers
+<a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a>   └─ Suggests relevant changes
+</code></pre></div>
+<p><strong>The extension is the control center</strong> that ties everything together in VS Code.</p>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="status-badge-shows-not-initialized">Status Badge Shows "Not Initialized"</h3>
+<p><strong>Cause:</strong> No <code>.codebase/state.json</code> file in workspace</p>
+<p><strong>Solution:</strong>
+1. Click <strong>Start</strong> button in UI
+2. Wait for indexing to begin
+3. Badge should update to 🟡 indexing then 🟢 watching</p>
+<h3 id="indexer-controls-disabled">Indexer Controls Disabled</h3>
+<p><strong>Cause:</strong> Indexer is currently running an operation</p>
+<p><strong>Solution:</strong>
+- Wait for current operation to complete
+- Check status badge for current state
+- If stuck, close extension and restart VS Code</p>
+<h3 id="new-chat-button-disabled">"New Chat" Button Disabled</h3>
+<p><strong>Cause:</strong> Agents are currently processing</p>
+<p><strong>Solution:</strong>
+- Wait for current conversation to complete
+- This is a safety feature to prevent session conflicts
+- Status will clear automatically when agents finish</p>
+<h3 id="cli-path-not-found">CLI Path Not Found</h3>
+<p><strong>Cause:</strong> <code>claudeCodeChat.codebase.path</code> points to wrong location</p>
+<p><strong>Solution:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Find your codebase CLI location</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>which<span class="w"> </span>codebase
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Update settings.json with correct path</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="o">{</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="s2">&quot;claudeCodeChat.codebase.path&quot;</span>:<span class="w"> </span><span class="s2">&quot;/correct/path/to/codebase&quot;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="o">}</span>
+</code></pre></div></p>
+<h3 id="environment-variables-not-working">Environment Variables Not Working</h3>
+<p><strong>Cause:</strong> <code>.env</code> file not in workspace root or malformed</p>
+<p><strong>Solution:</strong>
+1. Copy <code>env.example</code> to <code>.env</code>
+2. Place in workspace root (same level as <code>.vscode/</code>)
+3. Verify format (no quotes around values)
+4. Restart extension</p>
+<hr />
+<h2 id="configuration-examples">Configuration Examples</h2>
+<h3 id="minimal-setup-sqlite-local">Minimal Setup (SQLite local)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;claudeCodeChat.codebase.path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;~/.local/bin/codesql&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;claudeCodeChat.apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-claude-key&quot;</span><span class="p">,</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">&quot;claudeCodeChat.model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;claude-sonnet-4&quot;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="p">}</span>
+</code></pre></div>
+<p><code>.env</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nv">EMBED_PROVIDER</span><span class="o">=</span>openai-compatible
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nv">EMBED_BASE_URL</span><span class="o">=</span>http://localhost:4141/v1
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nv">EMBED_API_KEY</span><span class="o">=</span>your-key
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nv">EMBED_MODEL</span><span class="o">=</span>text-embedding-3-small
+</code></pre></div></p>
+<h3 id="production-setup-qdrant-git-tracking">Production Setup (Qdrant + Git Tracking)</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">&quot;claudeCodeChat.codebase.path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;~/.local/bin/codebase&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">&quot;claudeCodeChat.apiKey&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;your-claude-key&quot;</span><span class="p">,</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">&quot;claudeCodeChat.model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;claude-sonnet-4.5&quot;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">}</span>
+</code></pre></div>
+<p><code>.env</code>:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Embedder</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="nv">EMBED_PROVIDER</span><span class="o">=</span>openai-compatible
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="nv">EMBED_BASE_URL</span><span class="o">=</span>https://api.studio.nebius.com/v1/
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="nv">EMBED_API_KEY</span><span class="o">=</span>your-key
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="nv">EMBED_MODEL</span><span class="o">=</span>Qwen/Qwen3-Embedding-8B
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="c1"># Qdrant</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="nv">QDRANT_URL</span><span class="o">=</span>http://localhost:6333
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="c1"># Git tracking</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="nv">TRACK_GIT</span><span class="o">=</span><span class="nb">true</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="nv">TRACK_GIT_LLM_PROVIDER</span><span class="o">=</span>openai-compatible
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="nv">TRACK_GIT_LLM_ENDPOINT</span><span class="o">=</span>http://localhost:4141/v1
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="nv">TRACK_GIT_LLM_MODEL</span><span class="o">=</span>gpt-4.1
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="nv">TRACK_GIT_LLM_API_KEY</span><span class="o">=</span>your-key
+</code></pre></div></p>
+<hr />
+<h2 id="ecosystem-integration">Ecosystem Integration</h2>
+<p>This extension works seamlessly with:</p>
+<h3 id="codebase-index-cli">Codebase Index CLI</h3>
+<p>The indexer that powers semantic search.</p>
+<p><strong>Learn more:</strong> <a href="../codebase-index-cli/">Codebase Index CLI</a></p>
+<h3 id="semantic-search-mcp">Semantic Search MCP</h3>
+<p>MCP server for cross-IDE semantic search.</p>
+<p><strong>Learn more:</strong> <a href="../semantic-search-mcp/">Semantic Search MCP</a></p>
+<h3 id="claude-code">Claude Code</h3>
+<p>The AI coding assistant that consumes the indexed context.</p>
+<p><strong>Official site:</strong> <a href="https://claude.ai/code">claude.ai/code</a></p>
+<hr />
+<h2 id="credits">Credits</h2>
+<p>This enhanced version builds upon the excellent work of:</p>
+<p><strong>Original Extension:</strong> <a href="https://github.com/andrepimenta/claude-code-chat">Claude Code Chat</a> by <strong>André Pimenta</strong></p>
+<p>The original extension provides the foundation for the chat interface, conversation management, and Claude Code integration. This version adds the indexer integration layer on top.</p>
+<hr />
+<h2 id="contributing">Contributing</h2>
+<p>Contributions are welcome! This extension follows the same philosophy as the rest of the ecosystem:</p>
+<ul>
+<li><strong>Bug reports</strong> - If something doesn't work as documented</li>
+<li><strong>Documentation improvements</strong> - Clarifications, fixes</li>
+<li><strong>Critical features</strong> - That benefit the majority of users</li>
+</ul>
+<p>See the repository for contribution guidelines.</p>
+<hr />
+<h2 id="related-claude-hooks">Related: Claude Hooks</h2>
+<p>Want to enhance your workflow even further? Check out the <a href="../claude-hooks/">Claude Hooks</a> guide to learn how to inject custom context and automate workflows with hooks.</p>
+<hr />
+<h2 id="license">License</h2>
+<p>MIT (same as original extension)</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../semantic-search-mcp/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Semantic Search MCP">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Semantic Search MCP
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../claude-hooks/" class="md-footer__link md-footer__link--next" aria-label="Next: Claude Hooks">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Claude Hooks
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow", "toc.integrate"], "search": "../assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>

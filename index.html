@@ -1,0 +1,1449 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Complete documentation for the Codebase Index CLI ecosystem - semantic code search for AI coding assistants">
+      
+      
+        <meta name="author" content="Eduardo (dudufcb1)">
+      
+      
+        <link rel="canonical" href="https://dudufcb1.github.io/codebase-index-cli/">
+      
+      
+      
+        <link rel="next" href="codebase-index-cli/">
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.22">
+    
+    
+      
+        <title>Codebase Index CLI - Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.84d31ad4.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-codebase-index-cli-journey-a-human-story" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Codebase Index CLI - Documentation" class="md-header__button md-logo" aria-label="Codebase Index CLI - Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Codebase Index CLI - Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Cambiar a modo oscuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo oscuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Cambiar a modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Cambiar a modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/dudufcb1/codebase-index-cli" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dudufcb1/codebase-index-cli
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="codebase-index-cli/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Codebase Index CLI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="semantic-search-mcp/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Semantic Search MCP
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="claude-code-chat-ui/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Claude Code Chat UI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="claude-hooks/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Claude Hooks
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="prompt-configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Prompt Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="resources/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Resources
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="disclaimer/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  About This Project
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Codebase Index CLI - Documentation" class="md-nav__button md-logo" aria-label="Codebase Index CLI - Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    Codebase Index CLI - Documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/dudufcb1/codebase-index-cli" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    dudufcb1/codebase-index-cli
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-codebase-index-cli-journey-a-human-story_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Codebase Index CLI Journey: A Human Story
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Codebase Index CLI Journey: A Human Story">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-birth-spotting-a-real-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Birth: Spotting a Real Need
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#early-steps-configuration-and-usability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Early Steps: Configuration and Usability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identity-shift-from-roo-index-cli-to-codebase-index-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      Identity Shift: From "roo-index-cli" to "codebase-index-cli"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlite-vec-discovering-flexibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQLite-vec: Discovering Flexibility
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tree-sitter-the-semantic-quality-jump" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tree-sitter: The Semantic Quality Jump
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internationalization-and-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internationalization and Documentation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-commit-tracking-the-experimental-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      Git Commit Tracking: The Experimental Feature
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vector-store-specific-configuration-the-flexibility-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      Vector Store-Specific Configuration: The Flexibility Insight
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#claude-code-integration-closing-the-circle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Claude Code Integration: Closing the Circle
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-platform-thinking-about-community" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cross-Platform: Thinking About Community
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semantic-search-cli-the-complete-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      Semantic Search CLI: The Complete Tool
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-lessons-observation-and-continuous-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      Final Lessons: Observation and Continuous Improvement
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cli-mcp-instead-of-native-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Why CLI + MCP Instead of Native Integration?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#part-3-the-extension-that-closes-the-cycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      Part 3: The Extension That Closes the Cycle
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part 3: The Extension That Closes the Cycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fork-objective" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fork Objective
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-integration-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Integration Changes
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repository-hygiene-for-the-indexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Repository Hygiene for the Indexer
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation-and-fork-purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentation and Fork Purpose
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-the-fork-makes-the-ecosystem-more-complete" class="md-nav__link">
+    <span class="md-ellipsis">
+      How the Fork Makes the Ecosystem More Complete
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#my-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      My Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-reflections" class="md-nav__link">
+    <span class="md-ellipsis">
+      Final Reflections
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-historia-de-codebase-index-cli-un-viaje-humano" class="md-nav__link">
+    <span class="md-ellipsis">
+      La Historia de Codebase Index CLI: Un Viaje Humano
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="La Historia de Codebase Index CLI: Un Viaje Humano">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#el-nacimiento-detectando-una-necesidad-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      El Nacimiento: Detectando una Necesidad Real
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#primeros-pasos-configuracion-y-usabilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Primeros Pasos: Configuración y Usabilidad
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-cambio-de-identidad-de-roo-index-cli-a-codebase-index-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      El Cambio de Identidad: De "roo-index-cli" a "codebase-index-cli"
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlite-vec-el-descubrimiento-de-la-flexibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQLite-vec: El Descubrimiento de la Flexibilidad
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tree-sitter-el-salto-de-calidad-semantica" class="md-nav__link">
+    <span class="md-ellipsis">
+      Tree-sitter: El Salto de Calidad Semántica
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internacionalizacion-y-documentacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      Internacionalización y Documentación
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#git-commit-tracking-la-caracteristica-experimental" class="md-nav__link">
+    <span class="md-ellipsis">
+      Git Commit Tracking: La Característica Experimental
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#configuracion-por-vector-store-el-insight-de-flexibilidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuración por Vector Store: El Insight de Flexibilidad
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integracion-con-claude-code-el-circulo-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Integración con Claude Code: El Círculo Completo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-platform-pensando-en-comunidad" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cross-Platform: Pensando en Comunidad
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semantic-search-cli-la-herramienta-completa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Semantic Search CLI: La Herramienta Completa
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lecciones-finales-observacion-y-mejora-continua" class="md-nav__link">
+    <span class="md-ellipsis">
+      Lecciones Finales: Observación y Mejora Continua
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#por-que-cli-mcp-en-lugar-de-integracion-nativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      ¿Por qué CLI + MCP en lugar de integración nativa?
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parte-3-la-extension-que-cierra-el-ciclo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Parte 3: La extensión que cierra el ciclo
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte 3: La extensión que cierra el ciclo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objetivo-del-fork" class="md-nav__link">
+    <span class="md-ellipsis">
+      Objetivo del fork
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cambios-clave-de-integracion-con-el-indexador" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cambios clave de integración con el indexador
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#higiene-del-repositorio-para-el-indexador" class="md-nav__link">
+    <span class="md-ellipsis">
+      Higiene del repositorio para el indexador
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentacion-y-proposito-del-fork" class="md-nav__link">
+    <span class="md-ellipsis">
+      Documentación y propósito del fork
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#como-el-fork-vuelve-el-ecosistema-mas-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Cómo el fork vuelve el ecosistema más completo
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mi-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mi Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reflexiones-finales" class="md-nav__link">
+    <span class="md-ellipsis">
+      Reflexiones Finales
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contact-contacto" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contact / Contacto
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="codebase-index-cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Codebase Index CLI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="semantic-search-mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Semantic Search MCP
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="claude-code-chat-ui/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Claude Code Chat UI
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="claude-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Claude Hooks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="prompt-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Prompt Configuration
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="resources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Resources
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="disclaimer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    About This Project
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="the-codebase-index-cli-journey-a-human-story">The Codebase Index CLI Journey: A Human Story</h1>
+<p><a href="#la-historia-de-codebase-index-cli-un-viaje-humano">Leer en Español</a> | <a href="#the-codebase-index-cli-journey-a-human-story">Read in English</a></p>
+<hr />
+<h2 id="the-codebase-index-cli-journey-a-human-story_1">The Codebase Index CLI Journey: A Human Story</h2>
+<h3 id="the-birth-spotting-a-real-need">The Birth: Spotting a Real Need</h3>
+<p>This project started from direct observation while working with AI tools like Claude Code, Cline, and Codex. Unlike Cursor, which has built-in semantic search, these tools struggle with large codebases. They miss relevant code scattered across multiple files, can't understand the broader context of a project. The need was clear: I needed a semantic context engine that any AI assistant could use.</p>
+<p>I started in mid-October with a simple idea: a CLI tool for semantic code indexing outside of VS Code, reusing some concepts from Roo Code's semantic index infrastructure. At that moment, I already understood the core architecture needed: directory scanning, code chunking, embedding generation, and storage in vector stores.</p>
+<h3 id="early-steps-configuration-and-usability">Early Steps: Configuration and Usability</h3>
+<p>The first days were about basic setup. The initial version was functional but hard to use. It required manual JSON configuration, no environment variables, no installer.</p>
+<p>The first big learning came quickly: people don't want to configure complex JSONs. I learned that:
+- Configuration via .env is much more accessible
+- Users need automatic installers
+- Legacy data migration must be transparent
+- Real-time feedback is crucial (watchers, detailed logging)</p>
+<p>This massive refactor completely transformed the user experience. Suddenly, the CLI was a tool anyone could install and use.</p>
+<p><img alt="Indexing in action" src="assets/images/indexing.png" /></p>
+<p><em>The CLI in action: <code>codebase start .</code> configuring workspace, embedder, and starting the initial scan</em></p>
+<h3 id="identity-shift-from-roo-index-cli-to-codebase-index-cli">Identity Shift: From "roo-index-cli" to "codebase-index-cli"</h3>
+<p>An important learning about branding came early: the name "roo-index-cli" tied the project to "Roo Code", limiting adoption. I learned that generalization is power. Changing to "codebase-index-cli" made the project more generic and accessible, while maintaining legacy name compatibility.</p>
+<h3 id="sqlite-vec-discovering-flexibility">SQLite-vec: Discovering Flexibility</h3>
+<p>A few days in, I hit a realization. Until then, I only supported Qdrant, which requires a running server. I learned that not all users want or can run external services.</p>
+<p>That day I did three things:
+1. Made a backup before implementing SQLite-vec - caution learned from past experiences
+2. Integrated SQLite-vec - now users could choose between local (SQLite) or scalable (Qdrant)
+3. Created testing scripts - I learned the importance of debugging tools</p>
+<p>This change revealed something crucial: users need options. Small projects want SQLite, large projects Qdrant. Giving them the choice with the same CLI was powerful.</p>
+<h3 id="tree-sitter-the-semantic-quality-jump">Tree-sitter: The Semantic Quality Jump</h3>
+<p>The tree-sitter integration was a moment of technical maturation. I learned that regex-based chunking was limited. Tree-sitter enables:
+- Real semantic parsing of 29+ languages
+- Exact extraction of definitions (functions, classes)
+- AST understanding of code</p>
+<p>But I also learned about WASM memory fragmentation the hard way. Parsers would crash after processing many files. The solution: parser cache + reset every 100 files. Key learning: WASM memory isn't automatically managed, you have to be proactive.</p>
+<h3 id="internationalization-and-documentation">Internationalization and Documentation</h3>
+<p>A few days into the project, I focused on accessibility:
+- Complete translation to English
+- Emoji removal (professionalism)
+- Shields.io badges (open source standards)
+- Exhaustive troubleshooting documentation</p>
+<p>I learned that code without good documentation is inaccessible code. The troubleshooting sections I added weren't just documentation, they were the result of seeing real users encountering problems:
+- Dimension mismatches
+- Embedder requirements (OpenAI-compatible only)
+- Git tracking only in Qdrant
+- Performance tuning</p>
+<h3 id="git-commit-tracking-the-experimental-feature">Git Commit Tracking: The Experimental Feature</h3>
+<p>Commit tracking became the most ambitious learning experiment:</p>
+<p>The problem: Commit history is lost institutional knowledge. Why was this change made? What decisions led to this code?</p>
+<p>The solution:
+1. A .git watcher that detects new commits
+2. Metadata extraction, diffs, statistics
+3. LLM analysis of the commit (the key conceptual leap)
+4. Qdrant indexing for semantic search</p>
+<p>Technical learnings:
+- Batch processing is crucial - processing commits one by one was inefficient
+- LLM analysis caching - don't reanalyze already processed commits
+- Retroactive indexing - users want to index past history, not just future commits</p>
+<p>This feature did something unique: turn commit history into searchable knowledge.</p>
+<p><img alt="Indexing commit history" src="assets/images/indexing_commits.png" /></p>
+<p><em>Retroactive commit indexing: <code>codebase -index-history 100</code> analyzing 100 historical commits with LLM</em></p>
+<h3 id="vector-store-specific-configuration-the-flexibility-insight">Vector Store-Specific Configuration: The Flexibility Insight</h3>
+<p>A mature learning emerged: different vector stores have different needs. Why use the same embedder for local SQLite and production Qdrant?</p>
+<p>The solution: store-specific configuration:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># SQLite uses small/cheap model</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">SQLITE_EMBED_MODEL</span><span class="o">=</span>text-embedding-3-small
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Qdrant uses large/precise model</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">QDRANT_EMBED_MODEL</span><span class="o">=</span>Qwen/Qwen3-Embedding-8B
+</code></pre></div></p>
+<p>I learned that well-designed flexibility multiplies a tool's value.</p>
+<h3 id="claude-code-integration-closing-the-circle">Claude Code Integration: Closing the Circle</h3>
+<p>The Claude Code integration closed the circle:
+- Auto-start with SessionStart hook
+- Real-time status line
+- Zero-config experience</p>
+<p>I learned that tools must integrate seamlessly into the user's workflow. It's not enough for them to work, they must be invisible until needed.</p>
+<h3 id="cross-platform-thinking-about-community">Cross-Platform: Thinking About Community</h3>
+<p>The multiplatform installers were a learning about community: if you want broad adoption, reduce setup friction to the maximum. Although macOS/Windows aren't tested, providing the scripts invites contribution.</p>
+<h3 id="semantic-search-cli-the-complete-tool">Semantic Search CLI: The Complete Tool</h3>
+<p>Adding a dedicated semantic search command with Voyage AI reranking was learning that ad-hoc queries are valuable. You don't always want a UI, sometimes you just want:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>codebase<span class="w"> </span>semantic-search<span class="w"> </span><span class="s2">&quot;authentication flow&quot;</span><span class="w"> </span>--rerank
+</code></pre></div></p>
+<h3 id="final-lessons-observation-and-continuous-improvement">Final Lessons: Observation and Continuous Improvement</h3>
+<p>Recent refinements show how real usage teaches you:
+- Process locks to prevent multiple instances
+- Duration reporting in minutes (not seconds)
+- Memory fragmentation fixes</p>
+<p>I learned that software is never "finished". Every real use reveals something new to improve.</p>
+<h3 id="why-cli-mcp-instead-of-native-integration">Why CLI + MCP Instead of Native Integration?</h3>
+<p>This is an experimental project, but one that each user can perfectly adapt to their needs. It's not like they're retraining a model, but they can adjust it as much as they want. That's why it's open source - you can use the models you prefer and tweak it to your taste.</p>
+<p>Embedding it in a system didn't make much sense. Codex or Claude CLI are proprietary systems, but beyond that, there are many other CLIs that don't have an integrated contextual database. Even Cline itself, which is excellent, still works without semantic search for reasons its creators understand are better. But with this, there's the possibility to experiment a bit more, without needing to break what already exists - simply test, adjust, use, and see results.</p>
+<p>I'm not writing this with the intention of saying this will change the world or the way you program, but it can help you customize things and learn about AI agents, because along the way you learn many things about the entire environment.</p>
+<p>The project has been tested on agents like Gemini CLI, Aider, OpenCode, Codex, Qwen Code, Cline, Droid with good results, and it will work with all agents. Just in some, it may not be as relevant since they have their own context engine, but it's worth trying. It's important to mention that tool adoption depends a lot on the prompt, as that's important for the agent to take the tool as a natural part of its processes and you don't have to keep reminding it to use it.</p>
+<h3 id="part-3-the-extension-that-closes-the-cycle">Part 3: The Extension That Closes the Cycle</h3>
+<p>Here's the story of when I found <a href="https://github.com/andrepimenta/claude-code-chat">claude-code-chat</a> by André Pimenta, which I modified to use the indexer directly integrated into the extension. My enhanced version is available at <a href="https://github.com/dudufcb1/claude-code-chat-ui">claude-code-chat-ui</a>, compatible with the Codebase Index CLI. Since it's a particular use case, I preferred to fork and modify it for CLI use, but it's a great extension everyone should try from its original author.</p>
+<h4 id="fork-objective">Fork Objective</h4>
+<p>Integrate the local indexer (codebase-index-cli) directly into the extension, with UI control, visible state, and clear flow documentation. Also, prepare ground for subagent parallelization and improve repo hygiene for indexer artifacts.</p>
+<h4 id="key-integration-changes">Key Integration Changes</h4>
+<p><strong>Indexer controls in UI</strong>: Start, Stats, History, Full reset; live status badge; tooltips and disabled logic based on state.</p>
+<p><strong>Periodic reading</strong> of .codebase/state.json to reflect state (watching/indexing/idle/error) and update badge/warnings.</p>
+<p><strong>"Indexing" warning</strong> prioritized over YOLO mode for clearer UX while indexer works.</p>
+<p><strong>CLI configuration</strong>: new setting for codebase CLI path (claudeCodeChat.codebase.path).</p>
+<p><strong>Session safety</strong>: block "New Chat" while agents are processing to avoid "poison" from overlap.</p>
+<p><strong>Parallelization toggle</strong> (Subagents) for next message (prepared/documented and wired in UI).</p>
+<h4 id="repository-hygiene-for-the-indexer">Repository Hygiene for the Indexer</h4>
+<p><strong>Ignore local and sensitive artifacts</strong>: .codebase/, .env, agents_messaging.db; add env.example.</p>
+<h4 id="documentation-and-fork-purpose">Documentation and Fork Purpose</h4>
+<p><strong>README/CHANGELOG/TEST_SETTINGS</strong> updated with: indexer integration, badge UX, parallelization toggle, and message prepend notes.</p>
+<p><strong>Fork notice</strong> with credits and link to codebase-index-cli README, explaining this fork supports that flow and customizations.</p>
+<h4 id="how-the-fork-makes-the-ecosystem-more-complete">How the Fork Makes the Ecosystem More Complete</h4>
+<ul>
+<li>End-to-end indexer control from the extension (without leaving VS Code)</li>
+<li>Real-time indexing state visibility and safe UX during operations (badge + warnings)</li>
+<li>Consistent onboarding via env.example and .gitignore that avoids garbage/sensitives in git</li>
+<li>Prepared for parallel subagent work, aligned with indexer-supported flows</li>
+<li>Explicit indexer + fork flow documentation, facilitating adoption and contribution</li>
+</ul>
+<h3 id="my-setup">My Setup</h3>
+<p>VSCodium + customized Claude Code to consume GPT-5 and Codex in addition to native Claude-Sonnet-4 and Claude-Sonnet-4.5, Codebase Index CLI, Semantic Search MCP, claude.md or agents.md prompt in Codex, and extension to use Claude Code and better view indexing stats in VSCodium.</p>
+<ul>
+<li><a href="https://github.com/dudufcb1/codebase-index-cli/blob/codebase-cli/README.md">Codebase Index CLI</a></li>
+<li><a href="https://github.com/dudufcb1/semantic-search">Semantic Search MCP</a></li>
+</ul>
+<h3 id="final-reflections">Final Reflections</h3>
+<p>This project taught me:</p>
+<ol>
+<li><strong>Start simple, iterate fast</strong>: The initial commit was basic, but it worked. Complexity came later, when I understood it better.</li>
+<li><strong>Users teach you</strong>: Each feature (SQLite-vec, tree-sitter, git tracking) came from observing real needs.</li>
+<li><strong>Configuration is UX</strong>: Moving from JSON to .env, creating installers, allowing per-vector-store configuration - all this was learning that configuration is part of user experience.</li>
+<li><strong>Documentation is development</strong>: The 200+ troubleshooting lines aren't "extra documentation", they're knowledge distilled from real problems.</li>
+<li><strong>Code without context is lost code</strong>: Git commit tracking with LLM isn't just a cool feature, it's preserving the "why" of code.</li>
+<li><strong>Well-designed flexibility wins</strong>: SQLite vs Qdrant, different embedders, optional tree-sitter - giving users options is respecting them.</li>
+</ol>
+<p>This project started as a personal need and evolved into a tool any developer using AI assistants can leverage. It's not perfect, but it's useful, and that's the metric that matters.</p>
+<hr />
+<h2 id="la-historia-de-codebase-index-cli-un-viaje-humano">La Historia de Codebase Index CLI: Un Viaje Humano</h2>
+<h3 id="el-nacimiento-detectando-una-necesidad-real">El Nacimiento: Detectando una Necesidad Real</h3>
+<p>Este proyecto nació de una observación directa mientras trabajaba con herramientas de IA como Claude Code, Cline y Codex. A diferencia de Cursor, que tiene búsqueda semántica integrada, estas herramientas luchan con codebases grandes. Se pierden código relevante disperso en múltiples archivos, no pueden entender el contexto más amplio de un proyecto. La necesidad era clara: necesitaba un motor de contexto semántico que cualquier asistente de IA pudiera usar.</p>
+<p>Empecé a mediados de octubre con una idea simple: una herramienta CLI para indexación semántica de código fuera de VS Code, reutilizando algunos conceptos de la infraestructura de índice semántico de Roo Code. En ese momento, ya entendía la arquitectura core que necesitaba: escaneo de directorios, chunking de código, generación de embeddings, y almacenamiento en vector stores.</p>
+<h3 id="primeros-pasos-configuracion-y-usabilidad">Primeros Pasos: Configuración y Usabilidad</h3>
+<p>Los primeros días fueron de configuración básica. La versión inicial era funcional pero difícil de usar. Requería configuración manual via JSON, sin variables de entorno, sin instalador.</p>
+<p>El primer gran aprendizaje llegó rápido: la gente no quiere configurar JSONs complejos. Aprendí que:
+- La configuración via .env es mucho más accesible
+- Los usuarios necesitan instaladores automáticos
+- La migración de datos legacy debe ser transparente
+- El feedback en tiempo real es crucial (watchers, logging detallado)</p>
+<p>Este refactor masivo transformó completamente la experiencia de usuario. De repente, el CLI era una herramienta que cualquiera podía instalar y usar.</p>
+<p><img alt="Indexación en acción" src="assets/images/indexing.png" /></p>
+<p><em>El CLI en acción: <code>codebase start .</code> configurando workspace, embedder, e iniciando el escaneo inicial</em></p>
+<h3 id="el-cambio-de-identidad-de-roo-index-cli-a-codebase-index-cli">El Cambio de Identidad: De "roo-index-cli" a "codebase-index-cli"</h3>
+<p>Un aprendizaje importante sobre branding llegó temprano: el nombre "roo-index-cli" ataba el proyecto a "Roo Code", limitando su adopción. Aprendí que la generalización es poder. Cambiar a "codebase-index-cli" hizo que el proyecto fuera más genérico y accesible, manteniendo compatibilidad con el nombre legacy.</p>
+<h3 id="sqlite-vec-el-descubrimiento-de-la-flexibilidad">SQLite-vec: El Descubrimiento de la Flexibilidad</h3>
+<p>A los pocos días, llegué a una realización. Hasta entonces, solo soportaba Qdrant, que requiere un servidor corriendo. Aprendí que no todos los usuarios quieren o pueden correr servicios externos.</p>
+<p>Ese día hice tres cosas:
+1. Hice un backup antes de implementar SQLite-vec - precaución aprendida de experiencias pasadas
+2. Integré SQLite-vec - ahora los usuarios podían elegir entre local (SQLite) o escalable (Qdrant)
+3. Creé scripts de testing - aprendí la importancia de herramientas de debugging</p>
+<p>Este cambio reveló algo crucial: los usuarios necesitan opciones. Proyectos pequeños quieren SQLite, proyectos grandes Qdrant. Darles la elección con el mismo CLI era poderoso.</p>
+<h3 id="tree-sitter-el-salto-de-calidad-semantica">Tree-sitter: El Salto de Calidad Semántica</h3>
+<p>La integración de tree-sitter fue un momento de maduración técnica. Aprendí que el chunking basado en regex era limitado. Tree-sitter permite:
+- Parsing semántico real de 29+ lenguajes
+- Extracción de definiciones exactas (funciones, clases)
+- Comprensión del AST del código</p>
+<p>Pero también aprendí sobre fragmentación de memoria WASM de la forma difícil. Los parsers crasheaban después de procesar muchos archivos. La solución: cache de parsers + reset cada 100 archivos. Aprendizaje clave: la memoria WASM no se gestiona automáticamente, hay que ser proactivo.</p>
+<h3 id="internacionalizacion-y-documentacion">Internacionalización y Documentación</h3>
+<p>Unos días después del proyecto, me enfoqué en accesibilidad:
+- Traducción completa a inglés
+- Eliminación de emojis (profesionalismo)
+- Shields.io badges (estándares de open source)
+- Documentación exhaustiva de troubleshooting</p>
+<p>Aprendí que el código sin buena documentación es código inaccesible. Las secciones de troubleshooting que agregué no fueron solo documentación, fueron el resultado de ver a usuarios reales encontrando problemas:
+- Dimension mismatches
+- Embedder requirements (solo OpenAI-compatible)
+- Git tracking solo en Qdrant
+- Performance tuning</p>
+<h3 id="git-commit-tracking-la-caracteristica-experimental">Git Commit Tracking: La Característica Experimental</h3>
+<p>El tracking de commits se convirtió en el experimento de aprendizaje más ambicioso:</p>
+<p>El problema: El historial de commits es conocimiento institucional perdido. ¿Por qué se hizo este cambio? ¿Qué decisiones llevaron a este código?</p>
+<p>La solución:
+1. Un watcher de .git que detecta nuevos commits
+2. Extracción de metadata, diffs, estadísticas
+3. Análisis LLM del commit (el salto conceptual clave)
+4. Indexación en Qdrant para búsqueda semántica</p>
+<p>Aprendizajes técnicos:
+- Batch processing es crucial - procesar commits uno por uno era ineficiente
+- Cache de análisis LLM - no reanalizar commits ya procesados
+- Indexación retroactiva - los usuarios quieren indexar historia pasada, no solo futuros commits</p>
+<p>Este feature hizo algo único: convertir commit history en conocimiento búsqueda.</p>
+<p><img alt="Indexación de historial de commits" src="assets/images/indexing_commits.png" /></p>
+<p><em>Indexación retroactiva de commits: <code>codebase -index-history 100</code> analizando 100 commits históricos con LLM</em></p>
+<h3 id="configuracion-por-vector-store-el-insight-de-flexibilidad">Configuración por Vector Store: El Insight de Flexibilidad</h3>
+<p>Emergió un aprendizaje maduro: diferentes vector stores tienen diferentes necesidades. ¿Por qué usar el mismo embedder para SQLite local y Qdrant production?</p>
+<p>La solución: configuración específica por vector store:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># SQLite usa modelo pequeño/barato</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">SQLITE_EMBED_MODEL</span><span class="o">=</span>text-embedding-3-small
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Qdrant usa modelo grande/preciso</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nv">QDRANT_EMBED_MODEL</span><span class="o">=</span>Qwen/Qwen3-Embedding-8B
+</code></pre></div></p>
+<p>Aprendí que la flexibilidad bien diseñada multiplica el valor de una herramienta.</p>
+<h3 id="integracion-con-claude-code-el-circulo-completo">Integración con Claude Code: El Círculo Completo</h3>
+<p>La integración con Claude Code cerró el círculo:
+- Auto-start con SessionStart hook
+- Status line en tiempo real
+- Zero-config experience</p>
+<p>Aprendí que las herramientas deben integrarse perfectamente en el flujo del usuario. No basta con que funcionen, deben ser invisibles hasta que se necesiten.</p>
+<h3 id="cross-platform-pensando-en-comunidad">Cross-Platform: Pensando en Comunidad</h3>
+<p>Los instaladores multiplataforma fueron un aprendizaje sobre comunidad: si quieres adopción amplia, reduce fricción de setup al máximo. Aunque macOS/Windows no están testeados, proporcionar los scripts invita a la contribución.</p>
+<h3 id="semantic-search-cli-la-herramienta-completa">Semantic Search CLI: La Herramienta Completa</h3>
+<p>Agregar un comando dedicado de búsqueda semántica con reranking de Voyage AI fue aprender que ad-hoc queries son valiosas. No siempre quieres una UI, a veces solo quieres:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>codebase<span class="w"> </span>semantic-search<span class="w"> </span><span class="s2">&quot;authentication flow&quot;</span><span class="w"> </span>--rerank
+</code></pre></div></p>
+<h3 id="lecciones-finales-observacion-y-mejora-continua">Lecciones Finales: Observación y Mejora Continua</h3>
+<p>Los refinamientos recientes muestran cómo el uso real te enseña:
+- Process locks para prevenir múltiples instancias
+- Reporting de duración en minutos (no segundos)
+- Fixes de memory fragmentation</p>
+<p>Aprendí que el software nunca está "terminado". Cada uso real revela algo nuevo que mejorar.</p>
+<h3 id="por-que-cli-mcp-en-lugar-de-integracion-nativa">¿Por qué CLI + MCP en lugar de integración nativa?</h3>
+<p>Este es un proyecto experimental, pero que cada usuario puede adaptar perfectamente a sus necesidades. No es como que estén reentrenando un modelo, pero sí pueden ajustarlo tanto como quieran. Por eso es open source: pueden usar los modelos que prefieran y moldearlo a su gusto.</p>
+<p>Hacerlo o embederlo en un sistema no tenía mucho sentido. Codex o Claude CLI son sistemas propietarios, pero más allá de eso, hay muchos otros CLI que no tienen una base de datos contextual integrada. Incluso el mismo Cline, que es excelente, aún funciona sin búsqueda semántica por cuestiones que sus creadores entienden que es mejor. Pero con esto está la posibilidad de probar un poco más, sin necesidad de romper lo que ya existe: simplemente testear, ajustar, usarse y ver resultados.</p>
+<p>Yo no escribo esto con la intención de decir que esto va a cambiar el mundo o la forma en que programas, pero sí que puede ayudarte a personalizar cosas y aprender cosas sobre agentes de IA, pues en el camino uno aprende muchas cosas sobre todo el entorno.</p>
+<p>El proyecto ha sido probado en agentes como Gemini CLI, Aider, OpenCode, Codex, Qwen Code, Cline, Droid con buenos resultados, y funcionará con todos los agentes. Solo que en algunos puede no ser tan relevante, pues tienen su propio engine de contexto, pero vale la pena probarlo. Es importante mencionar que la adopción de la herramienta depende muchísimo del prompt, ya que eso es importante para que el agente tome la herramienta como parte natural de sus procesos y no tengas que estarle recordando que la use.</p>
+<h3 id="parte-3-la-extension-que-cierra-el-ciclo">Parte 3: La extensión que cierra el ciclo</h3>
+<p>Acá está la historia de cuando encontré <a href="https://github.com/andrepimenta/claude-code-chat">claude-code-chat</a> de André Pimenta, el cual modifiqué para utilizar el indexador directamente integrado en la extensión. Mi versión mejorada está disponible en <a href="https://github.com/dudufcb1/claude-code-chat-ui">claude-code-chat-ui</a>, compatible con el Codebase Index CLI. Como es un uso particular, preferí forkear y modificarla para el uso con el CLI, pero es una gran extensión que todo mundo debe probar de su autor original.</p>
+<h4 id="objetivo-del-fork">Objetivo del fork</h4>
+<p>Integrar el indexador local (codebase-index-cli) directamente en la extensión, con control desde la UI, estado visible y documentación clara del flujo. Además, preparar terreno para paralelización de subagentes y mejorar higiene del repo para artefactos del indexador.</p>
+<h4 id="cambios-clave-de-integracion-con-el-indexador">Cambios clave de integración con el indexador</h4>
+<p><strong>Controles del indexador en la UI</strong>: Start, Stats, History, Full reset; badge de estado en vivo; tooltips y lógica de disabled según estado.</p>
+<p><strong>Lectura periódica</strong> de .codebase/state.json para reflejar el estado (watching/indexing/idle/error) y actualizar el badge/avisos.</p>
+<p><strong>Advertencia de "indexing"</strong> prioritaria sobre YOLO mode para UX más clara mientras el indexador trabaja.</p>
+<p><strong>Configuración del CLI</strong>: nueva setting para ruta del codebase CLI (claudeCodeChat.codebase.path).</p>
+<p><strong>Seguridad de sesiones</strong>: bloquear "New Chat" mientras agentes están procesando para evitar "poison" por solape.</p>
+<p><strong>Paralelización toggle</strong> (Subagents) para el siguiente mensaje (preparado/documentado y cableado en la UI).</p>
+<h4 id="higiene-del-repositorio-para-el-indexador">Higiene del repositorio para el indexador</h4>
+<p><strong>Ignorar artefactos locales y sensibles</strong>: .codebase/, .env, agents_messaging.db; añadir env.example.</p>
+<h4 id="documentacion-y-proposito-del-fork">Documentación y propósito del fork</h4>
+<p><strong>README/CHANGELOG/TEST_SETTINGS</strong> actualizados con: integración del indexador, UX del badge, toggle de paralelización, y notas de prepend de mensaje.</p>
+<p><strong>Aviso de fork</strong> con créditos y link al README de codebase-index-cli, explicando que este fork soporta ese flujo y personalizaciones.</p>
+<h4 id="como-el-fork-vuelve-el-ecosistema-mas-completo">Cómo el fork vuelve el ecosistema más completo</h4>
+<ul>
+<li>Control end-to-end del indexador desde la extensión (sin salir de VS Code)</li>
+<li>Visibilidad en tiempo real del estado de indexación y UX segura durante operaciones (badge + warnings)</li>
+<li>Onboarding consistente vía env.example y .gitignore que evita basura/sensibles en git</li>
+<li>Preparado para trabajo con subagentes en paralelo, alineado con flujos apoyados por el indexador</li>
+<li>Documentación explícita del flujo indexador + fork, facilitando adopción y contribución</li>
+</ul>
+<h3 id="mi-setup">Mi Setup</h3>
+<p>VSCodium + Claude Code customizado para poder consumir GPT-5 y Codex además de los nativos Claude-Sonnet-4 y Claude-Sonnet-4.5, Codebase Index CLI, Semantic Search MCP, prompt de claude.md o agents.md en Codex, y extensión para usar Claude Code y mirar mejor los stats de indexing en VSCodium.</p>
+<ul>
+<li><a href="https://github.com/dudufcb1/codebase-index-cli/blob/codebase-cli/README.md">Codebase Index CLI</a></li>
+<li><a href="https://github.com/dudufcb1/semantic-search">Semantic Search MCP</a></li>
+</ul>
+<hr />
+<h3 id="reflexiones-finales">Reflexiones Finales</h3>
+<p>Este proyecto me enseñó:</p>
+<ol>
+<li><strong>Empieza simple, itera rápido</strong>: El commit inicial era básico, pero funcionaba. La complejidad vino después, cuando la entendía mejor.</li>
+<li><strong>Los usuarios te enseñan</strong>: Cada feature (SQLite-vec, tree-sitter, git tracking) vino de observar necesidades reales.</li>
+<li><strong>La configuración es UX</strong>: Pasar de JSON a .env, crear instaladores, permitir configuración por vector store - todo esto fue aprender que la configuración es parte de la experiencia de usuario.</li>
+<li><strong>La documentación es desarrollo</strong>: Las 200+ líneas de troubleshooting no son "documentación extra", son conocimiento destilado de problemas reales.</li>
+<li><strong>El código sin contexto es código perdido</strong>: Git commit tracking con LLM no es solo un feature cool, es preservar el "por qué" del código.</li>
+<li><strong>La flexibilidad bien diseñada gana</strong>: SQLite vs Qdrant, diferentes embedders, tree-sitter opcional - darles opciones a los usuarios es respetarlos.</li>
+</ol>
+<p>Este proyecto empezó como una necesidad personal y evolucionó en una herramienta que cualquier desarrollador que use AI assistants puede aprovechar. No es perfecto, pero es útil, y esa es la métrica que importa.</p>
+<hr />
+<h2 id="contact-contacto">Contact / Contacto</h2>
+<p><strong>GitHub:</strong> <a href="https://github.com/dudufcb1/">github.com/dudufcb1</a></p>
+<p><strong>Discord:</strong> duducoc</p>
+<p><strong>Telegram:</strong> <a href="https://t.me/hardcodeddev">@hardcodeddev</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+        
+          
+          <a href="codebase-index-cli/" class="md-footer__link md-footer__link--next" aria-label="Next: Codebase Index CLI">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Codebase Index CLI
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": ".", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.tabs.link", "toc.follow", "toc.integrate"], "search": "assets/javascripts/workers/search.973d3a69.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="assets/javascripts/bundle.f55a23d4.min.js"></script>
+      
+    
+  </body>
+</html>
