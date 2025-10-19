@@ -31,3 +31,9 @@ coverage/
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# IDE
+.vscode/
+
+# Database
+agents_messaging.db
