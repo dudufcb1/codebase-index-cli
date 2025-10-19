@@ -122,10 +122,15 @@ export class WorkspaceIndexer {
 	}
 
 	async runInitialScan(): Promise<void> {
+		const startTime = Date.now()
+		await updateIndexingStatus(this.workspacePath, {
+			state: 'scanning',
+		})
 		this.logger.info("Starting full workspace scan...")
 		const stats = await this.directoryScanner.scan()
+		const durationMinutes = ((Date.now() - startTime) / 60000).toFixed(2)
 		this.logger.info(
-			`Initial scan completed. Processed ${stats.processedFiles} files (${stats.totalBlocks} blocks), skipped ${stats.skippedFiles}.`,
+			`Initial scan completed in ${durationMinutes}m. Processed ${stats.processedFiles} files (${stats.totalBlocks} blocks), skipped ${stats.skippedFiles}.`,
 		)
 	}
 
