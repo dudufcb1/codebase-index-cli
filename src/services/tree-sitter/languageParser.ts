@@ -60,10 +60,13 @@ async function loadLanguage(langName: string, sourceDirectory?: string) {
 }
 
 let isParserInitialized = false
+let parsersCache: LanguageParser = {}
+let filesProcessedSinceReset = 0
+const MAX_FILES_BEFORE_RESET = 100 // Reset parsers every 100 files to prevent memory fragmentation
 
 /*
-Using node bindings for tree-sitter is problematic in vscode extensions 
-because of incompatibility with electron. Going the .wasm route has the 
+Using node bindings for tree-sitter is problematic in vscode extensions
+because of incompatibility with electron. Going the .wasm route has the
 advantage of not having to build for multiple architectures.
 
 We use web-tree-sitter and tree-sitter-wasms which provides auto-updating
@@ -77,6 +80,10 @@ This function loads WASM modules for relevant language parsers based on input fi
 
 This approach optimizes performance by loading only necessary parsers once for all relevant files.
 
+Memory management: To prevent WASM memory fragmentation, parsers are reset every
+MAX_FILES_BEFORE_RESET files. This prevents "memory access out of bounds" errors
+that occur when tree-sitter's WASM heap becomes fragmented after parsing many files.
+
 Sources:
 - https://github.com/tree-sitter/node-tree-sitter/issues/169
 - https://github.com/tree-sitter/node-tree-sitter/issues/168
@@ -85,6 +92,13 @@ Sources:
 - https://github.com/tree-sitter/tree-sitter/blob/master/lib/binding_web/test/query-test.js
 */
 export async function loadRequiredLanguageParsers(filesToParse: string[], sourceDirectory?: string) {
+	// Reset parsers periodically to prevent WASM memory fragmentation
+	if (filesProcessedSinceReset >= MAX_FILES_BEFORE_RESET && Object.keys(parsersCache).length > 0) {
+		parsersCache = {}
+		isParserInitialized = false
+		filesProcessedSinceReset = 0
+	}
+
 	if (!isParserInitialized) {
 		try {
 			await Parser.init()
@@ -95,13 +109,26 @@ export async function loadRequiredLanguageParsers(filesToParse: string[], source
 		}
 	}
 
+	filesProcessedSinceReset++
+
 	const extensionsToLoad = new Set(filesToParse.map((file) => path.extname(file).toLowerCase().slice(1)))
 	const parsers: LanguageParser = {}
 
 	for (const ext of extensionsToLoad) {
+		// Determine the parser key (some extensions share parsers)
+		let parserKey = ext
+		if (ext === "erb" || ext === "ejs") {
+			parserKey = "embedded_template"
+		}
+
+		// Check if parser is already cached
+		if (parsersCache[parserKey]) {
+			parsers[parserKey] = parsersCache[parserKey]
+			continue
+		}
+
 		let language: LanguageT
 		let query: QueryT
-		let parserKey = ext // Default to using extension as key
 
 		switch (ext) {
 			case "js":
@@ -212,7 +239,7 @@ export async function loadRequiredLanguageParsers(filesToParse: string[], source
 				break
 			case "ejs":
 			case "erb":
-				parserKey = "embedded_template" // Use same key for both extensions.
+				// parserKey already set to "embedded_template" above
 				language = await loadLanguage("embedded_template", sourceDirectory)
 				query = new Query(language, embeddedTemplateQuery)
 				break
@@ -232,6 +259,9 @@ export async function loadRequiredLanguageParsers(filesToParse: string[], source
 		const parser = new Parser()
 		parser.setLanguage(language)
 		parsers[parserKey] = { parser, query }
+
+		// Cache the parser for reuse
+		parsersCache[parserKey] = { parser, query }
 	}
 
 	return parsers

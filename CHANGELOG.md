@@ -13,6 +13,12 @@ All notable changes to this project will be documented in this file.
   - Stale lock detection (10 second timeout) for crashed processes
   - Lock is properly cleaned up on graceful exit
 
+### Fixed
+- Tree-sitter WASM memory fragmentation causing "memory access out of bounds" errors
+  - Implemented parser caching to reuse parsers across files
+  - Added automatic parser reset every 100 files to prevent memory exhaustion
+  - Prevents crashes when parsing large codebases with many files
+
 ### Changed
 - Added `proper-lockfile` dependency (v4.1.2)
 - Added `@types/proper-lockfile` dev dependency (v4.1.4)
