@@ -23,6 +23,7 @@
 		"ignore": "^5.3.2",
 		"openai": "^4.70.0",
 		"p-limit": "^4.0.0",
+		"proper-lockfile": "^4.1.2",
 		"sqlite-vec": "0.1.7-alpha.2",
 		"tree-sitter-wasms": "^0.1.13",
 		"uuid": "^9.0.1",
@@ -33,6 +34,7 @@
 	"devDependencies": {
 		"@types/better-sqlite3": "^7.6.13",
 		"@types/node": "^20.16.11",
+		"@types/proper-lockfile": "^4.1.4",
 		"tsx": "^4.19.3",
 		"typescript": "^5.4.5"
 	}

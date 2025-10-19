@@ -3,6 +3,7 @@
 import fs from "fs/promises"
 import path from "path"
 import process from "process"
+import lockfile from "proper-lockfile"
 
 import { Logger, parseLogLevel, rootLogger, type LogLevel } from "./logger.js"
 import { parseCliArgs, resolveConfig } from "./config.js"
@@ -640,6 +641,50 @@ async function main() {
 		const debounce = config.watch?.debounceMs ?? 500
 		rootLogger.info(`Watching for changes (debounce ${debounce}ms)`)
 
+		// Acquire lock to prevent duplicate instances
+		// proper-lockfile locks directories, so we lock the .codebase directory
+		const codebaseDir = path.join(config.workspacePath, ".codebase")
+		let releaseLock: (() => Promise<void>) | null = null
+
+		try {
+			releaseLock = await lockfile.lock(codebaseDir, {
+				lockfilePath: path.join(codebaseDir, "watcher.lock"),
+				stale: 10000, // Auto-release if process dies (10 seconds)
+				retries: 0,   // Fail immediately if locked
+			})
+			rootLogger.debug(`Lock acquired on ${codebaseDir}`)
+		} catch (err: any) {
+			console.error("\n❌ Cannot start watcher\n")
+			console.error("Another instance is already running in this workspace.")
+			console.error(`Workspace: ${config.workspacePath}`)
+
+			// Try to get lock info to show PID and timestamp
+			const lockFilePath = path.join(codebaseDir, "watcher.lock")
+			try {
+				const lockInfo = await lockfile.check(codebaseDir, {
+					lockfilePath: lockFilePath,
+				})
+				if (lockInfo && typeof lockInfo === "object") {
+					const info = lockInfo as { pid?: number; mtime?: number }
+					if (info.pid) {
+						console.error(`Process ID: ${info.pid}`)
+					}
+					if (info.mtime) {
+						const startTime = new Date(info.mtime).toLocaleString()
+						console.error(`Started at: ${startTime}`)
+					}
+					if (info.pid) {
+						console.error(`\nTo stop it, run: kill ${info.pid}`)
+					}
+				}
+			} catch {
+				// If we can't read lock info, just show generic message
+			}
+
+			console.error(`Or remove lock file: rm ${lockFilePath}\n`)
+			process.exit(1)
+		}
+
 		const indexer = new WorkspaceIndexer(config)
 		await indexer.initialize()
 
@@ -659,6 +704,17 @@ async function main() {
 			rootLogger.info("Received shutdown signal. Cleaning up...")
 			clearInterval(keepAlive)
 			await indexer.shutdown()
+
+			// Release lock file
+			if (releaseLock) {
+				try {
+					await releaseLock()
+					rootLogger.debug("Lock released")
+				} catch (err) {
+					rootLogger.warn("Failed to release lock:", err)
+				}
+			}
+
 			process.exit(0)
 		}
 
