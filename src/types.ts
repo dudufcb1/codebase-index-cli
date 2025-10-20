@@ -50,7 +50,7 @@ export interface IndexingConfig {
 	}
 }
 
-export type CliCommand = "start" | "restart" | "stats" | "full-reset" | "index-history" | "semantic-search"
+export type CliCommand = "start" | "restart" | "stop" | "stats" | "full-reset" | "index-history" | "semantic-search"
 
 export interface CliOptions {
 	command: CliCommand

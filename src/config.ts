@@ -531,6 +531,20 @@ export function parseCliArgs(argv: string[]): CliOptions {
 					}
 				}
 				break
+			case "-stop":
+			case "--stop":
+				if (command) {
+					throw new Error("Only one command can be provided at a time")
+				}
+				command = "stop"
+				{
+					const next = argv[i + 1]
+					if (next && !next.startsWith("-")) {
+						workspacePath = next
+						i++
+					}
+				}
+				break
 			case "-stats":
 			case "--stats":
 				if (command) {
@@ -665,6 +679,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
 					if (
 						normalized === "start" ||
 						normalized === "restart" ||
+						normalized === "stop" ||
 						normalized === "stats" ||
 						normalized === "full-reset" ||
 						normalized === "index-history" ||
@@ -746,7 +761,7 @@ export function parseCliArgs(argv: string[]): CliOptions {
 	}
 
 	if (!command) {
-		throw new Error("Please provide a command: -start, -restart, -stats, -full-reset, -index-history <count>, or -semantic-search <query>")
+		throw new Error("Please provide a command: -start, -restart, -stop, -stats, -full-reset, -index-history <count>, or -semantic-search <query>")
 	}
 
 	if (command === "semantic-search" && !searchQuery) {

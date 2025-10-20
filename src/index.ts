@@ -580,7 +580,151 @@ async function indexHistoricalCommits(workspacePath: string, count: number): Pro
 	}
 }
 
+function sleep(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+async function pathExists(targetPath: string): Promise<boolean> {
+	try {
+		await fs.access(targetPath)
+		return true
+	} catch (error: any) {
+		if (error?.code === "ENOENT") {
+			return false
+		}
+
+		rootLogger.warn(`Failed to access ${targetPath}`, error)
+		return true
+	}
+}
+
+function isProcessAlive(pid: number): boolean {
+	try {
+		process.kill(pid, 0)
+		return true
+	} catch (error: any) {
+		if (error?.code === "EPERM") {
+			return true
+		}
+		return false
+	}
+}
+
+async function removePidFile(pidFilePath: string): Promise<void> {
+	try {
+		await fs.unlink(pidFilePath)
+	} catch (error: any) {
+		if (error?.code !== "ENOENT") {
+			rootLogger.warn(`Failed to remove PID file at ${pidFilePath}`, error)
+		}
+	}
+}
+
+async function cleanupWatcherArtifacts(pidFilePath: string, lockfilePath: string): Promise<void> {
+	await removePidFile(pidFilePath)
+	try {
+		await fs.rm(lockfilePath, { recursive: true, force: true })
+	} catch (error: any) {
+		if (error?.code !== "ENOENT") {
+			rootLogger.warn(`Failed to remove watcher lock at ${lockfilePath}`, error)
+		}
+	}
+}
+
+async function stopWatcher(workspacePath: string): Promise<void> {
+	const codebaseDir = path.join(workspacePath, ".codebase")
+	const lockfilePath = path.join(codebaseDir, "watcher.lock")
+	const pidFilePath = path.join(codebaseDir, "watcher.pid")
+
+	let pid: number | null = null
+	try {
+		const rawPid = await fs.readFile(pidFilePath, "utf8")
+		const trimmed = rawPid.trim()
+		if (trimmed.length > 0) {
+			const parsed = Number.parseInt(trimmed, 10)
+			if (Number.isFinite(parsed) && parsed > 0) {
+				pid = parsed
+			} else {
+				rootLogger.warn(`Invalid PID "${trimmed}" found in ${pidFilePath}`)
+			}
+		}
+	} catch (error: any) {
+		if (error?.code !== "ENOENT") {
+			rootLogger.error(`Failed to read watcher PID file at ${pidFilePath}`, error)
+			process.exit(1)
+		}
+	}
+
+	let lockActive = false
+	try {
+		lockActive = await lockfile.check(codebaseDir, { lockfilePath })
+	} catch (error: any) {
+		if (error?.code === "ENOENT") {
+			lockActive = false
+		} else {
+			rootLogger.error(`Failed to inspect watcher lock at ${lockfilePath}`, error)
+			process.exit(1)
+		}
+	}
+
+	if (!pid) {
+		if (lockActive) {
+			rootLogger.warn(
+				`Watcher lock exists at ${lockfilePath}, but PID file is missing. Remove the lock manually if the watcher is stuck.`,
+			)
+		} else {
+			rootLogger.info("No running watcher found for this workspace.")
+		}
+		return
+	}
+
+	if (!isProcessAlive(pid)) {
+		rootLogger.warn(`Watcher process ${pid} is not running. Cleaning up stale lock data.`)
+		await cleanupWatcherArtifacts(pidFilePath, lockfilePath)
+		rootLogger.info("Stale watcher metadata removed.")
+		return
+	}
+
+	try {
+		process.kill(pid, "SIGINT")
+	} catch (error: any) {
+		if (error?.code === "EPERM") {
+			rootLogger.error(`Permission denied when signalling process ${pid}. Try running with elevated privileges.`)
+		} else {
+			rootLogger.error(`Failed to signal watcher process ${pid}`, error)
+		}
+		process.exit(1)
+	}
+
+	rootLogger.info(`Sent SIGINT to watcher process ${pid}. Waiting for it to shut down...`)
+
+	const timeoutMs = 10000
+	const intervalMs = 250
+	const start = Date.now()
+
+	while (Date.now() - start < timeoutMs) {
+		await sleep(intervalMs)
+
+		const alive = isProcessAlive(pid)
+		const pidFileStillExists = await pathExists(pidFilePath)
+		const lockStillExists = await pathExists(lockfilePath)
+
+		if (!alive && !pidFileStillExists && !lockStillExists) {
+			rootLogger.info("Watcher stopped successfully.")
+			return
+		}
+	}
+
+	rootLogger.warn(
+		`Watcher process ${pid} may still be shutting down. If it remains running, stop it manually (kill ${pid}).`,
+	)
+}
+
 async function main() {
+	let releaseLock: (() => Promise<void>) | null = null
+	let pidFilePath: string | null = null
+	let pidFileWritten = false
+
 	try {
 		const options = parseCliArgs(process.argv)
 
@@ -597,6 +741,11 @@ async function main() {
 
 		if (envLoads.length > 0) {
 			rootLogger.debug(`Environment files loaded: ${envLoads.join(", ")}`)
+		}
+
+		if (options.command === "stop") {
+			await stopWatcher(workspacePath)
+			return
 		}
 
 		if (options.command === "stats") {
@@ -644,7 +793,11 @@ async function main() {
 		// Acquire lock to prevent duplicate instances
 		// proper-lockfile locks directories, so we lock the .codebase directory
 		const codebaseDir = path.join(config.workspacePath, ".codebase")
-		let releaseLock: (() => Promise<void>) | null = null
+		pidFilePath = path.join(codebaseDir, "watcher.pid")
+
+		if (!pidFilePath) {
+			throw new Error("Watcher PID path could not be resolved")
+		}
 
 		try {
 			releaseLock = await lockfile.lock(codebaseDir, {
@@ -653,6 +806,24 @@ async function main() {
 				retries: 0,   // Fail immediately if locked
 			})
 			rootLogger.debug(`Lock acquired on ${codebaseDir}`)
+
+			const currentPidFilePath = pidFilePath
+
+			try {
+				await fs.writeFile(currentPidFilePath, `${process.pid}\n`, "utf8")
+				pidFileWritten = true
+				rootLogger.debug(`Recorded watcher PID ${process.pid} at ${currentPidFilePath}`)
+			} catch (error) {
+				if (releaseLock) {
+					try {
+						await releaseLock()
+					} catch (releaseError) {
+						rootLogger.warn("Failed to release lock after PID file write failure:", releaseError)
+					}
+				}
+				rootLogger.error(`Failed to write watcher PID file at ${pidFilePath}`, error)
+				process.exit(1)
+			}
 		} catch (err: any) {
 			console.error("\n❌ Cannot start watcher\n")
 			console.error("Another instance is already running in this workspace.")
@@ -704,6 +875,10 @@ async function main() {
 			rootLogger.info("Received shutdown signal. Cleaning up...")
 			clearInterval(keepAlive)
 			await indexer.shutdown()
+			if (pidFilePath) {
+				await removePidFile(pidFilePath)
+			}
+			pidFileWritten = false
 
 			// Release lock file
 			if (releaseLock) {
@@ -725,6 +900,19 @@ async function main() {
 			// Intentionally never resolve; shutdown() handles process exit.
 		})
 	} catch (error) {
+		if (pidFileWritten && pidFilePath) {
+			await removePidFile(pidFilePath)
+		}
+		pidFileWritten = false
+
+		if (releaseLock) {
+			try {
+				await releaseLock()
+			} catch (releaseError) {
+				rootLogger.warn("Failed to release lock during error handling:", releaseError)
+			}
+		}
+
 		rootLogger.error("Indexer failed", error)
 		process.exit(1)
 	}
