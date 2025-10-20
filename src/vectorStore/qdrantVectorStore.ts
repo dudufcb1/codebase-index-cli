@@ -314,6 +314,79 @@ export class QdrantVectorStore implements VectorStore {
 		}
 	}
 
+	private isTransientError(error: unknown): boolean {
+		if (!error) {
+			return false
+		}
+
+		const possibleError = error as any
+		const code = possibleError?.code ?? possibleError?.cause?.code ?? possibleError?.cause?.errno
+		const transientCodes = new Set(["EPIPE", "ECONNRESET", "ECONNREFUSED", "ETIMEDOUT", "EAI_AGAIN"])
+
+		if (typeof code === "string" && transientCodes.has(code)) {
+			return true
+		}
+
+		const status = possibleError?.status ?? possibleError?.response?.status ?? possibleError?.statusCode
+		if (typeof status === "number" && status >= 500) {
+			return true
+		}
+
+		if (error instanceof TypeError) {
+			const message = (error.message || "").toLowerCase()
+			if (message.includes("fetch failed") || message.includes("network")) {
+				return true
+			}
+		}
+
+		return false
+	}
+
+	private async delay(ms: number): Promise<void> {
+		return new Promise((resolve) => setTimeout(resolve, ms))
+	}
+
+	private async tryUpsertWithRetry(
+		processedPoints: Array<{
+			id: string
+			vector: number[]
+			payload: Record<string, any>
+		}>,
+		maxAttempts = 2,
+	): Promise<boolean> {
+		const attempts = Math.max(1, maxAttempts)
+
+		for (let attempt = 1; attempt <= attempts; attempt++) {
+			try {
+				await this.client.upsert(this.collectionName, {
+					points: processedPoints,
+					wait: true,
+				})
+				return true
+			} catch (error) {
+				const isTransient = this.isTransientError(error)
+				if (!isTransient) {
+					console.error("Failed to upsert points:", error)
+					throw error
+				}
+
+				const message = error instanceof Error ? error.message : String(error)
+				console.warn(
+					`[QdrantVectorStore] Transient upsert failure (attempt ${attempt}/${attempts}) for collection "${this.collectionName}": ${message}`,
+				)
+
+				if (attempt === attempts) {
+					break
+				}
+
+				const delayMs = Math.pow(3, attempt - 1) * 100
+				await this.delay(delayMs)
+			}
+		}
+
+		return false
+	}
+
 	async upsertPoints(
 		points: Array<{
 			id: string
@@ -321,35 +394,38 @@ export class QdrantVectorStore implements VectorStore {
 			payload: Record<string, any>
 		}>,
 	): Promise<void> {
-		try {
-			const processedPoints = points.map((point) => {
-				if (point.payload?.filePath) {
-					const segments = point.payload.filePath.split(path.sep).filter(Boolean)
-					const pathSegments = segments.reduce(
-						(acc: Record<string, string>, segment: string, index: number) => {
-							acc[index.toString()] = segment
-							return acc
-						},
-						{},
-					)
-					return {
-						...point,
-						payload: {
-							...point.payload,
-							pathSegments,
-						},
-					}
-				}
-				return point
-			})
+		if (points.length === 0) {
+			return
+		}
 
-			await this.client.upsert(this.collectionName, {
-				points: processedPoints,
-				wait: true,
-			})
-		} catch (error) {
-			console.error("Failed to upsert points:", error)
-			throw error
+		const processedPoints = points.map((point) => {
+			if (point.payload?.filePath) {
+				const segments = point.payload.filePath.split(path.sep).filter(Boolean)
+				const pathSegments = segments.reduce(
+					(acc: Record<string, string>, segment: string, index: number) => {
+						acc[index.toString()] = segment
+						return acc
+					},
+					{},
+				)
+				return {
+					...point,
+					payload: {
+						...point.payload,
+						pathSegments,
+					},
+				}
+			}
+			return point
+		})
+
+		const succeeded = await this.tryUpsertWithRetry(processedPoints, 2)
+		if (!succeeded) {
+			const sampleIds = processedPoints.slice(0, 3).map((point) => point.id)
+			console.warn(
+				`[QdrantVectorStore] Skipped ${processedPoints.length} points after repeated transient failures for collection "${this.collectionName}".`,
+				{ sampleIds },
+			)
 		}
 	}
 

@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+.venv/
 
 # Build outputs
 dist/
@@ -37,3 +38,8 @@ Thumbs.db
 
 # Database
 agents_messaging.db
+
+# MkDocs documentation
+mkdocs.yml
+docs/
+site/
