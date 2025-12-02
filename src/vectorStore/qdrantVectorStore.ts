@@ -419,12 +419,28 @@ export class QdrantVectorStore implements VectorStore {
 			return point
 		})
 
-		const succeeded = await this.tryUpsertWithRetry(processedPoints, 2)
-		if (!succeeded) {
-			const sampleIds = processedPoints.slice(0, 3).map((point) => point.id)
+		// Batch points to avoid hitting Qdrant payload limits (approx 32MB)
+		// Each point is ~10-15KB (vector + content), so 100 points is ~1-1.5MB
+		const BATCH_SIZE = 100
+		let failedCount = 0
+
+		for (let i = 0; i < processedPoints.length; i += BATCH_SIZE) {
+			const batch = processedPoints.slice(i, i + BATCH_SIZE)
+			const succeeded = await this.tryUpsertWithRetry(batch, 2)
+
+			if (!succeeded) {
+				failedCount += batch.length
+				const sampleIds = batch.slice(0, 3).map((point) => point.id)
+				console.warn(
+					`[QdrantVectorStore] Failed batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(processedPoints.length / BATCH_SIZE)} (${batch.length} points) after retries.`,
+					{ sampleIds },
+				)
+			}
+		}
+
+		if (failedCount > 0) {
 			console.warn(
-				`[QdrantVectorStore] Skipped ${processedPoints.length} points after repeated transient failures for collection "${this.collectionName}".`,
-				{ sampleIds },
+				`[QdrantVectorStore] Total skipped points: ${failedCount}/${processedPoints.length} due to failures.`,
 			)
 		}
 	}
